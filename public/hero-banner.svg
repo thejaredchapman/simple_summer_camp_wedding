@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a52"/>
+      <stop offset="50%" style="stop-color:#2d5a6e"/>
+      <stop offset="100%" style="stop-color:#e8a87c"/>
+    </linearGradient>
+    <linearGradient id="lake" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d5a6e;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#1a3a52"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky gradient background -->
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+
+  <!-- Stars -->
+  <g fill="#fff" opacity="0.6">
+    <circle cx="150" cy="80" r="2"/>
+    <circle cx="300" cy="120" r="1.5"/>
+    <circle cx="500" cy="60" r="2"/>
+    <circle cx="700" cy="150" r="1"/>
+    <circle cx="850" cy="90" r="2"/>
+    <circle cx="1050" cy="130" r="1.5"/>
+    <circle cx="1200" cy="70" r="2"/>
+    <circle cx="1400" cy="100" r="1"/>
+    <circle cx="1600" cy="140" r="2"/>
+    <circle cx="1750" cy="80" r="1.5"/>
+    <circle cx="400" cy="200" r="1"/>
+    <circle cx="1100" cy="180" r="1.5"/>
+    <circle cx="1500" cy="220" r="1"/>
+  </g>
+
+  <!-- Moon -->
+  <circle cx="1650" cy="180" r="50" fill="#f5e6d3" opacity="0.9"/>
+  <circle cx="1670" cy="170" r="50" fill="url(#sky)"/>
+
+  <!-- Distant mountains -->
+  <path d="M0 500 L200 350 L400 420 L600 300 L800 380 L1000 280 L1200 360 L1400 320 L1600 400 L1800 340 L1920 380 L1920 600 L0 600 Z" fill="#1a3a28" opacity="0.6"/>
+
+  <!-- Mid mountains -->
+  <path d="M0 550 L150 450 L350 500 L500 400 L700 480 L900 380 L1100 450 L1300 400 L1500 470 L1700 420 L1920 480 L1920 650 L0 650 Z" fill="#1a3a28" opacity="0.8"/>
+
+  <!-- Forest treeline left -->
+  <path d="M0 580 L30 520 L60 580 L90 510 L120 580 L150 500 L180 580 L210 530 L240 580 L270 490 L300 580 L330 520 L360 580 L390 510 L420 580 L450 530 L480 580 L480 680 L0 680 Z" fill="#0d1f15"/>
+
+  <!-- Forest treeline right -->
+  <path d="M1440 580 L1470 520 L1500 580 L1530 510 L1560 580 L1590 490 L1620 580 L1650 520 L1680 580 L1710 500 L1740 580 L1770 530 L1800 580 L1830 510 L1860 580 L1890 520 L1920 580 L1920 680 L1440 680 Z" fill="#0d1f15"/>
+
+  <!-- Lake -->
+  <ellipse cx="960" cy="720" rx="800" ry="200" fill="url(#lake)"/>
+
+  <!-- Lake reflection shimmer -->
+  <g fill="#e8a87c" opacity="0.15">
+    <ellipse cx="960" cy="680" rx="100" ry="8"/>
+    <ellipse cx="960" cy="720" rx="150" ry="10"/>
+    <ellipse cx="960" cy="760" rx="200" ry="12"/>
+  </g>
+
+  <!-- Dock -->
+  <rect x="920" y="800" width="80" height="150" fill="#5c3d2e"/>
+  <rect x="900" y="800" width="120" height="15" fill="#7a5240"/>
+
+  <!-- Camp dock lights -->
+  <g fill="#ffd700" opacity="0.8">
+    <circle cx="920" cy="800" r="4"/>
+    <circle cx="1000" cy="800" r="4"/>
+  </g>
+
+  <!-- Foreground grass -->
+  <path d="M0 850 Q200 820 400 850 Q600 880 800 850 Q1000 820 1200 850 Q1400 880 1600 850 Q1800 820 1920 850 L1920 1080 L0 1080 Z" fill="#1a4a2e"/>
+
+  <!-- Pine trees left -->
+  <g fill="#0f2a1a">
+    <path d="M100 900 L150 650 L200 900 Z"/>
+    <path d="M50 920 L90 720 L130 920 Z"/>
+    <path d="M180 880 L220 700 L260 880 Z"/>
+  </g>
+
+  <!-- Pine trees right -->
+  <g fill="#0f2a1a">
+    <path d="M1700 900 L1750 650 L1800 900 Z"/>
+    <path d="M1780 920 L1820 720 L1860 920 Z"/>
+    <path d="M1640 880 L1680 700 L1720 880 Z"/>
+  </g>
+
+  <!-- Tent silhouettes -->
+  <g fill="#0d1f15">
+    <path d="M600 870 L680 750 L760 870 Z"/>
+    <path d="M1160 870 L1240 750 L1320 870 Z"/>
+  </g>
+
+  <!-- Campfire glow -->
+  <circle cx="960" cy="900" r="60" fill="#ff6b35" opacity="0.3"/>
+  <circle cx="960" cy="900" r="40" fill="#ff8c42" opacity="0.4"/>
+  <circle cx="960" cy="900" r="20" fill="#ffd700" opacity="0.6"/>
+
+  <!-- Fireflies/string lights -->
+  <g fill="#ffd700" opacity="0.7">
+    <circle cx="500" cy="600" r="3"/>
+    <circle cx="550" cy="650" r="2"/>
+    <circle cx="480" cy="680" r="2"/>
+    <circle cx="1400" cy="620" r="3"/>
+    <circle cx="1450" cy="660" r="2"/>
+    <circle cx="1380" cy="700" r="2"/>
+    <circle cx="700" cy="750" r="2"/>
+    <circle cx="1200" cy="740" r="2"/>
+  </g>
+
+  <!-- Couple silhouette on dock -->
+  <g fill="#0d1f15">
+    <!-- Person 1 -->
+    <ellipse cx="945" cy="780" rx="12" ry="15"/>
+    <path d="M933 795 L933 850 L957 850 L957 795 Z"/>
+    <!-- Person 2 -->
+    <ellipse cx="975" cy="778" rx="11" ry="14"/>
+    <path d="M964 792 L964 850 L986 850 L986 792 Z"/>
+  </g>
+</svg>

@@ -1,0 +1,65 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs
+dist
+dist-ssr
+build
+*.local
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing
+coverage
+.nyc_output
+
+# RAG / AI Chatbot
+# Vector database files
+*.faiss
+*.pkl
+chroma_db/
+vector_store/
+embeddings/
+
+# Model files (large)
+*.bin
+*.pt
+*.pth
+*.onnx
+models/
+
+# RAG data files
+rag_data/
+knowledge_base/
+documents/
+
+# API keys and secrets
+.env.api
+secrets.json
