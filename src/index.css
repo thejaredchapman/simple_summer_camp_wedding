@@ -382,9 +382,9 @@ img {
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(45, 90, 61, 0.4) 0%,
-    rgba(45, 90, 61, 0.6) 50%,
-    rgba(45, 90, 61, 0.7) 100%
+    rgba(45, 90, 61, 0.3) 0%,
+    rgba(45, 90, 61, 0.4) 50%,
+    rgba(45, 90, 61, 0.5) 100%
   );
 }
 
@@ -1620,269 +1620,6 @@ img {
 }
 
 /* ========================================
-   RSVP SECTION
-   ======================================== */
-
-.rsvp {
-  padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-primary);
-  position: relative;
-  overflow: hidden;
-}
-
-.rsvp-lantern {
-  position: absolute;
-  width: 50px;
-  height: 80px;
-  opacity: 0.5;
-}
-
-.rsvp-lantern-left {
-  top: 150px;
-  left: 150px;
-}
-
-.rsvp-lantern-right {
-  top: 250px;
-  right: 150px;
-}
-
-.rsvp .section-header h2 {
-  color: var(--color-cream);
-}
-
-.rsvp .section-subtitle {
-  color: var(--color-secondary);
-}
-
-.rsvp-form {
-  max-width: 700px;
-  margin: 0 auto;
-  background: var(--color-cream);
-  padding: var(--spacing-lg);
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-}
-
-.form-header {
-  text-align: center;
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--color-secondary);
-  margin-bottom: var(--spacing-md);
-}
-
-.form-header span {
-  font-family: var(--font-script);
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.form-group {
-  margin-bottom: var(--spacing-md);
-}
-
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-  color: var(--color-primary);
-  font-size: 1.1rem;
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 0.9rem 1.2rem;
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  border: 2px solid var(--color-secondary);
-  border-radius: 6px;
-  background: white;
-  transition: border-color var(--transition-fast);
-}
-
-.form-group textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
-
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background var(--transition-fast);
-}
-
-.checkbox-label:hover {
-  background: rgba(112, 179, 117, 0.1);
-}
-
-.checkbox-label input[type="checkbox"] {
-  margin-top: 3px;
-  accent-color: var(--color-primary);
-}
-
-.radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.radio-label {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  cursor: pointer;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--color-secondary);
-  border-radius: 6px;
-  transition: all var(--transition-fast);
-}
-
-.radio-label:hover {
-  border-color: var(--color-primary);
-  background: rgba(112, 179, 117, 0.1);
-}
-
-.radio-label input[type="radio"] {
-  display: none;
-}
-
-.radio-custom {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.radio-label input[type="radio"]:checked + .radio-custom::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 10px;
-  height: 10px;
-  background: var(--color-primary);
-  border-radius: 50%;
-}
-
-.rsvp-form .btn-primary {
-  width: 100%;
-  margin-top: var(--spacing-sm);
-}
-
-.form-error {
-  color: #c0392b;
-  text-align: center;
-  margin-top: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  background: rgba(192, 57, 43, 0.1);
-  border-radius: 4px;
-}
-
-.form-note {
-  text-align: center;
-  margin-top: var(--spacing-md);
-  color: var(--color-text-light);
-  font-size: 0.9rem;
-  font-style: italic;
-}
-
-/* Important notices box */
-.important-notice {
-  background: #FFF3CD;
-  border: 2px solid #FFD700;
-  border-radius: 8px;
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-}
-
-.important-notice h4 {
-  font-family: var(--font-accent);
-  font-size: 1.5rem;
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}
-
-.important-notice ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.important-notice li {
-  padding: var(--spacing-xs) 0;
-  padding-left: 1.5rem;
-  position: relative;
-  color: var(--color-text);
-  font-size: 0.95rem;
-}
-
-.important-notice li::before {
-  content: "!";
-  position: absolute;
-  left: 0;
-  font-weight: bold;
-  color: var(--color-primary);
-}
-
-.important-notice li strong {
-  color: var(--color-primary);
-}
-
-/* RSVP Success */
-.rsvp-success {
-  text-align: center;
-  padding: var(--spacing-xl) var(--spacing-md);
-}
-
-.success-badge {
-  margin-bottom: var(--spacing-md);
-}
-
-.success-check {
-  font-size: 3rem;
-  color: var(--color-cream);
-}
-
-.rsvp-success h2 {
-  font-family: var(--font-accent);
-  font-size: 3rem;
-  color: var(--color-cream);
-  margin-bottom: var(--spacing-sm);
-}
-
-.rsvp-success p {
-  color: var(--color-secondary);
-  font-size: 1.1rem;
-  margin-bottom: var(--spacing-md);
-}
-
-/* ========================================
    REGISTRY SECTION
    ======================================== */
 
@@ -2474,14 +2211,17 @@ img {
 
 .contact-us {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: linear-gradient(
-    180deg,
-    var(--color-cream) 0%,
-    #f5e6c8 50%,
-    var(--color-cream) 100%
-  );
+  background: var(--color-primary);
   position: relative;
   overflow: hidden;
+}
+
+.contact-us .section-header h2 {
+  color: var(--color-cream);
+}
+
+.contact-us .section-subtitle {
+  color: var(--color-secondary);
 }
 
 .contact-lantern {
@@ -2643,7 +2383,12 @@ img {
    ======================================== */
 
 .footer {
-  background: var(--color-primary);
+  background: linear-gradient(
+    180deg,
+    var(--color-cream) 0%,
+    #f5e6c8 50%,
+    var(--color-cream) 100%
+  );
   padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
   position: relative;
   overflow: hidden;
@@ -2658,7 +2403,7 @@ img {
 
 .footer-tree {
   height: 80px;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   opacity: 0.5;
 }
 
@@ -2688,19 +2433,19 @@ img {
   font-family: var(--font-accent);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--color-cream);
+  color: var(--color-primary);
 }
 
 .footer-tagline {
   font-family: var(--font-script);
   font-size: 3rem;
-  color: var(--color-cream);
+  color: var(--color-primary);
   margin-bottom: var(--spacing-xs);
 }
 
 .footer-date {
   font-family: var(--font-display);
-  color: var(--color-secondary);
+  color: var(--color-text-light);
   font-size: 1.3rem;
   margin-bottom: var(--spacing-md);
 }
@@ -2714,7 +2459,7 @@ img {
 }
 
 .footer-nav a {
-  color: var(--color-cream);
+  color: var(--color-primary);
   font-size: 1.1rem;
   opacity: 0.8;
   transition: opacity var(--transition-fast);
@@ -2730,19 +2475,19 @@ img {
 }
 
 .footer-contact p {
-  color: var(--color-cream);
-  opacity: 0.7;
+  color: var(--color-text-light);
+  opacity: 0.9;
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
 
 .footer-contact a {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .footer-copyright {
-  color: var(--color-cream);
-  opacity: 0.5;
+  color: var(--color-text-light);
+  opacity: 0.6;
   font-size: 0.8rem;
   margin-bottom: var(--spacing-xs);
 }
@@ -2750,7 +2495,115 @@ img {
 .footer-hashtag {
   font-family: var(--font-script);
   font-size: 1.8rem;
-  color: var(--color-secondary);
+  color: var(--color-primary);
+}
+
+/* Footer Logo Clickable */
+.footer-logo-clickable {
+  cursor: pointer;
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  border-radius: 8px;
+}
+
+.footer-logo-clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(44, 24, 16, 0.2);
+}
+
+.footer-logo-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  opacity: 0.7;
+  margin-top: var(--spacing-xs);
+  font-style: italic;
+}
+
+/* Logo Modal */
+.logo-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--spacing-md);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.logo-modal {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.logo-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.logo-modal-close:hover {
+  color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.logo-modal-image {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.logo-download-btn {
+  margin-top: var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .logo-modal {
+    padding: var(--spacing-md);
+    max-width: 95vw;
+  }
+
+  .logo-modal-image {
+    max-height: 50vh;
+  }
+
+  .logo-modal-close {
+    top: 5px;
+    right: 10px;
+    font-size: 2rem;
+  }
 }
 
 /* ========================================
@@ -2797,7 +2650,6 @@ img {
   .our-story,
   .photos,
   .event-details,
-  .rsvp,
   .registry,
   .accommodations,
   .faq {
@@ -2888,7 +2740,6 @@ img {
   .our-story,
   .photos,
   .event-details,
-  .rsvp,
   .registry,
   .accommodations,
   .faq {
@@ -2909,7 +2760,6 @@ img {
   .our-story,
   .photos,
   .event-details,
-  .rsvp,
   .registry,
   .accommodations,
   .faq {
@@ -3049,8 +2899,7 @@ img {
   }
 
   .story-lantern,
-  .acc-lantern,
-  .rsvp-lantern {
+  .acc-lantern {
     display: none;
   }
 
@@ -3111,10 +2960,6 @@ img {
 
   .date-main {
     font-size: 1.4rem;
-  }
-
-  .rsvp-form {
-    padding: var(--spacing-md);
   }
 
   .cabins-grid {

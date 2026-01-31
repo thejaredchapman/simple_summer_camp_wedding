@@ -2,7 +2,6 @@ import {
   Navbar,
   Hero,
   MeetTheCouple,
-  RSVP,
   ContactUs,
   Footer
 } from './components';
@@ -15,7 +14,6 @@ function App() {
       <main>
         <Hero />
         <MeetTheCouple />
-        <RSVP />
         <ContactUs />
       </main>
       <Footer />
