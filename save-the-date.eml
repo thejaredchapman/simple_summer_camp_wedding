@@ -1,0 +1,123 @@
+MIME-Version: 1.0
+From: Avery & Jared <campjavery@email.com>
+To: Guest <guest@example.com>
+Subject: Save the Date - Camp Javery - September 3-6, 2026
+Content-Type: text/html; charset="UTF-8"
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save the Date - Camp Javery</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background-color: #FAF8F3;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #FAF8F3;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+
+        <!-- Main Container -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(44, 24, 16, 0.1);">
+
+          <!-- Header Banner -->
+          <tr>
+            <td style="background-color: #2D5A3D; padding: 40px 30px; text-align: center;">
+              <h1 style="margin: 0; font-family: 'Palatino Linotype', Palatino, Georgia, serif; font-size: 18px; font-weight: 400; color: #FAF8F3; letter-spacing: 4px; text-transform: uppercase;">
+                Save the Weekend
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 50px 40px; text-align: center; background: linear-gradient(180deg, #FAF8F3 0%, #f5e6c8 100%);">
+
+              <!-- Couple Names -->
+              <h2 style="margin: 0 0 10px 0; font-family: Georgia, serif; font-size: 42px; font-weight: 400; color: #2D5A3D; font-style: italic;">
+                Avery & Jared
+              </h2>
+
+              <p style="margin: 0 0 30px 0; font-size: 16px; color: #4A7C59; letter-spacing: 2px; text-transform: uppercase;">
+                Are Getting Married!
+              </p>
+
+              <!-- Decorative Line -->
+              <table role="presentation" width="80" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto 30px auto;">
+                <tr>
+                  <td style="height: 2px; background-color: #4A7C59;"></td>
+                </tr>
+              </table>
+
+              <!-- Camp Name -->
+              <h3 style="margin: 0 0 20px 0; font-family: 'Brush Script MT', 'Lucida Handwriting', cursive; font-size: 52px; font-weight: 400; color: #2D5A3D;">
+                Camp Javery
+              </h3>
+
+              <!-- Date Box -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 30px auto; background-color: #2D5A3D; border-radius: 8px; border: 3px solid #4A7C59;">
+                <tr>
+                  <td style="padding: 25px 40px; text-align: center;">
+                    <p style="margin: 0 0 5px 0; font-family: 'Brush Script MT', cursive; font-size: 22px; color: #4A7C59;">
+                      Join us for a weekend celebration
+                    </p>
+                    <p style="margin: 0 0 10px 0; font-family: Georgia, serif; font-size: 28px; font-weight: 600; color: #FAF8F3;">
+                      September 3-6, 2026
+                    </p>
+                    <p style="margin: 0; font-family: Georgia, serif; font-size: 16px; font-style: italic; color: #4A7C59;">
+                      Camp Newaygo, Michigan
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Message -->
+              <p style="margin: 30px 0 0 0; font-size: 16px; color: #4A7C59; line-height: 1.8; max-width: 400px; margin-left: auto; margin-right: auto;">
+                We're so excited to celebrate our love surrounded by the beauty of nature and our favorite people.
+              </p>
+
+              <p style="margin: 20px 0 0 0; font-size: 16px; color: #4A7C59; line-height: 1.8;">
+                <strong style="color: #2D5A3D;">Formal invitation to follow.</strong>
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #2D5A3D; padding: 30px; text-align: center;">
+
+              <!-- Hashtag -->
+              <p style="margin: 0 0 15px 0; font-family: 'Brush Script MT', cursive; font-size: 28px; color: #4A7C59;">
+                #CampJavery2026
+              </p>
+
+              <!-- Contact -->
+              <p style="margin: 0; font-size: 14px; color: #FAF8F3; opacity: 0.8;">
+                Questions? Contact us at
+              </p>
+              <a href="mailto:campjavery@email.com" style="font-size: 16px; color: #4A7C59; text-decoration: none;">
+                campjavery@email.com
+              </a>
+
+            </td>
+          </tr>
+
+        </table>
+        <!-- End Main Container -->
+
+        <!-- Bottom Spacing -->
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px;">
+          <tr>
+            <td style="padding: 30px; text-align: center;">
+              <p style="margin: 0; font-size: 12px; color: #4A7C59; opacity: 0.7;">
+                This email was sent with love from Avery & Jared
+              </p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -2,6 +2,10 @@ import {
   Navbar,
   Hero,
   MeetTheCouple,
+  PhotoGallery,
+  Schedule,
+  Lodging,
+  FAQs,
   ContactUs,
   Footer
 } from './components';
@@ -14,6 +18,10 @@ function App() {
       <main>
         <Hero />
         <MeetTheCouple />
+        <PhotoGallery />
+        <Schedule />
+        <Lodging />
+        <FAQs />
         <ContactUs />
       </main>
       <Footer />

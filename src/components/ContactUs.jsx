@@ -21,8 +21,8 @@ export default function ContactUs() {
           </div>
           <h3>Email Us</h3>
           <p>For any questions about the wedding weekend, accommodations, or anything else:</p>
-          <a href="mailto:campjavery@email.com" className="contact-link">
-            campjavery@email.com
+          <a href="mailto:javery.chapmanwine@gmail.com" className="contact-link">
+            javery.chapmanwine@gmail.com
           </a>
         </div>
 
@@ -61,7 +61,6 @@ export default function ContactUs() {
           <h3>Wedding Weekend</h3>
           <p className="contact-date">Labor Day Weekend 2026</p>
           <p>September 3-6, 2026</p>
-          <p className="contact-note">Please RSVP by March 1st, 2026</p>
         </div>
       </div>
 
