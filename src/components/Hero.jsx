@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ScrollReveal } from './utils';
+import { HERO_CAROUSEL_INTERVAL_MS } from '../constants';
 
 const heroPhotos = [
   { src: '/photos/engagement_photo.JPG', alt: 'Avery and Jared engagement photo' },
@@ -20,17 +21,15 @@ const heroPhotos = [
 
 export default function Hero() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     // Preload the first image
     const img = new Image();
     img.src = heroPhotos[0].src;
-    img.onload = () => setIsLoaded(true);
 
     const interval = setInterval(() => {
       setCurrentPhotoIndex((prevIndex) => (prevIndex + 1) % heroPhotos.length);
-    }, 5000); // Increased to 5 seconds for better viewing
+    }, HERO_CAROUSEL_INTERVAL_MS);
 
     return () => clearInterval(interval);
   }, []);

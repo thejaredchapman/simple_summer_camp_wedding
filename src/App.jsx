@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import {
   Navbar,
   Hero,
@@ -10,6 +11,9 @@ import {
   Footer
 } from './components';
 import './index.css';
+
+// Lazy load the Chatbot component for better initial page load
+const Chatbot = lazy(() => import('./components/Chatbot'));
 
 function App() {
   return (
@@ -25,6 +29,11 @@ function App() {
         <ContactUs />
       </main>
       <Footer />
+
+      {/* Chatbot loads asynchronously after main content */}
+      <Suspense fallback={null}>
+        <Chatbot />
+      </Suspense>
     </div>
   );
 }

@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { API_URL, MAX_MESSAGE_LENGTH } from '../constants';
 
 function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,20 +13,45 @@ function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+  const chatWindowRef = useRef(null);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
+
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  // Handle escape key to close chat
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!inputValue.trim() || isLoading) return;
+    const trimmedInput = inputValue.trim();
+    if (!trimmedInput || isLoading) return;
 
-    const userMessage = { role: 'user', content: inputValue };
+    // Truncate if too long
+    const sanitizedInput = trimmedInput.substring(0, MAX_MESSAGE_LENGTH);
+
+    const userMessage = { role: 'user', content: sanitizedInput };
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
@@ -43,13 +67,14 @@ function Chatbot() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: inputValue,
+          message: sanitizedInput,
           conversationHistory
         })
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to get response');
       }
 
       const data = await response.json();
@@ -61,22 +86,27 @@ function Chatbot() {
       }]);
 
     } catch (err) {
-      console.error('Chat error:', err);
-      setError('Sorry, I had trouble connecting. Please try again.');
+      const errorMessage = err.message || 'Sorry, I had trouble connecting. Please try again.';
+      setError(errorMessage);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, I\'m having trouble connecting right now. Please make sure the server is running and try again.'
+        content: 'Sorry, I\'m having trouble connecting right now. Please try again in a moment.'
       }]);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const toggleChat = () => {
+    setIsOpen(prev => !prev);
+  };
+
   return (
     <>
       {/* Chat Toggle Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleChat}
+        className="chat-toggle-button"
         style={{
           position: 'fixed',
           bottom: '20px',
@@ -94,24 +124,33 @@ function Chatbot() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'transform 0.2s ease'
+          transition: 'transform 0.2s ease, background-color 0.2s ease'
         }}
-        onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-        aria-label="Toggle chat"
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        aria-label={isOpen ? 'Close wedding assistant chat' : 'Open wedding assistant chat'}
+        aria-expanded={isOpen}
+        aria-controls="chat-window"
       >
-        {isOpen ? '✕' : '💬'}
+        <span aria-hidden="true">{isOpen ? '\u2715' : '\uD83D\uDCAC'}</span>
       </button>
 
       {/* Chat Window */}
       {isOpen && (
         <div
+          id="chat-window"
+          ref={chatWindowRef}
+          role="dialog"
+          aria-label="Wedding Assistant Chat"
+          aria-modal="false"
           style={{
             position: 'fixed',
             bottom: '90px',
             right: '20px',
             width: '380px',
+            maxWidth: 'calc(100vw - 40px)',
             height: '500px',
+            maxHeight: 'calc(100vh - 120px)',
             backgroundColor: 'white',
             borderRadius: '16px',
             boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
@@ -133,8 +172,8 @@ function Chatbot() {
               gap: '10px'
             }}
           >
-            <span style={{ fontSize: '20px' }}>🏕️</span>
-            <span>Wedding Assistant</span>
+            <span style={{ fontSize: '20px' }} aria-hidden="true">{'\uD83C\uDFD5\uFE0F'}</span>
+            <span id="chat-title">Wedding Assistant</span>
             <span
               style={{
                 marginLeft: 'auto',
@@ -150,6 +189,9 @@ function Chatbot() {
 
           {/* Messages */}
           <div
+            role="log"
+            aria-live="polite"
+            aria-label="Chat messages"
             style={{
               flex: 1,
               overflowY: 'auto',
@@ -197,8 +239,12 @@ function Chatbot() {
                 )}
               </div>
             ))}
+
+            {/* Typing indicator with ARIA live region */}
             {isLoading && (
               <div
+                role="status"
+                aria-label="Assistant is typing"
                 style={{
                   alignSelf: 'flex-start',
                   backgroundColor: 'white',
@@ -210,9 +256,10 @@ function Chatbot() {
                   gap: '4px'
                 }}
               >
-                <span className="typing-dot" style={{ animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0s' }}>●</span>
-                <span className="typing-dot" style={{ animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.2s' }}>●</span>
-                <span className="typing-dot" style={{ animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.4s' }}>●</span>
+                <span className="typing-dot" style={{ animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0s' }} aria-hidden="true">{'\u25CF'}</span>
+                <span className="typing-dot" style={{ animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.2s' }} aria-hidden="true">{'\u25CF'}</span>
+                <span className="typing-dot" style={{ animation: 'bounce 1.4s infinite ease-in-out both', animationDelay: '0.4s' }} aria-hidden="true">{'\u25CF'}</span>
+                <span className="sr-only">Assistant is typing a response</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -221,6 +268,7 @@ function Chatbot() {
           {/* Error message */}
           {error && (
             <div
+              role="alert"
               style={{
                 padding: '8px 16px',
                 backgroundColor: '#fee2e2',
@@ -244,12 +292,18 @@ function Chatbot() {
               backgroundColor: 'white'
             }}
           >
+            <label htmlFor="chat-input" className="sr-only">
+              Type your message
+            </label>
             <input
+              id="chat-input"
+              ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask about venue, schedule, dress code..."
               disabled={isLoading}
+              maxLength={MAX_MESSAGE_LENGTH}
               style={{
                 flex: 1,
                 padding: '12px 16px',
@@ -261,6 +315,7 @@ function Chatbot() {
               }}
               onFocus={(e) => e.target.style.borderColor = '#4a7c59'}
               onBlur={(e) => e.target.style.borderColor = '#ddd'}
+              aria-describedby={error ? 'chat-error' : undefined}
             />
             <button
               type="submit"
@@ -276,6 +331,7 @@ function Chatbot() {
                 fontWeight: '500',
                 transition: 'background-color 0.2s'
               }}
+              aria-label={isLoading ? 'Sending message...' : 'Send message'}
             >
               {isLoading ? '...' : 'Send'}
             </button>
@@ -283,11 +339,39 @@ function Chatbot() {
         </div>
       )}
 
-      {/* Typing animation styles */}
+      {/* Styles */}
       <style>{`
         @keyframes bounce {
           0%, 80%, 100% { transform: translateY(0); }
           40% { transform: translateY(-6px); }
+        }
+
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border: 0;
+        }
+
+        @media (max-width: 480px) {
+          #chat-window {
+            width: calc(100vw - 20px) !important;
+            right: 10px !important;
+            bottom: 80px !important;
+            height: calc(100vh - 100px) !important;
+          }
+
+          .chat-toggle-button {
+            width: 50px !important;
+            height: 50px !important;
+            bottom: 15px !important;
+            right: 15px !important;
+          }
         }
       `}</style>
     </>
