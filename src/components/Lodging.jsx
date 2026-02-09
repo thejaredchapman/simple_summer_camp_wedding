@@ -74,6 +74,21 @@ export default function Lodging() {
             </div>
 
             <div className="offsite-option">
+              <h4>Newaygo Bed & Breakfast</h4>
+              <p className="offsite-distance">Only 5 minutes from camp</p>
+              <p>Historic charm in an 1860s mansion with uniquely decorated rooms. Individual nightly rates range from <strong>$125 to $175</strong> with home-cooked breakfasts and modern amenities near the Muskegon River. The entire mansion can be reserved for <strong>$900 per night</strong> for larger group stays.</p>
+              <p>Call <a href="tel:231-652-1093" className="lodging-link">(231) 652-1093</a> to reserve.</p>
+              <a
+                href="https://www.newaygobb.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="lodging-link"
+              >
+                Visit Newaygo Bed & Breakfast Website →
+              </a>
+            </div>
+
+            <div className="offsite-option">
               <h4>Airbnbs</h4>
               <p>Northern Michigan is full of amazing Airbnbs, many of which are very close to Camp Newaygo.</p>
               <a

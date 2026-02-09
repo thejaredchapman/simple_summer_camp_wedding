@@ -1,18 +1,22 @@
 import { Lantern } from './decorations';
+import { ScrollReveal } from './utils';
 
 export default function ContactUs() {
   return (
-    <section id="contact" className="contact-us">
+    <section id="contact" className="contact-us" aria-labelledby="contact-heading">
       <Lantern className="contact-lantern contact-lantern-left" />
       <Lantern className="contact-lantern contact-lantern-right" />
 
-      <div className="section-header">
-        <h2>Contact Us</h2>
-        <p className="section-subtitle">Have questions? We'd love to hear from you!</p>
-      </div>
+      <ScrollReveal animation="fade-up">
+        <div className="section-header">
+          <h2 id="contact-heading">Contact Us</h2>
+          <p className="section-subtitle">Have questions? We'd love to hear from you!</p>
+        </div>
+      </ScrollReveal>
 
       <div className="contact-content">
-        <div className="contact-card">
+        <ScrollReveal animation="fade-up" delay={100}>
+          <div className="contact-card hover-lift">
           <div className="contact-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -21,12 +25,18 @@ export default function ContactUs() {
           </div>
           <h3>Email Us</h3>
           <p>For any questions about the wedding weekend, accommodations, or anything else:</p>
-          <a href="mailto:javery.chapmanwine@gmail.com" className="contact-link">
-            javery.chapmanwine@gmail.com
+          <a
+            href="mailto:javery.chapmanwine@gmail.com"
+            className="contact-link"
+            title="Please send an email to javery.chapmanwine@gmail.com"
+          >
+            EMAIL us
           </a>
-        </div>
+          </div>
+        </ScrollReveal>
 
-        <div className="contact-card">
+        <ScrollReveal animation="fade-up" delay={200}>
+          <div className="contact-card hover-lift">
           <div className="contact-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -47,9 +57,11 @@ export default function ContactUs() {
           >
             View on Map
           </a>
-        </div>
+          </div>
+        </ScrollReveal>
 
-        <div className="contact-card">
+        <ScrollReveal animation="fade-up" delay={300}>
+          <div className="contact-card hover-lift">
           <div className="contact-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -61,13 +73,23 @@ export default function ContactUs() {
           <h3>Wedding Weekend</h3>
           <p className="contact-date">Labor Day Weekend 2026</p>
           <p>September 3-6, 2026</p>
-        </div>
+          <a
+            href="/camp-javery-wedding.ics"
+            download
+            className="contact-link"
+          >
+            Add to Calendar
+          </a>
+          </div>
+        </ScrollReveal>
       </div>
 
-      <div className="contact-message">
-        <p>We can't wait to celebrate with you at Camp Javery!</p>
-        <span className="contact-hashtag">#CampJavery2026</span>
-      </div>
+      <ScrollReveal animation="fade-up" delay={400}>
+        <div className="contact-message">
+          <p>We can't wait to celebrate with you at Camp Javery!</p>
+          <span className="contact-hashtag">#CampJavery2026</span>
+        </div>
+      </ScrollReveal>
     </section>
   );
 }

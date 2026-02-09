@@ -1,4 +1,5 @@
 import { Lantern } from './decorations';
+import { ScrollReveal } from './utils';
 
 const scheduleItems = [
   {
@@ -17,28 +18,32 @@ const scheduleItems = [
 
 export default function Schedule() {
   return (
-    <section id="schedule" className="schedule">
+    <section id="schedule" className="schedule" aria-labelledby="schedule-heading">
       <Lantern className="schedule-lantern schedule-lantern-left" />
       <Lantern className="schedule-lantern schedule-lantern-right" />
 
-      <div className="section-header">
-        <h2>Camp Schedule</h2>
-        <p className="section-subtitle">Full schedule to be provided closer to the date!</p>
-        <p className="section-tagline">We hope you can join us for some or all of our wedding weekend fun!</p>
-      </div>
+      <ScrollReveal animation="fade-up">
+        <div className="section-header">
+          <h2 id="schedule-heading">Camp Schedule</h2>
+          <p className="section-subtitle">Full schedule to be provided closer to the date!</p>
+          <p className="section-tagline">We hope you can join us for some or all of our wedding weekend fun!</p>
+        </div>
+      </ScrollReveal>
 
       <div className="schedule-timeline">
         {scheduleItems.map((item, index) => (
-          <div key={index} className="schedule-item">
+          <ScrollReveal key={index} animation="fade-left" delay={index * 100}>
+            <div className="schedule-item">
             <div className="schedule-marker">
               <div className="schedule-dot"></div>
               {index < scheduleItems.length - 1 && <div className="schedule-line"></div>}
             </div>
-            <div className="schedule-content">
-              <h3 className="schedule-day">{item.day}</h3>
-              <p className="schedule-description">{item.description}</p>
+              <div className="schedule-content">
+                <h3 className="schedule-day">{item.day}</h3>
+                <p className="schedule-description">{item.description}</p>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         ))}
       </div>
     </section>

@@ -1,4 +1,5 @@
 import { Lantern } from './decorations';
+import { ScrollReveal } from './utils';
 import { useState } from 'react';
 
 const faqData = [
@@ -61,40 +62,46 @@ export default function FAQs() {
   };
 
   return (
-    <section id="faqs" className="faqs">
+    <section id="faqs" className="faqs" aria-labelledby="faqs-heading">
       <Lantern className="faqs-lantern faqs-lantern-left" />
       <Lantern className="faqs-lantern faqs-lantern-right" />
 
-      <div className="section-header">
-        <h2>FAQs</h2>
-        <p className="section-subtitle">Everything you need to know about Camp Javery</p>
-      </div>
+      <ScrollReveal animation="fade-up">
+        <div className="section-header">
+          <h2 id="faqs-heading">FAQs</h2>
+          <p className="section-subtitle">Everything you need to know about Camp Javery</p>
+        </div>
+      </ScrollReveal>
 
       <div className="faqs-container">
         {faqData.map((faq, index) => (
-          <div key={index} className={`faq-item ${openIndex === index ? 'open' : ''}`}>
-            <button
-              className="faq-question"
-              onClick={() => toggleFAQ(index)}
-              aria-expanded={openIndex === index}
-            >
-              <span>{faq.question}</span>
-              <svg
-                className="faq-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+          <ScrollReveal key={index} animation="fade-up" delay={index * 50}>
+            <div className={`faq-item ${openIndex === index ? 'open' : ''}`}>
+              <button
+                className="faq-question"
+                onClick={() => toggleFAQ(index)}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${index}`}
               >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            {openIndex === index && (
-              <div className="faq-answer">
-                {faq.answer}
-              </div>
-            )}
-          </div>
+                <span>{faq.question}</span>
+                <svg
+                  className="faq-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {openIndex === index && (
+                <div className="faq-answer" id={`faq-answer-${index}`} role="region">
+                  {faq.answer}
+                </div>
+              )}
+            </div>
+          </ScrollReveal>
         ))}
       </div>
     </section>

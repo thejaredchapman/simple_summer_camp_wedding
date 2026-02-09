@@ -1,0 +1,51 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Camp Javery Wedding//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Camp Javery Wedding Weekend
+X-WR-TIMEZONE:America/Detroit
+X-WR-CALDESC:Avery & Jared's Wedding Weekend at Camp Newaygo
+
+BEGIN:VTIMEZONE
+TZID:America/Detroit
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+DTSTART:20260308T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+TZNAME:EDT
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+DTSTART:20261101T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+TZNAME:EST
+END:STANDARD
+END:VTIMEZONE
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260903T150000
+DTEND;TZID=America/Detroit:20260906T230000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-wedding-weekend@campjavery.com
+SUMMARY:Camp Javery Wedding Weekend 🏕️
+DESCRIPTION:Join Avery & Jared for an unforgettable wedding weekend at Camp Newaygo!\n\nFull Weekend Schedule:\n• Thursday\, Sept 3: Arrival day - karaoke and campfires\n• Friday\, Sept 4: Classic summer camp activities\n• Saturday\, Sept 6: Wedding Ceremony & Reception\n\nLocation: Camp Newaygo\, MI\nWebsite: [Add your website URL here]\n\nWe hope you can join us for some or all of our wedding weekend fun!
+LOCATION:Camp Newaygo\, 2944 Jefferson Rd\, Newaygo\, MI 49337
+GEO:43.4186;-85.8002
+STATUS:CONFIRMED
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-P7D
+ACTION:DISPLAY
+DESCRIPTION:Camp Javery Wedding Weekend is in 1 week!
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Camp Javery Wedding Weekend starts tomorrow!
+END:VALARM
+END:VEVENT
+
+END:VCALENDAR
