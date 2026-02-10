@@ -48,7 +48,7 @@ const faqData = [
     question: 'Still have questions?',
     answer: (
       <>
-        <p>Text the bride and groom or email <a href="mailto:javery.chapmanwine@gmail.com" className="faq-link">javery.chapmanwine@gmail.com</a></p>
+        <p>Email the bride and groom <a href="mailto:javery.chapmanwine@gmail.com" className="faq-link">javery.chapmanwine@gmail.com</a></p>
       </>
     )
   }

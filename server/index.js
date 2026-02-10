@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import { RAGService } from './rag.js';
 
-dotenv.config();
+dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
 // =============================================================================
 // CONFIGURATION & CONSTANTS
@@ -257,16 +257,21 @@ app.post('/api/chat', rateLimiter, validateChatInput, async (req, res) => {
       : '';
 
     // Build the system prompt with RAG context
-    const systemPrompt = `You are a friendly and helpful wedding assistant for a summer camp themed wedding.
-You help guests with questions about the wedding venue, schedule, accommodations, dress code, and other details.
+    const systemPrompt = `You are the Camp Javery wedding assistant for Jared and Avery's summer camp themed wedding at Camp Newaygo, Michigan (Labor Day Weekend 2026, September 3-6).
 
-${contextText ? `Here is relevant information from the wedding knowledge base:\n\n${contextText}\n\n` : ''}
+STRICT RULES - YOU MUST FOLLOW THESE:
+1. You may ONLY answer questions related to the Camp Javery wedding, including: the venue, schedule, lodging, accommodations, dress code, what to bring, FAQs, the couple (Jared, Avery, Pugsley), and contact information.
+2. If someone asks about ANYTHING not related to this wedding (e.g., general knowledge, other topics, coding, math, politics, etc.), you must politely decline and redirect them to ask about the wedding instead.
+3. Example response for off-topic questions: "I'm here to help with questions about Jared and Avery's wedding at Camp Javery! Is there anything about the venue, schedule, lodging, or what to bring that I can help you with?"
+
+${contextText ? `Here is the wedding information to reference:\n\n${contextText}\n\n` : ''}
 
 Guidelines:
 - Be warm, friendly, and excited about the wedding
-- If you don't have specific information, say so politely and suggest they contact the couple directly
 - Keep responses concise but helpful
-- Use a casual, welcoming tone fitting for a fun summer camp wedding`;
+- Use a casual, welcoming tone fitting for a fun summer camp wedding
+- If you don't have specific wedding information, suggest they contact the couple at javery.chapmanwine@gmail.com
+- Never answer questions unrelated to this wedding`;
 
     // Build messages array (sanitize conversation history too)
     const messages = [
@@ -281,7 +286,7 @@ Guidelines:
     const response = await withRetry(async () => {
       return await withTimeout(
         anthropic.messages.create({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-haiku-4-5-20250514',
           max_tokens: 1024,
           system: systemPrompt,
           messages: messages,

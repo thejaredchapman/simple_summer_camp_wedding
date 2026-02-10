@@ -11,15 +11,19 @@ const LazyImage = ({
   className = '',
   placeholderSrc = null,
   threshold = 0.1,
-  rootMargin = '50px',
+  rootMargin = '100px',
+  eager = false,
   ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const [isInView, setIsInView] = useState(eager);
+  const [hasError, setHasError] = useState(false);
   const imgRef = useRef(null);
 
   useEffect(() => {
-    if (!imgRef.current) return;
+    if (eager || !imgRef.current) return;
+
+    const currentRef = imgRef.current;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -36,32 +40,37 @@ const LazyImage = ({
       }
     );
 
-    observer.observe(imgRef.current);
+    observer.observe(currentRef);
 
     return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
-      }
+      observer.unobserve(currentRef);
     };
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, eager]);
 
   const handleLoad = () => {
+    setIsLoaded(true);
+  };
+
+  const handleError = () => {
+    setHasError(true);
     setIsLoaded(true);
   };
 
   return (
     <div
       ref={imgRef}
-      className={`lazy-image-wrapper ${!isLoaded ? 'loading' : ''}`}
+      className={`lazy-image-wrapper ${!isLoaded ? 'loading' : ''} ${hasError ? 'error' : ''}`}
     >
-      <img
-        src={isInView ? src : (placeholderSrc || '')}
-        alt={alt}
-        className={`${className} ${isLoaded ? 'loaded' : ''}`}
-        onLoad={handleLoad}
-        loading="lazy"
-        {...props}
-      />
+      {isInView && (
+        <img
+          src={src}
+          alt={alt}
+          className={`${className} ${isLoaded ? 'loaded' : ''}`}
+          onLoad={handleLoad}
+          onError={handleError}
+          {...props}
+        />
+      )}
     </div>
   );
 };

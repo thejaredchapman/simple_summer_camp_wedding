@@ -6,7 +6,7 @@ function Chatbot() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Hi! I\'m the wedding assistant powered by Claude. Ask me anything about the summer camp wedding!'
+      content: 'Hi! I\'m the Camp Javery wedding assistant. Ask me anything about the wedding weekend!'
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -42,6 +42,26 @@ function Chatbot() {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
+
+  // Auto-open chat after 10 seconds to offer help
+  useEffect(() => {
+    const hasSeenPrompt = sessionStorage.getItem('chatPromptShown');
+    if (hasSeenPrompt) return;
+
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Hey there! Need any help planning for Camp Javery? I can answer questions about lodging, the schedule, what to bring, or anything else about the wedding weekend!'
+        }
+      ]);
+      sessionStorage.setItem('chatPromptShown', 'true');
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -111,28 +131,47 @@ function Chatbot() {
           position: 'fixed',
           bottom: '20px',
           right: '20px',
-          width: '60px',
-          height: '60px',
+          width: '70px',
+          height: '70px',
           borderRadius: '50%',
-          backgroundColor: '#4a7c59',
-          color: 'white',
-          border: 'none',
+          backgroundColor: 'white',
+          border: '3px solid #4a7c59',
           cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          fontSize: '24px',
           zIndex: 1000,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'transform 0.2s ease, background-color 0.2s ease'
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          padding: '8px',
+          overflow: 'hidden'
         }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.05)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        }}
         aria-label={isOpen ? 'Close wedding assistant chat' : 'Open wedding assistant chat'}
         aria-expanded={isOpen}
         aria-controls="chat-window"
       >
-        <span aria-hidden="true">{isOpen ? '\u2715' : '\uD83D\uDCAC'}</span>
+        {isOpen ? (
+          <span style={{ fontSize: '24px', color: '#4a7c59' }} aria-hidden="true">{'\u2715'}</span>
+        ) : (
+          <img
+            src="/camp-sign.png"
+            alt=""
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain'
+            }}
+            aria-hidden="true"
+          />
+        )}
       </button>
 
       {/* Chat Window */}
@@ -163,7 +202,7 @@ function Chatbot() {
           {/* Header */}
           <div
             style={{
-              padding: '16px 20px',
+              padding: '12px 20px',
               backgroundColor: '#4a7c59',
               color: 'white',
               fontWeight: 'bold',
@@ -172,19 +211,13 @@ function Chatbot() {
               gap: '10px'
             }}
           >
-            <span style={{ fontSize: '20px' }} aria-hidden="true">{'\uD83C\uDFD5\uFE0F'}</span>
-            <span id="chat-title">Wedding Assistant</span>
-            <span
-              style={{
-                marginLeft: 'auto',
-                fontSize: '10px',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                padding: '2px 8px',
-                borderRadius: '10px'
-              }}
-            >
-              Powered by Claude
-            </span>
+            <img
+              src="/camp-sign.png"
+              alt=""
+              style={{ width: '36px', height: '36px', objectFit: 'contain' }}
+              aria-hidden="true"
+            />
+            <span id="chat-title">Camp Javery Assistant</span>
           </div>
 
           {/* Messages */}

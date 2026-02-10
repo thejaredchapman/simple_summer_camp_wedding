@@ -44,12 +44,20 @@ export default function Lodging() {
 
             <div className="lodging-option">
               <h4>Ready to Stay Onsite?</h4>
-              <p>To stay onsite please fill out this survey! Avery and Jared will coordinate with you the rest!</p>
+              <p>To stay onsite please fill out our lodging survey! Avery and Jared will coordinate with you the rest!</p>
+              <a
+                href="https://forms.gle/dcQfpGu1Mbt4ZNiDA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary lodging-survey-btn"
+              >
+                Fill Out Lodging Survey
+              </a>
             </div>
 
             <div className="lodging-option lodging-option-family">
               <h4>For Immediate Family</h4>
-              <p>A small select number of hotel style rooms are available at Camp Newaygo for <strong>$150 per night</strong>. Avery and Jared will reach out to confirm these rooms with you.</p>
+              <p>A small select number of hotel style rooms are available at Camp Newaygo. Avery and Jared will reach out to confirm these rooms with you.</p>
             </div>
           </div>
         </div>

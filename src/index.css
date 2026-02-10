@@ -1008,6 +1008,10 @@ img {
   display: block;
 }
 
+.profile-photo.bride-photo {
+  object-position: center;
+}
+
 .profile-card.pup-card .profile-image-placeholder {
   border-bottom-color: var(--color-warm-sunset-3);
 }
@@ -2391,10 +2395,11 @@ img {
 
 .contact-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
   max-width: 1000px;
   margin: 0 auto var(--spacing-lg);
+  align-items: stretch;
 }
 
 .contact-card {
@@ -2405,6 +2410,9 @@ img {
   box-shadow: 0 6px 25px rgba(44, 24, 16, 0.12);
   text-align: center;
   transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .contact-card:hover {
@@ -2463,7 +2471,8 @@ img {
   font-size: 1.4rem;
   color: var(--color-secondary);
   transition: color var(--transition-fast);
-  margin-top: var(--spacing-xs);
+  margin-top: auto;
+  padding-top: var(--spacing-sm);
 }
 
 .contact-link:hover {
@@ -2500,7 +2509,7 @@ img {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .contact-content {
     grid-template-columns: 1fr;
     max-width: 400px;
@@ -2508,6 +2517,7 @@ img {
 
   .contact-card {
     padding: var(--spacing-md);
+    height: auto;
   }
 
   .contact-card h3 {
@@ -3337,6 +3347,12 @@ img {
   background: linear-gradient(135deg, #FFF5F0 0%, var(--color-cream) 100%);
 }
 
+.lodging-survey-btn {
+  display: inline-block;
+  margin-top: var(--spacing-sm);
+  text-align: center;
+}
+
 .lodging-offsite {
   display: flex;
   flex-direction: column;
@@ -3644,6 +3660,11 @@ img {
 .gallery-photo-item:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 30px rgba(44, 24, 16, 0.2);
+}
+
+.gallery-photo-item .lazy-image-wrapper {
+  width: 100%;
+  height: 100%;
 }
 
 .gallery-photo-item img {
@@ -4042,15 +4063,32 @@ textarea:valid:not(:placeholder-shown) {
   position: relative;
   overflow: hidden;
   background: var(--color-cream-dark);
+  width: 100%;
+  height: 100%;
 }
 
 .lazy-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 0;
   transition: opacity 0.3s ease-in;
 }
 
 .lazy-image-wrapper img.loaded {
   opacity: 1;
+}
+
+.lazy-image-wrapper.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lazy-image-wrapper.error::after {
+  content: 'Image unavailable';
+  color: var(--color-text-light);
+  font-size: 0.9rem;
 }
 
 .lazy-image-wrapper.loading::before {
@@ -4068,4 +4106,231 @@ textarea:valid:not(:placeholder-shown) {
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   LODGING SURVEY
+   ======================================== */
+
+.lodging-survey {
+  padding: var(--spacing-xl) var(--spacing-md);
+  background: linear-gradient(
+    180deg,
+    #f5e6c8 0%,
+    var(--color-cream) 30%,
+    var(--color-cream) 70%,
+    #f5e6c8 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.survey-lantern {
+  position: absolute;
+  top: 20%;
+}
+
+.survey-lantern-left {
+  left: 5%;
+}
+
+.survey-lantern-right {
+  right: 5%;
+}
+
+.survey-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: 12px;
+  border: 3px solid var(--color-secondary);
+  box-shadow: 0 6px 25px rgba(44, 24, 16, 0.12);
+}
+
+.survey-error {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: var(--spacing-sm);
+  border-radius: 8px;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-xs);
+  font-size: 1.1rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"] {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid var(--color-cream-dark);
+  border-radius: 8px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  font-family: var(--font-body);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="tel"]:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(212, 132, 95, 0.2);
+}
+
+.checkbox-group,
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.checkbox-label,
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 8px;
+  transition: background-color var(--transition-fast);
+}
+
+.checkbox-label:hover,
+.radio-label:hover {
+  background: var(--color-cream);
+}
+
+.checkbox-label input,
+.radio-label input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.survey-submit {
+  width: 100%;
+  margin-top: var(--spacing-md);
+  font-size: 1.2rem;
+  padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.survey-success {
+  max-width: 600px;
+  margin: var(--spacing-xl) auto;
+  background: white;
+  padding: var(--spacing-xl);
+  border-radius: 12px;
+  border: 3px solid var(--color-secondary);
+  box-shadow: 0 6px 25px rgba(44, 24, 16, 0.12);
+  text-align: center;
+}
+
+.survey-success h3 {
+  font-family: var(--font-script);
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.survey-success p {
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.6;
+}
+
+.survey-success .btn-primary {
+  margin-top: var(--spacing-md);
+}
+
+@media (max-width: 1024px) {
+  .survey-lantern {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .survey-form {
+    padding: var(--spacing-md);
+  }
+
+  .survey-success {
+    padding: var(--spacing-lg);
+  }
+
+  .survey-success h3 {
+    font-size: 2rem;
+  }
+}
+
+/* Google Form Embed Styles */
+.survey-form-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  border: 3px solid var(--color-secondary);
+  box-shadow: 0 6px 25px rgba(44, 24, 16, 0.12);
+  overflow: hidden;
+}
+
+.google-form-iframe {
+  display: block;
+  border: none;
+  min-height: 900px;
+}
+
+.survey-placeholder {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.survey-placeholder p {
+  font-family: var(--font-script);
+  font-size: 2rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.survey-placeholder-note {
+  font-family: var(--font-body) !important;
+  font-size: 1.1rem !important;
+  color: var(--color-text-light);
+}
+
+.survey-placeholder-note a {
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
+}
+
+.survey-placeholder-note a:hover {
+  color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .survey-form-container {
+    margin: 0 var(--spacing-sm);
+  }
+
+  .google-form-iframe {
+    min-height: 1000px;
+  }
 }

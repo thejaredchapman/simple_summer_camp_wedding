@@ -42,7 +42,7 @@ export default function Footer() {
 
         <nav className="footer-nav">
           <a href="#home">Home</a>
-          <a href="#rsvp">RSVP</a>
+          <a href="#schedule">Schedule</a>
         </nav>
 
         <div className="footer-contact">

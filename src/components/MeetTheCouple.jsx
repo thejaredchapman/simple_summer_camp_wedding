@@ -7,7 +7,7 @@ const profiles = [
     role: 'The Groom',
     description: 'A Chicago native with a passion for comedy and adventure. When he\'s not making people laugh, you\'ll find him planning the next great escape or perfecting his campfire cooking skills.',
     funFacts: [
-      'Improv performer at iO Chicago',
+      'Comedy and improv enthusiast',
       'Self-proclaimed s\'mores connoisseur',
       'Always has a terrible pun ready'
     ],
@@ -21,7 +21,8 @@ const profiles = [
       'Master trip planner extraordinaire',
       'Brings the party wherever she goes',
       'Historically hates movies (yes, really!)'
-    ]
+    ],
+    photo: '/photos/avery_zoomed.jpg'
   },
   {
     name: 'Dr. Pugsley Bikini',
@@ -89,7 +90,7 @@ export default function MeetTheCouple() {
           <div key={index} className={`profile-card ${profile.name === 'Dr. Pugsley Bikini' ? 'pup-card' : ''}`}>
             <div className="profile-image-placeholder">
               {profile.photo ? (
-                <img src={profile.photo} alt={profile.name} className="profile-photo" />
+                <img src={profile.photo} alt={profile.name} className={`profile-photo ${profile.role === 'The Bride' ? 'bride-photo' : ''}`} />
               ) : (
                 <div className="profile-icon">
                   {profile.name === 'Dr. "Pugsley" Bikini' ? (

@@ -23,14 +23,14 @@ export default function ContactUs() {
               <polyline points="22,6 12,13 2,6"/>
             </svg>
           </div>
-          <h3>Email Us</h3>
+          <h3>E-mail Us</h3>
           <p>For any questions about the wedding weekend, accommodations, or anything else:</p>
           <a
             href="mailto:javery.chapmanwine@gmail.com"
             className="contact-link"
             title="Please send an email to javery.chapmanwine@gmail.com"
           >
-            EMAIL us
+            E-mail us
           </a>
           </div>
         </ScrollReveal>
