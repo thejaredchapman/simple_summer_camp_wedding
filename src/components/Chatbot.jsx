@@ -12,9 +12,21 @@ function Chatbot() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const chatWindowRef = useRef(null);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -42,26 +54,6 @@ function Chatbot() {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
-
-  // Auto-open chat after 10 seconds to offer help
-  useEffect(() => {
-    const hasSeenPrompt = sessionStorage.getItem('chatPromptShown');
-    if (hasSeenPrompt) return;
-
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-      setMessages(prev => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: 'Hey there! Need any help planning for Camp Javery? I can answer questions about lodging, the schedule, what to bring, or anything else about the wedding weekend!'
-        }
-      ]);
-      sessionStorage.setItem('chatPromptShown', 'true');
-    }, 10000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -129,10 +121,10 @@ function Chatbot() {
         className="chat-toggle-button"
         style={{
           position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          width: '70px',
-          height: '70px',
+          bottom: isMobile ? '15px' : '20px',
+          right: isMobile ? '15px' : '20px',
+          width: isMobile ? '56px' : '70px',
+          height: isMobile ? '56px' : '70px',
           borderRadius: '50%',
           backgroundColor: 'white',
           border: '3px solid #4a7c59',
@@ -159,7 +151,7 @@ function Chatbot() {
         aria-controls="chat-window"
       >
         {isOpen ? (
-          <span style={{ fontSize: '24px', color: '#4a7c59' }} aria-hidden="true">{'\u2715'}</span>
+          <span style={{ fontSize: isMobile ? '20px' : '24px', color: '#4a7c59' }} aria-hidden="true">{'\u2715'}</span>
         ) : (
           <img
             src="/camp-sign.png"
@@ -184,12 +176,13 @@ function Chatbot() {
           aria-modal="false"
           style={{
             position: 'fixed',
-            bottom: '90px',
-            right: '20px',
-            width: '380px',
-            maxWidth: 'calc(100vw - 40px)',
-            height: '500px',
-            maxHeight: 'calc(100vh - 120px)',
+            bottom: isMobile ? '80px' : '100px',
+            right: isMobile ? '10px' : '20px',
+            left: isMobile ? '10px' : 'auto',
+            width: isMobile ? 'auto' : '380px',
+            maxWidth: isMobile ? 'none' : 'calc(100vw - 40px)',
+            height: isMobile ? 'calc(100vh - 160px)' : '500px',
+            maxHeight: isMobile ? 'none' : 'calc(100vh - 120px)',
             backgroundColor: 'white',
             borderRadius: '16px',
             boxShadow: '0 4px 24px rgba(0,0,0,0.2)',
@@ -318,7 +311,7 @@ function Chatbot() {
           <form
             onSubmit={handleSubmit}
             style={{
-              padding: '12px 16px',
+              padding: isMobile ? '10px 12px' : '12px 16px',
               borderTop: '1px solid #eee',
               display: 'flex',
               gap: '8px',
@@ -334,17 +327,18 @@ function Chatbot() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask about venue, schedule, dress code..."
+              placeholder={isMobile ? "Ask a question..." : "Ask about venue, schedule, dress code..."}
               disabled={isLoading}
               maxLength={MAX_MESSAGE_LENGTH}
               style={{
                 flex: 1,
-                padding: '12px 16px',
+                padding: isMobile ? '10px 14px' : '12px 16px',
                 borderRadius: '24px',
                 border: '1px solid #ddd',
-                fontSize: '14px',
+                fontSize: isMobile ? '16px' : '14px',
                 outline: 'none',
-                transition: 'border-color 0.2s'
+                transition: 'border-color 0.2s',
+                minWidth: 0
               }}
               onFocus={(e) => e.target.style.borderColor = '#4a7c59'}
               onBlur={(e) => e.target.style.borderColor = '#ddd'}
@@ -354,7 +348,7 @@ function Chatbot() {
               type="submit"
               disabled={isLoading || !inputValue.trim()}
               style={{
-                padding: '12px 20px',
+                padding: isMobile ? '10px 16px' : '12px 20px',
                 backgroundColor: isLoading || !inputValue.trim() ? '#ccc' : '#4a7c59',
                 color: 'white',
                 border: 'none',
@@ -362,7 +356,8 @@ function Chatbot() {
                 cursor: isLoading || !inputValue.trim() ? 'not-allowed' : 'pointer',
                 fontSize: '14px',
                 fontWeight: '500',
-                transition: 'background-color 0.2s'
+                transition: 'background-color 0.2s',
+                flexShrink: 0
               }}
               aria-label={isLoading ? 'Sending message...' : 'Send message'}
             >
@@ -389,22 +384,6 @@ function Chatbot() {
           clip: rect(0, 0, 0, 0);
           white-space: nowrap;
           border: 0;
-        }
-
-        @media (max-width: 480px) {
-          #chat-window {
-            width: calc(100vw - 20px) !important;
-            right: 10px !important;
-            bottom: 80px !important;
-            height: calc(100vh - 100px) !important;
-          }
-
-          .chat-toggle-button {
-            width: 50px !important;
-            height: 50px !important;
-            bottom: 15px !important;
-            right: 15px !important;
-          }
         }
       `}</style>
     </>
