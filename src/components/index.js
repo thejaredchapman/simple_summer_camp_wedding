@@ -1,6 +1,7 @@
 export { default as Navbar } from './Navbar';
 export { default as Hero } from './Hero';
 export { default as MeetTheCouple } from './MeetTheCouple';
+export { default as TheirStory } from './TheirStory';
 export { default as PhotoGallery } from './PhotoGallery';
 export { default as Schedule } from './Schedule';
 export { default as Lodging } from './Lodging';
