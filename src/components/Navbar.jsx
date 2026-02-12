@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 
 const navLinks = [
   { href: '#home', label: 'Home' },
-  { href: '#our-story', label: 'Their Story' },
-  { href: '#meet-us', label: 'Meet the Campers' },
+  { href: '#our-story', label: 'Our Story' },
+  { href: '#meet-us', label: 'Campers' },
   { href: '#photos', label: 'Photos' },
   { href: '#schedule', label: 'Schedule' },
   { href: '#lodging', label: 'Lodging' },
   { href: '#faqs', label: 'FAQs' },
-  { href: '#contact', label: 'Contact Us' },
+  { href: 'https://registry.theknot.com/-september-2026-mi/76855220', label: 'Registry', external: true },
+  { href: '#contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -142,15 +143,27 @@ export default function Navbar() {
         >
           {navLinks.map((link) => (
             <li key={link.href} role="none">
-              <a
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                role="menuitem"
-                aria-current={activeSection === link.href ? 'page' : undefined}
-                className={activeSection === link.href ? 'active' : ''}
-              >
-                {link.label}
-              </a>
+              {link.external ? (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  role="menuitem"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <a
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  role="menuitem"
+                  aria-current={activeSection === link.href ? 'page' : undefined}
+                  className={activeSection === link.href ? 'active' : ''}
+                >
+                  {link.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>

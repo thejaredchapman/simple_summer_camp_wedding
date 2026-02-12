@@ -11,8 +11,12 @@ const scheduleItems = [
     description: 'A full day of classic summer camp fun - games, crafts, and plenty of time to relax and hang out.'
   },
   {
-    day: 'Saturday, September 6',
+    day: 'Saturday, September 5',
     description: 'We say "I do!". Wedding ceremony and reception celebrations at Camp Newaygo. Can\'t wait to celebrate with you!'
+  },
+  {
+    day: 'Sunday, September 6',
+    description: 'Brunch and head home to enjoy Labor Day!'
   }
 ];
 

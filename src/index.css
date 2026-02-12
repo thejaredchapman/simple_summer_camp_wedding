@@ -345,17 +345,19 @@ img {
 .navbar-links {
   display: flex;
   list-style: none;
-  gap: 2rem;
+  gap: 1.25rem;
+  flex-wrap: nowrap;
 }
 
 .navbar-links a {
   font-family: var(--font-body);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: var(--color-cream);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   font-weight: 500;
   position: relative;
+  white-space: nowrap;
 }
 
 .navbar-links a::after {
@@ -1420,6 +1422,19 @@ img {
   color: var(--color-cream);
   line-height: 1.7;
   opacity: 0.9;
+}
+
+.pugsley-chapter-image {
+  margin-top: var(--spacing-md);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pugsley-chapter-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .pugsley-story-quote {

@@ -21,24 +21,36 @@ const profiles = [
 
 const pugsleyStory = [
   {
-    title: "The Lonesome Wanderer",
-    text: `The year was 2017. A cosmic anomaly (or perhaps just a very eccentric kennel) birthed a legend. He wasn't just a Pug; he was a force of nature, a pint-sized enigma named simply "Pug-X." For three years, Pug-X roamed the concrete jungles as a canine ronin, a dog with no name and a heart full of untapped potential. He survived on fallen hot dogs and the kindness of strangers, his spirit unbroken, his destiny unwritten.`
+    title: "Issue #1: Lone Star Origins (2017)",
+    text: `Our story begins on a sweltering Texas night in 2017, beneath the vast star-filled sky of San Antonio. In the back room of "Big Earl's Premium Pup Palace & BBQ Joint," a legend drew his first wheezing breath. This was no ordinary dog—he was a glorious, genetic lottery of Beagle, Corgi, Hound, and Supermutt. With the long body of a Corgi, the floppy ears of a Beagle, and a howl that could rattle windows, Pugsley thrived in the brutal Texas heat. His early months were spent under the tutelage of Sensei Snausage, a wise Blue Heeler who ran an illegal martial arts dojo behind a Whataburger. "The head tilt, pardner," the Sensei would bark, "is a weapon of MASS PERSUASION."`
   },
   {
-    title: "A New Home, A New Name (2020)",
-    text: `Then came the fateful year of 2020. While the world stood still, grappling with unprecedented challenges, Pug-X's adventure hit warp speed. One rainy afternoon, sheltering under a newspaper stand, he encountered them: the Power Duo, Jared (The Architect of Adventure) and Avery (The Keeper of the Kibble). They weren't just looking for a pet; they were looking for a soulmate. And Pug-X, with a single, perfectly timed sneeze, sealed his fate. He was christened "Pugsley," and with a new name came a new purpose.`
+    title: "Issue #2 & 3: The Dark Years & The Incident",
+    text: `By six months old, Pugsley had been adopted and returned seven times. He had ISSUES. His first owner was a cruel man who associated masculine energy and deep voices with pain. Tragically, when a kind Black neighbor tried to rescue Pugsley from a beating, the abuser yanked him away, screaming racist vitriol. In Pugsley's hurting mind, a twisted connection was made: he learned to fear the very people who wanted to save him. He bounced through foster homes until he landed with a traveling rodeo. It was there, outside the Houston Livestock Show, that Pugsley witnessed a terrifying gunfight. As muzzle flashes lit the night, Pugsley froze in his "SECURITY" vest. His world-view was shattered: Trust no one.`,
+    image: "/pugsley_story/composite.jpg",
+    imageAlt: "Pugsley witnessing chaos and providing therapy"
   },
   {
-    title: "The Cosmic Cross-Eyed Curse!",
-    text: `But peace was short-lived! One starry night, while investigating a suspicious glowing firefly, Pugsley was abruptly hoisted into the sky by a Zeta Reticulan tractor beam. These were the notorious "Optical Obsessors," extraterrestrial optometrists on a mission to understand Earth's most complex visual phenomena. In their misguided attempt to "optimize" his ocular capabilities, they tried to download the entire library of the known universe into his canine brain. The result? A permanent, heroically cross-eyed gaze and Parallel Vision: one eye seeing the mundane present, the other glimpsing chaotic flashes of potential futures!`
+    title: "Issue #4 & 5: Healing and the Third Snort",
+    text: `Pugsley eventually found Dr. Linda Ramirez, a trauma specialist who taught him that "hurt dogs can heal." But just as he began to find peace, the sky opened up. In 2019, a violet beam lifted Pugsley into a Zorbaxian spacecraft. The aliens were obsessed with his chaotic genetic sequence. During a "Reverse Sneeze Calibration Test," Pugsley sneezed so powerfully he created a temporal rift! To stabilize him, the aliens crossed his optical neurons with his dimensional perception. He woke up permanently cross-eyed, but gifted with the ability to see 0.3 seconds into the future and sense the TRUE hearts of humans.`,
+    image: "/pugsley_story/abduction.jpg",
+    imageAlt: "Pugsley being abducted by Zorbaxian aliens"
   },
   {
-    title: "The Doctor is IN",
-    text: `Pugsley didn't let a little abduction slow him down. He embraced his expanded consciousness, earning a Doctorate in Love and a license in Canine Psychotherapy. His first major case? The infamous Gunfight at the OK Hydrant—a tense standoff between rival squirrel gangs and a particularly territorial mailman. With therapeutic barks and strategic tail-wags, Dr. Bikini calmed the situation before it devolved into total anarchy. He realized then that the world needed more than bark—it needed heart.`
+    title: "Issue #6 & 7: Destiny Calls (2020)",
+    text: `Early 2020. The world was changing, and Pugsley was waiting. Enter Jared and Avery. Jared, a Black man with a gentle soul, saw Pugsley's profile and knew the truth: "Fear can be unlearned." When they first met, Pugsley's old programming screamed DANGER. But his new cosmic senses whispered HEALING. He saw Jared's heart—pure, patient, and kind. Taking a shaky step forward on his short Corgi legs, Pugsley performed the "Snausage Head Tilt." Welcome home, Dr. Pugsley Bikini.`
   },
   {
-    title: "The Legend Today",
-    text: `Whether he's jet-setting across time zones, mediating disputes between toddlers and their toys, or prescribing "Three Belly Rubs and a Snack" to a weary soul, Dr. "Pugsley" Bikini remains the world's premier cross-eyed crusader. He's seen the stars, he's seen the streets, and now, he's seeing you... and the wall behind you... and perhaps a glimpse of what you'll have for dinner. All at the same time.`
+    title: "Issue #8: The 'Stockholm Syndrome' Arc (2020-2025)",
+    text: `For years, Jared was relentless with his gentleness. He let Pugsley set the boundaries, celebrating every tiny breakthrough. Slowly, the trauma crumbled. Pugsley realized that Jared wasn't a threat; he was the safest person in the universe. Pugsley began seeking out Black people everywhere—from Mr. Johnson the neighbor to Jerome the mail carrier—replacing fear with a demand for belly rubs. Avery joked it was Stockholm Syndrome; Pugsley knew it was Trust.`
+  },
+  {
+    title: "Issue #9-12: The Colombia Betrayal & The Reckoning",
+    text: `In March 2025, the ultimate betrayal occurred: They went to Colombia without him. Pugsley spent the week giving the "silent treatment" to the FaceTime camera. When they returned, Jared dropped the bombshell: He had proposed to Avery in Cartagena. Pugsley unleashed a howl of profound disappointment. I overcame racism for you! I rewired my brain! And you propose without your primary therapist present?! Jared wept, realizing the depth of Pugsley's commitment. He promised Pugsley a front-row seat as the Best Man.`
+  },
+  {
+    title: "Issue #13 & 14: The Great Western Migration",
+    text: `In late 2025, the trio packed up for Los Angeles. Pugsley supervised the move from inside various boxes. The road trip was a revelation—Beagle nose out the window, crossing the desert into a land of dog-friendly patios and diverse communities. Now, in the City of Angels, Dr. Pugsley Bikini is a local legend. Whether he's eating peach cobbler with Ms. Lorraine in Crenshaw or providing trauma therapy to anxious poodles, he is a living testament to the power of love.`
   }
 ];
 
@@ -110,7 +122,7 @@ export default function MeetTheCouple() {
           <div className="easter-egg-modal" onClick={(e) => e.stopPropagation()}>
             <button className="easter-egg-close" onClick={() => setShowEasterEgg(false)}>×</button>
             <h3 className="easter-egg-title">Where it all began...</h3>
-            <p className="easter-egg-subtitle">Our first LinkedIn DMs - September 2017</p>
+            <p className="easter-egg-subtitle">Our first LinkedIn DMs - September 2017 #cringe</p>
             <div className="easter-egg-image-container">
               <img
                 src="/photos/first-dms.jpg"
@@ -129,13 +141,13 @@ export default function MeetTheCouple() {
             <button className="easter-egg-close" onClick={() => setShowPugsleyStory(false)}>×</button>
             <div className="pugsley-story-header">
               <h3 className="pugsley-story-title">Dr. "Pugsley" Bikini</h3>
-              <p className="pugsley-story-subtitle">The Ballad of the Cross-Eyed Cupid</p>
+              <p className="pugsley-story-subtitle">The Cosmic Canine Chronicle</p>
             </div>
             <div className="pugsley-story-content">
               <div className="pugsley-comic-image">
                 <img
-                  src="/pugsley_story/pugsleycomicbook.jpg"
-                  alt="Dr. Pugsley Bikini Comic Book Cover"
+                  src="/pugsley_story/cover.jpg"
+                  alt="Dr. Pugsley Bikini Comic Book Cover - Heart of Gold, Eyes of Chaos"
                 />
               </div>
               <div className="pugsley-story-chapters">
@@ -143,12 +155,16 @@ export default function MeetTheCouple() {
                   <div key={index} className="pugsley-chapter">
                     <h4 className="pugsley-chapter-title">{chapter.title}</h4>
                     <p className="pugsley-chapter-text">{chapter.text}</p>
+                    {chapter.image && (
+                      <div className="pugsley-chapter-image">
+                        <img src={chapter.image} alt={chapter.imageAlt} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
               <div className="pugsley-story-quote">
-                <p>"In a world of chaos and conflicting visions, the only true compass is the heart of a Pug."</p>
-                <span>— Dr. Bikini's unpublished memoir, 'The Snort of Salvation'</span>
+                <p>"Coming in 2026: The Wedding Special — How Dr. Bikini saved the ceremony and still managed to judge Jared for the Colombia thing."</p>
               </div>
             </div>
           </div>
