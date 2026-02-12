@@ -3,7 +3,7 @@ import { Lantern, Campfire } from './decorations';
 const storyParagraphs = [
   `In 2015, two newcomers arrived in Chicago looking for a fresh start: Jared, bringing his southern charm from Atlanta, and Avery, hailing from Michigan. Their paths first crossed in the hallways of iO Theater, where they spent three years perfecting the art of "just being friends."`,
 
-  `The "friend zone" officially ended when Jared took a bold, professional risk: sliding into Avery's LinkedIn DMs. It wasn't exactly the place for romance, but it worked. Avery countered with an invite to a comedy show featuring a then-unproblematic Dave Chappelle, and the rest was history. It wasn't long into their dating journey that Jared was the first to say "I love you," setting the stage for everything to come.`,
+  `The "friend zone" officially ended when Jared took a bold, professional risk: sliding into Avery's LinkedIn DMs. It wasn't exactly the place for romance, but it worked. Avery countered with an invite to a comedy show featuring a then-unproblematic Dave Chappelle, and the rest was history. It wasn't long into their dating journey that Jared was the first to say "I love you"—to which Avery promptly responded, "Oh, wow." (She said it back shortly afterwards.)`,
 
   `After a year of dating, Jared moved in during November 2019—just months before the world turned upside down. While 2020 was a challenge for many, for them, it was an accelerant. They squeezed years of relationship milestones into months of lockdown, featuring Avery as Jared's personal (and experimental) hairstylist and the arrival of their favorite roommate, Pugsley.`,
 

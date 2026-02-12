@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Lantern } from './decorations';
 import { LazyImage, ScrollReveal } from './utils';
 
-const galleryPhotos = [
+const galleryPhotosData = [
   { src: '/photos/engagement_photo.JPG', alt: 'Avery and Jared engagement photo' },
   { src: '/photos/0511191515c.jpg', alt: 'Avery and Jared together' },
   { src: '/photos/0511191524.jpg', alt: 'Avery and Jared outdoor portrait' },
+  { src: '/photos/0703192342b.jpg', alt: 'Avery and Jared night out' },
   { src: '/photos/1124191356b.jpg', alt: 'Avery and Jared casual photo' },
   { src: '/photos/1130191432b.jpg', alt: 'Avery and Jared enjoying time together' },
   { src: '/photos/IMG_0064.jpg', alt: 'Avery and Jared adventure moment' },
@@ -13,7 +14,9 @@ const galleryPhotos = [
   { src: '/photos/IMG_1386 (1).jpg', alt: 'Avery and Jared candid moment' },
   { src: '/photos/IMG_1474.jpg', alt: 'Avery and Jared portrait' },
   { src: '/photos/IMG_2319.jpg', alt: 'Avery and Jared celebration photo' },
+  { src: '/photos/IMG_3532.jpg', alt: 'Avery and Jared memorable moment' },
   { src: '/photos/IMG_3692.jpg', alt: 'Avery and Jared fun photo' },
+  { src: '/photos/IMG_4153.jpg', alt: 'Avery and Jared sweet moment' },
   { src: '/photos/IMG_4392.jpg', alt: 'Avery and Jared happy together' },
   { src: '/photos/IMG_4420.jpg', alt: 'Avery and Jared scenic photo' },
   { src: '/photos/IMG_5847.jpg', alt: 'Avery and Jared outdoor photo' },
@@ -23,12 +26,26 @@ const galleryPhotos = [
   { src: '/photos/IMG_7487.jpg', alt: 'Avery and Jared enjoying nature' },
   { src: '/photos/IMG_7733.jpg', alt: 'Avery and Jared beautiful day' },
   { src: '/photos/IMG_8961.jpg', alt: 'Avery and Jared cozy moment' },
-  { src: '/photos/IMG_9693.jpg', alt: 'Avery and Jared fun times' }
+  { src: '/photos/IMG_9693.jpg', alt: 'Avery and Jared fun times' },
+  { src: '/photos/IMG_20190421_131703_797.jpg', alt: 'Avery and Jared spring day' },
+  { src: '/photos/IMG_20191221_160126.jpg', alt: 'Avery and Jared winter moment' },
+  { src: '/photos/PXL_20201122_155056683.jpg', alt: 'Avery and Jared together' },
+  { src: '/photos/IMG_20200730_211623.jpg', alt: 'Avery and Jared summer evening' }
 ];
 
 export default function PhotoGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Shuffle photos once on mount
+  const galleryPhotos = useMemo(() => {
+    const shuffled = [...galleryPhotosData];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, []);
 
   const openPhoto = (index) => {
     setCurrentIndex(index);
