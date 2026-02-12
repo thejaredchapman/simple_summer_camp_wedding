@@ -18,8 +18,8 @@ function App() {
       <Navbar />
       <main id="main-content">
         <Hero />
-        <MeetTheCouple />
         <TheirStory />
+        <MeetTheCouple />
         <PhotoGallery />
         <Schedule />
         <Lodging />

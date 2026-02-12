@@ -19,13 +19,38 @@ const profiles = [
   }
 ];
 
+const pugsleyStory = [
+  {
+    title: "The Lonesome Wanderer",
+    text: `The year was 2017. A cosmic anomaly (or perhaps just a very eccentric kennel) birthed a legend. He wasn't just a Pug; he was a force of nature, a pint-sized enigma named simply "Pug-X." For three years, Pug-X roamed the concrete jungles as a canine ronin, a dog with no name and a heart full of untapped potential. He survived on fallen hot dogs and the kindness of strangers, his spirit unbroken, his destiny unwritten.`
+  },
+  {
+    title: "A New Home, A New Name (2020)",
+    text: `Then came the fateful year of 2020. While the world stood still, grappling with unprecedented challenges, Pug-X's adventure hit warp speed. One rainy afternoon, sheltering under a newspaper stand, he encountered them: the Power Duo, Jared (The Architect of Adventure) and Avery (The Keeper of the Kibble). They weren't just looking for a pet; they were looking for a soulmate. And Pug-X, with a single, perfectly timed sneeze, sealed his fate. He was christened "Pugsley," and with a new name came a new purpose.`
+  },
+  {
+    title: "The Cosmic Cross-Eyed Curse!",
+    text: `But peace was short-lived! One starry night, while investigating a suspicious glowing firefly, Pugsley was abruptly hoisted into the sky by a Zeta Reticulan tractor beam. These were the notorious "Optical Obsessors," extraterrestrial optometrists on a mission to understand Earth's most complex visual phenomena. In their misguided attempt to "optimize" his ocular capabilities, they tried to download the entire library of the known universe into his canine brain. The result? A permanent, heroically cross-eyed gaze and Parallel Vision: one eye seeing the mundane present, the other glimpsing chaotic flashes of potential futures!`
+  },
+  {
+    title: "The Doctor is IN",
+    text: `Pugsley didn't let a little abduction slow him down. He embraced his expanded consciousness, earning a Doctorate in Love and a license in Canine Psychotherapy. His first major case? The infamous Gunfight at the OK Hydrant—a tense standoff between rival squirrel gangs and a particularly territorial mailman. With therapeutic barks and strategic tail-wags, Dr. Bikini calmed the situation before it devolved into total anarchy. He realized then that the world needed more than bark—it needed heart.`
+  },
+  {
+    title: "The Legend Today",
+    text: `Whether he's jet-setting across time zones, mediating disputes between toddlers and their toys, or prescribing "Three Belly Rubs and a Snack" to a weary soul, Dr. "Pugsley" Bikini remains the world's premier cross-eyed crusader. He's seen the stars, he's seen the streets, and now, he's seeing you... and the wall behind you... and perhaps a glimpse of what you'll have for dinner. All at the same time.`
+  }
+];
+
 export default function MeetTheCouple() {
   const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [showPugsleyStory, setShowPugsleyStory] = useState(false);
 
   const handleProfileClick = (profileName) => {
-    // Easter egg: clicking on Jared or Avery reveals their first DMs
     if (profileName === 'Jared Michael Chapman' || profileName === 'Avery Leigh Wine') {
       setShowEasterEgg(true);
+    } else if (profileName === 'Dr. Pugsley Bikini') {
+      setShowPugsleyStory(true);
     }
   };
 
@@ -43,7 +68,7 @@ export default function MeetTheCouple() {
         {profiles.map((profile, index) => (
           <div
             key={index}
-            className={`profile-card ${profile.name === 'Dr. Pugsley Bikini' ? 'pup-card' : ''} ${(profile.name === 'Jared Michael Chapman' || profile.name === 'Avery Leigh Wine') ? 'clickable-profile' : ''}`}
+            className={`profile-card ${profile.name === 'Dr. Pugsley Bikini' ? 'pup-card' : ''} clickable-profile`}
             onClick={() => handleProfileClick(profile.name)}
           >
             <div className="profile-image-placeholder">
@@ -85,13 +110,46 @@ export default function MeetTheCouple() {
           <div className="easter-egg-modal" onClick={(e) => e.stopPropagation()}>
             <button className="easter-egg-close" onClick={() => setShowEasterEgg(false)}>×</button>
             <h3 className="easter-egg-title">Where it all began...</h3>
-            <p className="easter-egg-subtitle">Our first Instagram DMs - September 2017</p>
+            <p className="easter-egg-subtitle">Our first LinkedIn DMs - September 2017</p>
             <div className="easter-egg-image-container">
               <img
-                src="/photos/Screenshot 2026-02-11 at 7.31.32 PM.png"
+                src="/photos/first-dms.jpg"
                 alt="Jared and Avery's first Instagram DMs from September 2017"
                 className="easter-egg-image"
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pugsley Story Modal */}
+      {showPugsleyStory && (
+        <div className="easter-egg-overlay" onClick={() => setShowPugsleyStory(false)}>
+          <div className="pugsley-story-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="easter-egg-close" onClick={() => setShowPugsleyStory(false)}>×</button>
+            <div className="pugsley-story-header">
+              <h3 className="pugsley-story-title">Dr. "Pugsley" Bikini</h3>
+              <p className="pugsley-story-subtitle">The Ballad of the Cross-Eyed Cupid</p>
+            </div>
+            <div className="pugsley-story-content">
+              <div className="pugsley-comic-image">
+                <img
+                  src="/pugsley_story/pugsleycomicbook.jpg"
+                  alt="Dr. Pugsley Bikini Comic Book Cover"
+                />
+              </div>
+              <div className="pugsley-story-chapters">
+                {pugsleyStory.map((chapter, index) => (
+                  <div key={index} className="pugsley-chapter">
+                    <h4 className="pugsley-chapter-title">{chapter.title}</h4>
+                    <p className="pugsley-chapter-text">{chapter.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="pugsley-story-quote">
+                <p>"In a world of chaos and conflicting visions, the only true compass is the heart of a Pug."</p>
+                <span>— Dr. Bikini's unpublished memoir, 'The Snort of Salvation'</span>
+              </div>
             </div>
           </div>
         </div>

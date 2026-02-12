@@ -939,9 +939,17 @@ img {
 
 .meet-the-couple {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-cream);
+  background: var(--color-primary);
   position: relative;
   overflow: hidden;
+}
+
+.meet-the-couple .section-header h2 {
+  color: var(--color-cream);
+}
+
+.meet-the-couple .section-subtitle {
+  color: var(--color-secondary);
 }
 
 .meet-lantern {
@@ -1210,17 +1218,22 @@ img {
 }
 
 .clickable-profile:hover::after {
-  content: '💬';
+  content: '';
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 1.5rem;
-  opacity: 0.7;
+  width: 40px;
+  height: 40px;
+  background-image: url('/camp-sign.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.9;
   animation: pulse-hint 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse-hint {
-  0%, 100% { transform: scale(1); opacity: 0.7; }
+  0%, 100% { transform: scale(1); opacity: 0.9; }
   50% { transform: scale(1.1); opacity: 1; }
 }
 
@@ -1317,13 +1330,154 @@ img {
   }
 }
 
+/* Pugsley Story Modal */
+.pugsley-story-modal {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(112, 179, 117, 0.2);
+  animation: slideUp 0.4s ease;
+  border: 3px solid var(--color-secondary);
+}
+
+.pugsley-story-modal .easter-egg-close {
+  color: var(--color-cream);
+  opacity: 0.8;
+}
+
+.pugsley-story-modal .easter-egg-close:hover {
+  opacity: 1;
+}
+
+.pugsley-story-header {
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-sm);
+  border-bottom: 2px solid rgba(112, 179, 117, 0.3);
+}
+
+.pugsley-story-title {
+  font-family: var(--font-script);
+  font-size: 2.5rem;
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-xs);
+  text-shadow: 0 2px 10px rgba(112, 179, 117, 0.3);
+}
+
+.pugsley-story-subtitle {
+  font-family: var(--font-accent);
+  font-size: 1.1rem;
+  color: var(--color-cream);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pugsley-story-content {
+  padding: var(--spacing-md);
+}
+
+.pugsley-comic-image {
+  max-width: 350px;
+  margin: 0 auto var(--spacing-lg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border: 3px solid var(--color-secondary);
+}
+
+.pugsley-comic-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pugsley-story-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.pugsley-chapter {
+  background: rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-md);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-secondary);
+}
+
+.pugsley-chapter-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.pugsley-chapter-text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-cream);
+  line-height: 1.7;
+  opacity: 0.9;
+}
+
+.pugsley-story-quote {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: rgba(112, 179, 117, 0.15);
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid rgba(112, 179, 117, 0.3);
+}
+
+.pugsley-story-quote p {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--color-cream);
+  margin-bottom: var(--spacing-xs);
+}
+
+.pugsley-story-quote span {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+}
+
+@media (max-width: 600px) {
+  .pugsley-story-modal {
+    max-width: 95%;
+  }
+
+  .pugsley-story-title {
+    font-size: 1.8rem;
+  }
+
+  .pugsley-story-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .pugsley-chapter-title {
+    font-size: 1.1rem;
+  }
+
+  .pugsley-chapter-text {
+    font-size: 0.95rem;
+  }
+
+  .pugsley-comic-image {
+    max-width: 280px;
+  }
+}
+
 /* ========================================
    THEIR STORY SECTION
    ======================================== */
 
 .their-story {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: linear-gradient(180deg, var(--color-cream-dark) 0%, var(--color-cream) 100%);
+  background: var(--color-cream);
   position: relative;
   overflow: hidden;
 }
@@ -1405,6 +1559,25 @@ img {
   font-size: 1.1rem;
   line-height: 1.8;
   color: var(--color-text-light);
+}
+
+.story-paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.story-paragraph {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: var(--color-text-light);
+  text-align: left;
+  text-indent: 2em;
+}
+
+.story-paragraph:first-child {
+  text-indent: 0;
 }
 
 .story-closing {
@@ -2523,17 +2696,9 @@ img {
 
 .contact-us {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-primary);
+  background: var(--color-cream);
   position: relative;
   overflow: hidden;
-}
-
-.contact-us .section-header h2 {
-  color: var(--color-cream);
-}
-
-.contact-us .section-subtitle {
-  color: var(--color-secondary);
 }
 
 .contact-lantern {
@@ -3309,9 +3474,17 @@ img {
 
 .schedule {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-cream);
+  background: var(--color-primary);
   position: relative;
   overflow: hidden;
+}
+
+.schedule .section-header h2 {
+  color: var(--color-cream);
+}
+
+.schedule .section-subtitle {
+  color: var(--color-secondary);
 }
 
 .schedule-lantern {
@@ -3338,6 +3511,10 @@ img {
   margin-top: var(--spacing-xs);
 }
 
+.schedule .section-tagline {
+  color: var(--color-cream);
+}
+
 .schedule-timeline {
   max-width: 800px;
   margin: 0 auto;
@@ -3362,7 +3539,7 @@ img {
 .schedule-dot {
   width: 24px;
   height: 24px;
-  background: var(--color-primary);
+  background: var(--color-cream);
   border: 4px solid var(--color-secondary);
   border-radius: 50%;
   box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3);
@@ -3374,7 +3551,7 @@ img {
   background: linear-gradient(
     to bottom,
     var(--color-secondary),
-    var(--color-primary)
+    var(--color-cream)
   );
   margin-top: 8px;
   min-height: 80px;
@@ -3414,17 +3591,9 @@ img {
 
 .lodging {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-primary);
+  background: var(--color-cream);
   position: relative;
   overflow: hidden;
-}
-
-.lodging .section-header h2 {
-  color: var(--color-cream);
-}
-
-.lodging .section-subtitle {
-  color: var(--color-secondary);
 }
 
 .lodging-lantern {
@@ -3487,6 +3656,61 @@ img {
   padding: var(--spacing-md);
   border-radius: 8px;
   border-left: 4px solid var(--color-secondary);
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+
+.lodging-option-with-photo {
+  gap: var(--spacing-sm);
+  padding: 0;
+  overflow: hidden;
+}
+
+.lodging-option-with-photo .lodging-option-content {
+  padding: var(--spacing-md);
+  padding-top: 0;
+  flex: 1;
+}
+
+.lodging-option-photo {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.lodging-option-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lodging-option-with-icon {
+  gap: var(--spacing-sm);
+  padding: 0;
+  overflow: hidden;
+}
+
+.lodging-option-icon {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-cream-dark) 0%, var(--color-cream) 100%);
+}
+
+.lodging-option-icon svg {
+  width: 100px;
+  height: 100px;
+  color: var(--color-primary);
+}
+
+.lodging-option-with-icon .lodging-option-content {
+  padding: var(--spacing-md);
+  padding-top: 0;
+  flex: 1;
 }
 
 .lodging-option h4 {
@@ -3599,9 +3823,17 @@ img {
 
 .faqs {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-cream);
+  background: var(--color-primary);
   position: relative;
   overflow: hidden;
+}
+
+.faqs .section-header h2 {
+  color: var(--color-cream);
+}
+
+.faqs .section-subtitle {
+  color: var(--color-secondary);
 }
 
 .faqs-lantern {

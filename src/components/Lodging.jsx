@@ -17,29 +17,58 @@ export default function Lodging() {
           <p className="lodging-intro">We're so excited to spend the weekend together at Camp Newaygo! Lodging at camp is rustic, fun, and all about the experience.</p>
 
           <div className="lodging-options">
-            <div className="lodging-option">
-              <h4>Dormitories</h4>
-              <p>Bunk with 10-20 of your closest friends in air conditioning and full electricity! <strong>$50 per person per night</strong></p>
+            <div className="lodging-option lodging-option-with-photo">
+              <div className="lodging-option-photo">
+                <img src="/photos/lodging-bunkhouse.jpeg" alt="Dormitory with bunk beds" />
+              </div>
+              <div className="lodging-option-content">
+                <h4>Dormitories</h4>
+                <p>Bunk with 10-20 of your closest friends in air conditioning and full electricity! <strong>$50 per person per night</strong></p>
+              </div>
             </div>
 
-            <div className="lodging-option">
-              <h4>Cabins</h4>
-              <p>Get the full parent trap experience in cabins with lights but no outlets and a short walk to the lodge for bathrooms. 10 cabins that sleep up to 12 people available. <strong>$50 per person per night</strong></p>
+            <div className="lodging-option lodging-option-with-photo">
+              <div className="lodging-option-photo">
+                <img src="/photos/lodging-cabin.jpeg" alt="Camp cabin interior" />
+              </div>
+              <div className="lodging-option-content">
+                <h4>Cabins</h4>
+                <p>Get the full parent trap experience in cabins with lights but no outlets and a short walk to the lodge for bathrooms. 10 cabins that sleep up to 12 people available. <strong>$50 per person per night</strong></p>
+              </div>
             </div>
 
-            <div className="lodging-option">
-              <h4>Platform Tents</h4>
-              <p>Looking for a quieter more rustic experience – canvas platform tents are available. They are a bit away from the main lodge but have water running to them and an outhouse near them. <strong>$50 per person per night</strong></p>
+            <div className="lodging-option lodging-option-with-photo">
+              <div className="lodging-option-photo">
+                <img src="/photos/lodging-tents.jpeg" alt="Platform tents in the woods" />
+              </div>
+              <div className="lodging-option-content">
+                <h4>Platform Tents</h4>
+                <p>Looking for a quieter more rustic experience – canvas platform tents are available. They are a bit away from the main lodge but have water running to them and an outhouse near them. <strong>$50 per person per night</strong></p>
+              </div>
             </div>
 
-            <div className="lodging-option">
-              <h4>Bring Your Own Tent</h4>
-              <p>If you wish to bring your own tent and gear - spaces are available for <strong>$25 per person per night</strong> with bathrooms and showers available.</p>
-            </div>
-
-            <div className="lodging-option">
-              <h4>What You'll Need</h4>
-              <p>For all camping sleeping bags or bedding and pillows is required. Camp Newaygo has a limited number that can be rented.</p>
+            <div className="lodging-option lodging-option-with-icon">
+              <div className="lodging-option-icon">
+                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M32 8 L56 48 H8 L32 8Z" />
+                  <line x1="32" y1="8" x2="32" y2="48" />
+                  <line x1="20" y1="48" x2="44" y2="48" />
+                  <path d="M26 48 V38 H38 V48" />
+                  <circle cx="48" cy="16" r="6" fill="currentColor" strokeWidth="0" />
+                  <line x1="48" y1="6" x2="48" y2="4" />
+                  <line x1="48" y1="28" x2="48" y2="26" />
+                  <line x1="38" y1="16" x2="36" y2="16" />
+                  <line x1="60" y1="16" x2="58" y2="16" />
+                  <line x1="41" y1="9" x2="39.5" y2="7.5" />
+                  <line x1="56.5" y1="22.5" x2="55" y2="24" />
+                  <line x1="41" y1="23" x2="39.5" y2="24.5" />
+                  <line x1="56.5" y1="9.5" x2="55" y2="8" />
+                </svg>
+              </div>
+              <div className="lodging-option-content">
+                <h4>Bring Your Own Tent</h4>
+                <p>If you wish to bring your own tent and gear - spaces are available for <strong>$25 per person per night</strong> with bathrooms and showers available.</p>
+              </div>
             </div>
 
             <div className="lodging-option">

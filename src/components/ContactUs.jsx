@@ -30,7 +30,7 @@ export default function ContactUs() {
             className="contact-link"
             title="Please send an email to javery.chapmanwine@gmail.com"
           >
-            E-mail us
+            javery.chapmanwine@gmail.com
           </a>
           </div>
         </ScrollReveal>
