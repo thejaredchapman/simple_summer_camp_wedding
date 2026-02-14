@@ -125,7 +125,7 @@ export default function MeetTheCouple() {
             <p className="easter-egg-subtitle">Our first LinkedIn DMs - September 2017 #cringe</p>
             <div className="easter-egg-image-container">
               <img
-                src="/photos/first-dms.jpg"
+                src="/photos/cringe.jpeg"
                 alt="Jared and Avery's first Instagram DMs from September 2017"
                 className="easter-egg-image"
               />

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Camp Javery is a private wedding website.
+# Please do not index this site.

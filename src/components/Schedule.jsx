@@ -16,7 +16,7 @@ const scheduleItems = [
   },
   {
     day: 'Sunday, September 6',
-    description: 'Brunch and head home to enjoy Labor Day!'
+    description: 'Head home with a heart full of memories and maybe a few s\'mores. We hope to see you again at the next campfire! :) #CampersRollout'
   }
 ];
 
