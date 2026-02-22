@@ -45,6 +45,10 @@ const faqData = [
     answer: 'Due to space limitations, we\'re only able to accommodate the guests named on the invitation. We appreciate your understanding and can\'t wait to celebrate with everyone who\'s invited!'
   },
   {
+    question: 'Code of Conduct',
+    answer: 'Our wedding is a celebration of love, and that love extends to every single one of our guests. We are committed to creating a safe, joyful, and inclusive environment for everyone, regardless of race, religion, gender identity, sexual orientation, ability, age, or political affiliation. We understand that our guests hold a wide range of political beliefs—and that\'s okay! They are not important for this weekend. We ask that you leave politics at the door and join us in making this a space where everyone feels celebrated and respected. If anyone chooses to disrespect others over their beliefs or identity, they will be asked to leave. We have a zero-tolerance policy for discrimination or harassment of any kind—we\'re here to make happy memories together!'
+  },
+  {
     question: 'Still have questions?',
     answer: (
       <>
