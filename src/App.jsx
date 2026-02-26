@@ -6,6 +6,7 @@ import {
   PhotoGallery,
   Schedule,
   Lodging,
+  GettingThere,
   FAQs,
   ContactUs,
   Footer
@@ -23,6 +24,7 @@ function App() {
         <PhotoGallery />
         <Schedule />
         <Lodging />
+        <GettingThere />
         <FAQs />
         <ContactUs />
       </main>

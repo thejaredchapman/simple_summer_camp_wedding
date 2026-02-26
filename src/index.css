@@ -4517,6 +4517,114 @@ textarea:valid:not(:placeholder-shown) {
 }
 
 /* ========================================
+   GETTING THERE SECTION
+   ======================================== */
+
+.getting-there {
+  padding: var(--spacing-xl) var(--spacing-md);
+  background: var(--color-cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.getting-there-lantern {
+  position: absolute;
+  width: 50px;
+  height: 80px;
+  opacity: 0.5;
+}
+
+.getting-there-lantern-left {
+  top: 100px;
+  left: 150px;
+}
+
+.getting-there-lantern-right {
+  top: 300px;
+  right: 150px;
+}
+
+.getting-there-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+}
+
+.getting-there-card {
+  background: white;
+  padding: var(--spacing-lg);
+  border-radius: 12px;
+  border: 3px solid var(--color-secondary);
+  box-shadow: 0 4px 20px rgba(44, 24, 16, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.getting-there-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.getting-there-map {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: var(--spacing-md);
+}
+
+.getting-there-map-placeholder {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  background: var(--color-cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.getting-there-link {
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.getting-there-link:hover {
+  color: var(--color-primary);
+}
+
+@media (max-width: 1024px) {
+  .getting-there-lantern {
+    display: none;
+  }
+
+  .getting-there-grid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .getting-there-card {
+    padding: var(--spacing-md);
+  }
+
+  .getting-there-map {
+    height: 250px;
+  }
+}
+
+/* ========================================
    LODGING SURVEY
    ======================================== */
 

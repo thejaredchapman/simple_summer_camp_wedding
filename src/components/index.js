@@ -5,6 +5,7 @@ export { default as TheirStory } from './TheirStory';
 export { default as PhotoGallery } from './PhotoGallery';
 export { default as Schedule } from './Schedule';
 export { default as Lodging } from './Lodging';
+export { default as GettingThere } from './GettingThere';
 export { default as FAQs } from './FAQs';
 export { default as ContactUs } from './ContactUs';
 export { default as Footer } from './Footer';

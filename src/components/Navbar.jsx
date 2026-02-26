@@ -7,6 +7,7 @@ const navLinks = [
   { href: '#photos', label: 'Photos' },
   { href: '#schedule', label: 'Schedule' },
   { href: '#lodging', label: 'Lodging' },
+  { href: '#getting-there', label: 'Getting There' },
   { href: '#faqs', label: 'FAQs' },
   { href: 'https://registry.theknot.com/-september-2026-mi/76855220', label: 'Registry', external: true },
   { href: '#contact', label: 'Contact' },
