@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Lantern } from './decorations';
 import { ScrollReveal } from './utils';
 
@@ -9,6 +10,12 @@ const airports = [
     code: 'ORD',
     origin: 'O%27Hare+International+Airport,+Chicago,+IL',
     link: 'https://maps.app.goo.gl/xndp5kzJdFTuCzQq9',
+  },
+  {
+    name: 'Chicago Midway International Airport',
+    code: 'MDW',
+    origin: 'Chicago+Midway+International+Airport,+Chicago,+IL',
+    link: 'https://maps.app.goo.gl/rBBhjVw5krKtg9yo7',
   },
   {
     name: 'Detroit Metropolitan Wayne County Airport',
@@ -23,6 +30,43 @@ const airports = [
     link: 'https://maps.app.goo.gl/k49rUWXnUC1xzxmM9',
   },
 ];
+
+function AirportCard({ airport, destination }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className={`getting-there-card ${expanded ? 'expanded' : ''}`}>
+      <button
+        className="getting-there-card-toggle"
+        onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
+      >
+        <h3>{airport.name} ({airport.code})</h3>
+        <span className={`getting-there-chevron ${expanded ? 'rotated' : ''}`}>▼</span>
+      </button>
+      {expanded && (
+        <div className="getting-there-card-content">
+          <iframe
+            className="getting-there-map"
+            title={`Directions from ${airport.name} to Camp Newaygo`}
+            src={`https://www.google.com/maps?saddr=${airport.origin}&daddr=${destination}&output=embed`}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+          <a
+            href={airport.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="getting-there-link"
+          >
+            Open in Google Maps →
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function GettingThere() {
   return (
@@ -42,25 +86,7 @@ export default function GettingThere() {
       <div className="getting-there-grid">
         {airports.map((airport, index) => (
           <ScrollReveal key={airport.code} animation="fade-up" delay={index * 150}>
-            <div className="getting-there-card">
-              <h3>{airport.name} ({airport.code})</h3>
-              <iframe
-                className="getting-there-map"
-                title={`Directions from ${airport.name} to Camp Newaygo`}
-                src={`https://www.google.com/maps?saddr=${airport.origin}&daddr=${destination}&output=embed`}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <a
-                href={airport.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="getting-there-link"
-              >
-                Open in Google Maps →
-              </a>
-            </div>
+            <AirportCard airport={airport} destination={destination} />
           </ScrollReveal>
         ))}
       </div>

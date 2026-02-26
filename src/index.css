@@ -4548,27 +4548,67 @@ textarea:valid:not(:placeholder-shown) {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
+}
+
+.getting-there-grid > * {
+  display: flex;
 }
 
 .getting-there-card {
   background: white;
-  padding: var(--spacing-lg);
   border-radius: 12px;
   border: 3px solid var(--color-secondary);
   box-shadow: 0 4px 20px rgba(44, 24, 16, 0.08);
   display: flex;
   flex-direction: column;
-  align-items: center;
   text-align: center;
+  width: 100%;
+  flex: 1;
+}
+
+.getting-there-card-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.getting-there-card-toggle:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 9px;
 }
 
 .getting-there-card h3 {
   font-family: var(--font-display);
   font-size: 1.3rem;
   color: var(--color-primary);
-  margin-bottom: var(--spacing-md);
+  margin: 0;
+}
+
+.getting-there-chevron {
+  font-size: 0.8rem;
+  color: var(--color-secondary);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.getting-there-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.getting-there-card-content {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .getting-there-map {
@@ -4615,8 +4655,12 @@ textarea:valid:not(:placeholder-shown) {
 }
 
 @media (max-width: 768px) {
-  .getting-there-card {
+  .getting-there-card-toggle {
     padding: var(--spacing-md);
+  }
+
+  .getting-there-card-content {
+    padding: 0 var(--spacing-md) var(--spacing-md);
   }
 
   .getting-there-map {
