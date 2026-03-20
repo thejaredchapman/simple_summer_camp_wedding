@@ -151,7 +151,7 @@ export class RAGService {
         title: 'Offsite Accommodations',
         content: `Recommended offsite accommodations:
 
-        Muskegon River Inn: Only 7 minutes from camp. A small inn with amazing showers and perfectly situated in downtown Newaygo. Standard rooms available for $145 and suites for $155. Call the hotel at 307-690-4960 to reserve for our wedding weekend (2 nights minimum required). A shuttle will run a few times the day of the wedding to and from this location.
+        Muskegon River Inn: Only 7 minutes from camp. A small inn with amazing showers and perfectly situated in downtown Newaygo. Standard rooms available for $145 and suites for $155. Avery & Jared have all 7 rooms blocked for the wedding. Call the hotel directly at 307-690-4960 to make a reservation (2 nights minimum required). A shuttle will run a few times the day of the wedding to and from this location.
 
         Airbnbs: Northern Michigan is full of amazing Airbnbs, many of which are very close to Camp Newaygo.`
       },

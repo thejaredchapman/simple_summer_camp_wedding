@@ -99,7 +99,7 @@ export default function Lodging() {
               <h4>Muskegon River Inn</h4>
               <p className="offsite-distance">Only 7 minutes from camp</p>
               <p>Muskegon River Inn is a small inn with amazing showers and perfectly situated in downtown Newaygo. Standard rooms available for <strong>$145</strong> and suites for <strong>$155</strong>.</p>
-              <p>Call the hotel at <a href="tel:307-690-4960" className="lodging-link">307-690-4960</a> to reserve for our wedding weekend (2 nights minimum required). A shuttle will run a few times the day of the wedding to and from this location.</p>
+              <p><strong>Avery & Jared have all 7 rooms blocked for the wedding.</strong> Call the hotel directly at <a href="tel:307-690-4960" className="lodging-link">307-690-4960</a> to make a reservation (2 nights minimum required). A shuttle will run a few times the day of the wedding to and from this location.</p>
               <a
                 href="https://muskegonriverinn.com/"
                 target="_blank"
