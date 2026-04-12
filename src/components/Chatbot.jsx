@@ -64,7 +64,7 @@ export default function Chatbot() {
       {isOpen && (
         <div className="chatbot-window" role="dialog" aria-label="Camp Javery wedding assistant">
           <div className="chatbot-header">
-            <span className="chatbot-header-icon">🏕️</span>
+            <img src="/camp-sign.png" alt="Camp Javery" className="chatbot-header-icon" />
             <div>
               <p className="chatbot-header-title">Camp Javery Guide</p>
               <p className="chatbot-header-sub">Ask me about the wedding!</p>
@@ -124,7 +124,7 @@ export default function Chatbot() {
         onClick={() => setIsOpen(prev => !prev)}
         aria-label={isOpen ? 'Close camp guide' : 'Open camp guide'}
       >
-        🏕️
+        <img src="/camp-sign.png" alt="Camp Javery" className="chatbot-bubble-icon" />
       </button>
     </div>
   );
