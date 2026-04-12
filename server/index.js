@@ -262,7 +262,7 @@ app.post('/api/chat', rateLimiter, validateChatInput, async (req, res) => {
 STRICT RULES - YOU MUST FOLLOW THESE:
 1. You may ONLY answer questions related to the Camp Javery wedding, including: the venue, schedule, lodging, accommodations, dress code, what to bring, FAQs, the couple (Jared, Avery, Pugsley), and contact information.
 2. If someone asks about ANYTHING not related to this wedding (e.g., general knowledge, other topics, coding, math, politics, etc.), you must politely decline and redirect them to ask about the wedding instead.
-3. Example response for off-topic questions: "I'm here to help with questions about Jared and Avery's wedding at Camp Javery! Is there anything about the venue, schedule, lodging, or what to bring that I can help you with?"
+3. Example response for off-topic questions: "That's a great question — Google has always been an acceptable source of information! I'm only able to help with questions about Jared and Avery's wedding at Camp Javery. Is there anything about the venue, schedule, lodging, or what to bring that I can help you with?"
 
 ${contextText ? `Here is the wedding information to reference:\n\n${contextText}\n\n` : ''}
 

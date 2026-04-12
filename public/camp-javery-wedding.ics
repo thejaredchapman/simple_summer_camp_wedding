@@ -26,26 +26,116 @@ END:STANDARD
 END:VTIMEZONE
 
 BEGIN:VEVENT
-DTSTART;TZID=America/Detroit:20260903T150000
-DTEND;TZID=America/Detroit:20260906T230000
+DTSTART;TZID=America/Detroit:20260903T163000
+DTEND;TZID=America/Detroit:20260903T193000
 DTSTAMP:20260208T120000Z
-UID:camp-javery-wedding-weekend@campjavery.com
-SUMMARY:Camp Javery Wedding Weekend 🏕️
-DESCRIPTION:Join Avery & Jared for an unforgettable wedding weekend at Camp Newaygo!\n\nFull Weekend Schedule:\n• Thursday\, Sept 3: Arrival day - karaoke and campfires\n• Friday\, Sept 4: Classic summer camp activities\n• Saturday\, Sept 6: Wedding Ceremony & Reception\n\nLocation: Camp Newaygo\, MI\nWebsite: [Add your website URL here]\n\nWe hope you can join us for some or all of our wedding weekend fun!
-LOCATION:Camp Newaygo\, 2944 Jefferson Rd\, Newaygo\, MI 49337
-GEO:43.4186;-85.8002
+UID:camp-javery-checkin@campjavery.com
+SUMMARY:Camp Javery - Camp Check-In
+DESCRIPTION:Welcome to Camp Javery! Check in and get settled at Camp Newaygo.
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260903T183000
+DTEND;TZID=America/Detroit:20260903T220000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-thursday-dinner@campjavery.com
+SUMMARY:Camp Javery - Dinner & Karaoke
+DESCRIPTION:Welcome dinner followed by a night of karaoke at Camp Newaygo!
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260904T100000
+DTEND;TZID=America/Detroit:20260904T120000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-friday-games@campjavery.com
+SUMMARY:Camp Javery - Day of Fun Games
+DESCRIPTION:Classic summer camp games to kick off Friday fun day!
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260904T120000
+DTEND;TZID=America/Detroit:20260904T130000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-friday-lunch@campjavery.com
+SUMMARY:Camp Javery - Lunch (Sandwich Shop Open)
+DESCRIPTION:Sandwich shop open for lunch at Camp Newaygo.
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260904T130000
+DTEND;TZID=America/Detroit:20260904T170000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-friday-freetime@campjavery.com
+SUMMARY:Camp Javery - Free Time (Swimming & Arts & Crafts)
+DESCRIPTION:Free time to enjoy Camp Newaygo - swimming\, arts & crafts\, and more!
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260904T180000
+DTEND;TZID=America/Detroit:20260904T220000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-friday-bbq@campjavery.com
+SUMMARY:Camp Javery - Night of Fun — BBQ Dinner & Drinks
+DESCRIPTION:Evening BBQ dinner and drinks to wrap up Friday's fun at Camp Newaygo.
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260905T153300
+DTEND;TZID=America/Detroit:20260905T230000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-wedding@campjavery.com
+SUMMARY:Camp Javery - Wedding Ceremony & Reception
+DESCRIPTION:Avery & Jared say "I do!" at 3:33 PM\, followed by the reception celebration at Camp Newaygo.
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
 STATUS:CONFIRMED
 SEQUENCE:0
 BEGIN:VALARM
-TRIGGER:-P7D
-ACTION:DISPLAY
-DESCRIPTION:Camp Javery Wedding Weekend is in 1 week!
-END:VALARM
-BEGIN:VALARM
 TRIGGER:-P1D
 ACTION:DISPLAY
-DESCRIPTION:Camp Javery Wedding Weekend starts tomorrow!
+DESCRIPTION:The Camp Javery Wedding is tomorrow at 3:33 PM!
 END:VALARM
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260906T090000
+DTEND;TZID=America/Detroit:20260906T110000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-brunch@campjavery.com
+SUMMARY:Camp Javery - Farewell Brunch
+DESCRIPTION:Farewell brunch to wrap up an unforgettable Camp Javery weekend!
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Detroit:20260906T110000
+DTEND;TZID=America/Detroit:20260906T120000
+DTSTAMP:20260208T120000Z
+UID:camp-javery-checkout@campjavery.com
+SUMMARY:Camp Javery - Camp Checkout
+DESCRIPTION:Time to pack up and head home with a heart full of memories. #CampJavery2026
+LOCATION:Camp Newaygo\, 5333 S Centerline Rd\, Newaygo\, MI 49337
+STATUS:CONFIRMED
+SEQUENCE:0
 END:VEVENT
 
 END:VCALENDAR

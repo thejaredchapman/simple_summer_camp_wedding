@@ -5,11 +5,13 @@ import {
   TheirStory,
   PhotoGallery,
   Schedule,
+  RSVP,
   Lodging,
   GettingThere,
   FAQs,
   ContactUs,
-  Footer
+  Footer,
+  Chatbot
 } from './components';
 import './index.css';
 
@@ -23,12 +25,14 @@ function App() {
         <MeetTheCouple />
         <PhotoGallery />
         <Schedule />
+        <RSVP />
         <Lodging />
         <GettingThere />
         <FAQs />
         <ContactUs />
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 }

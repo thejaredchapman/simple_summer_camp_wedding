@@ -7,5 +7,7 @@ export { default as Schedule } from './Schedule';
 export { default as Lodging } from './Lodging';
 export { default as GettingThere } from './GettingThere';
 export { default as FAQs } from './FAQs';
+export { default as RSVP } from './RSVP';
 export { default as ContactUs } from './ContactUs';
 export { default as Footer } from './Footer';
+export { default as Chatbot } from './Chatbot';

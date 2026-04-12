@@ -6,6 +6,7 @@ const navLinks = [
   { href: '#meet-us', label: 'Campers' },
   { href: '#photos', label: 'Photos' },
   { href: '#schedule', label: 'Schedule' },
+  { href: '#rsvp', label: 'RSVP' },
   { href: '#lodging', label: 'Lodging' },
   { href: '#getting-there', label: 'Getting There' },
   { href: '#faqs', label: 'FAQs' },
