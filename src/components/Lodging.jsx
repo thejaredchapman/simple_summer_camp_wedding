@@ -126,8 +126,8 @@ export default function Lodging() {
             </div>
 
             <div className="offsite-option">
-              <h4>Airbnbs</h4>
-              <p>Northern Michigan is full of amazing Airbnbs, many of which are very close to Camp Newaygo.</p>
+              <h4>Airbnbs &amp; VRBOs</h4>
+              <p>Northern Michigan is full of amazing vacation rentals, many of which are very close to Camp Newaygo.</p>
               <a
                 href="https://www.airbnb.com/s/Newaygo--MI/homes?refinement_paths%5B%5D=%2Fhomes&place_id=ChIJla02DXE9GYgR9ZLbaBf2sTM&location_bb=Qi25aMKrjdJCLZZqwqun4g%3D%3D&acp_id=5e879129-0987-418e-a200-bac1d55d0350&date_picker_type=calendar&checkin=2026-09-03&checkout=2026-09-06&adults=2&search_type=unknown"
                 target="_blank"
@@ -135,6 +135,14 @@ export default function Lodging() {
                 className="lodging-link"
               >
                 Airbnb.com →
+              </a>
+              <a
+                href="https://www.vrbo.com/search?destination=Newaygo%2C+Michigan%2C+United+States+of+America&regionId=6052820&startDate=2026-09-03&endDate=2026-09-06&adults=2&sort=RECOMMENDED"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="lodging-link"
+              >
+                VRBO.com →
               </a>
             </div>
           </div>

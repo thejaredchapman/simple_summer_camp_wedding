@@ -3824,14 +3824,22 @@ img {
 }
 
 .lodging-link {
-  color: var(--color-secondary);
-  font-weight: 600;
-  text-decoration: underline;
-  transition: color var(--transition-fast);
+  display: inline-block;
+  margin-top: var(--spacing-xs);
+  padding: 0.45em 1.1em;
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 .lodging-link:hover {
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-cream);
 }
 
 .camp-overview {
