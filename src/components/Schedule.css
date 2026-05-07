@@ -154,6 +154,14 @@
   line-height: 1.5;
 }
 
+.schedule-event-note .schedule-event-name {
+  grid-column: 1 / -1;
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+  padding-top: 2px;
+}
+
 .schedule-description {
   font-size: 1rem;
   color: var(--color-text-light);

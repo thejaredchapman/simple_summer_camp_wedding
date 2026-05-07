@@ -4,10 +4,10 @@ import { ScrollReveal } from './utils';
 const scheduleItems = [
   {
     day: 'Thursday, September 3',
-    subtitle: 'Welcome to Camp',
+    subtitle: 'Camp Javery Opening',
     description: "Jared & Avery arrive to kick off the festivities. If you're staying at Camp Newaygo, pitch your tent, settle in, and warm up your vocal cords for a karaoke and camp fires.",
     events: [
-      { time: '4:30 PM', name: 'Camp Check-In' },
+      { time: '5:00 PM', name: 'Camper Check-In' },
       { time: '6:30 PM', name: 'Dinner & Karaoke' },
     ]
   },
@@ -16,10 +16,8 @@ const scheduleItems = [
     subtitle: 'Day of Fun',
     description: 'A full day of classic summer camp fun - games, crafts, and plenty of time to relax and hang out.',
     events: [
-      { time: '10:00 AM', name: 'Day of Fun Games' },
-      { time: '12:00 PM', name: 'Lunch — Sandwich Shop Open' },
-      { time: '1:00–5:00 PM', name: 'Free Time (Swimming, Arts & Crafts)' },
-      { time: '6:00 PM', name: 'Night of Fun — BBQ Dinner & Drinks' },
+      { time: '11:00 AM', name: 'Summer Camp Day of Fun Kick-off' },
+      { time: '7:00 PM', name: 'Night of Fun — Dinner & Drinks' },
     ]
   },
   {
@@ -27,16 +25,17 @@ const scheduleItems = [
     subtitle: 'Wedding Day',
     description: "We say \"I do!\". Wedding ceremony and reception celebrations at Camp Newaygo. Can't wait to celebrate with you!",
     events: [
-      { time: '3:33 PM', name: 'Wedding Ceremony & Reception to Follow' },
+      { time: '3:33 PM', name: 'Ceremony' },
+      { time: null, name: 'Photos · Cocktail Party · Dinner · Club Javery to Follow' },
     ]
   },
   {
     day: 'Sunday, September 6',
-    subtitle: 'Farewell Brunch',
+    subtitle: 'Camp Javery Closing',
     description: "Head home with a heart full of memories and maybe a few s'mores. We hope to see you again at the next campfire! :) #CampersRollout",
     events: [
       { time: '9:00 AM', name: 'Farewell Brunch' },
-      { time: '11:00 AM', name: 'Camp Checkout' },
+      { time: '11:00 AM', name: 'Camper Check-out' },
     ]
   }
 ];
@@ -68,9 +67,8 @@ export default function Schedule() {
                 <p className="schedule-description">{item.description}</p>
                 <ul className="schedule-events">
                   {item.events.map((event, i) => (
-                    <li key={i} className="schedule-event">
-                      <span className="schedule-event-time">{event.time}</span>
-                      <span className="schedule-event-sep" aria-hidden="true">—</span>
+                    <li key={i} className={`schedule-event${event.time ? '' : ' schedule-event-note'}`}>
+                      {event.time && <><span className="schedule-event-time">{event.time}</span><span className="schedule-event-sep" aria-hidden="true">—</span></>}
                       <span className="schedule-event-name">{event.name}</span>
                     </li>
                   ))}
