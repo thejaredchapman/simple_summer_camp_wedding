@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import multer from 'multer';
 import { RAGService } from './rag.js';
-import { uploadPhoto } from './photoStorage.js';
+import { uploadPhoto, listPhotos } from './photoStorage.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
@@ -118,6 +118,7 @@ function createRateLimiter(windowMs, maxRequests) {
 
 const chatRateLimiter = createRateLimiter(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_REQUESTS);
 const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 15); // 15 uploads / 10 min / IP
+const photoListRateLimiter = createRateLimiter(60 * 1000, 60); // 60 requests / min / IP
 
 // =============================================================================
 // INPUT SANITIZATION
@@ -283,6 +284,16 @@ app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
   } catch (error) {
     console.error('Photo upload error:', error.message);
     res.status(500).json({ error: 'Upload failed. Please try again.' });
+  }
+});
+
+app.get('/api/photos', photoListRateLimiter, async (req, res) => {
+  try {
+    const photos = await listPhotos();
+    res.json({ photos });
+  } catch (error) {
+    console.error('List photos error:', error.message);
+    res.status(500).json({ error: 'Unable to load photos right now.' });
   }
 });
 
