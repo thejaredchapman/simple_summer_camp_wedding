@@ -1,38 +1,13 @@
-import {
-  Navbar,
-  Hero,
-  MeetTheCouple,
-  TheirStory,
-  PhotoGallery,
-  Schedule,
-  RSVP,
-  Lodging,
-  GettingThere,
-  FAQs,
-  ContactUs,
-  Footer,
-  Chatbot
-} from './components';
+import { Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 import './index.css';
 
 function App() {
   return (
     <div className="app">
-      <Navbar />
-      <main id="main-content">
-        <Hero />
-        <TheirStory />
-        <MeetTheCouple />
-        <PhotoGallery />
-        <Schedule />
-        <RSVP />
-        <Lodging />
-        <GettingThere />
-        <FAQs />
-        <ContactUs />
-      </main>
-      <Footer />
-      <Chatbot />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
     </div>
   );
 }
