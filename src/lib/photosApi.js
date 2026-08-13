@@ -16,3 +16,12 @@ export async function uploadPhoto(guestName, file) {
   }
   return data;
 }
+
+export async function listPhotos() {
+  const res = await fetch(`${BACKEND_URL}/api/photos`);
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Unable to load photos.');
+  }
+  return data.photos;
+}
