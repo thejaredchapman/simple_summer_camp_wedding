@@ -66,6 +66,17 @@ Shared between the photo and video upload pages via a new
 `src/components/UploadProgressBar.jsx` (+ `.css`) component, to avoid
 duplicating the gradient/animation logic.
 
+### Shared success screen
+
+`/upload` and `/upload-video` remain two separate pages/routes (each with
+its own name field, file picker, and progress bar), but both render the
+same `src/components/UploadSuccessScreen.jsx` (+ `.css`) component for the
+post-upload confirmation state, parameterized by a `mediaType` prop
+(`"photo" | "video"`) so the copy is correct for what was actually
+uploaded — e.g. "Thanks, {name}! Your photo is up." vs "Thanks, {name}!
+Your video is up." The "Upload another" reset button and styling are
+identical between the two; only the message text differs.
+
 ## 2. Video upload
 
 ### Upload page
