@@ -43,9 +43,9 @@ function runLoopbackOAuthFlow() {
         if (!code) return;
 
         res.end('Authorized. You can close this tab and return to the terminal.');
+        const redirectUri = `http://localhost:${server.address().port}/oauth2callback`;
         server.close();
 
-        const redirectUri = `http://localhost:${server.address().port}/oauth2callback`;
         const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, redirectUri);
         const { tokens } = await client.getToken(code);
         resolve(tokens);
