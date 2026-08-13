@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import UploadPage from './pages/UploadPage';
 import './index.css';
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/upload" element={<UploadPage />} />
       </Routes>
     </div>
   );
