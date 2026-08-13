@@ -39,3 +39,15 @@
   font-family: var(--font-body);
   font-size: 1.5rem;
 }
+
+.slideshow-connection-warning {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+}

@@ -4,6 +4,7 @@ import './SlideshowPage.css';
 
 const POLL_INTERVAL_MS = 20000;
 const SLIDE_INTERVAL_MS = 5000;
+const FAILURE_THRESHOLD = 3;
 
 function shuffle(array) {
   const copy = [...array];
@@ -17,7 +18,9 @@ function shuffle(array) {
 export default function SlideshowPage() {
   const [photos, setPhotos] = useState([]);
   const [index, setIndex] = useState(0);
+  const [connectionTrouble, setConnectionTrouble] = useState(false);
   const knownIdsRef = useRef(new Set());
+  const failureCountRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -26,6 +29,8 @@ export default function SlideshowPage() {
       try {
         const data = await listPhotos();
         if (cancelled) return;
+        failureCountRef.current = 0;
+        setConnectionTrouble(false);
         const currentIds = new Set(data.map(p => p.id));
         const isSameSet =
           currentIds.size === knownIdsRef.current.size &&
@@ -37,6 +42,11 @@ export default function SlideshowPage() {
         }
       } catch (err) {
         console.error('Slideshow fetch error:', err.message);
+        if (cancelled) return;
+        failureCountRef.current += 1;
+        if (failureCountRef.current >= FAILURE_THRESHOLD) {
+          setConnectionTrouble(true);
+        }
       }
     }
 
@@ -60,6 +70,9 @@ export default function SlideshowPage() {
     return (
       <div className="slideshow-page slideshow-empty">
         <p>Waiting for the first photo…</p>
+        {connectionTrouble && (
+          <p className="slideshow-connection-warning">Having trouble connecting…</p>
+        )}
       </div>
     );
   }
@@ -75,6 +88,9 @@ export default function SlideshowPage() {
         className="slideshow-image"
       />
       <p className="slideshow-caption">{current.name}</p>
+      {connectionTrouble && (
+        <p className="slideshow-connection-warning">Having trouble connecting…</p>
+      )}
     </div>
   );
 }

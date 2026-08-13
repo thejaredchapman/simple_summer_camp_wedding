@@ -67,7 +67,6 @@ export default function UploadPage() {
               id="photo"
               type="file"
               accept="image/*"
-              capture="environment"
               onChange={e => setFile(e.target.files?.[0] || null)}
               required
               disabled={status === 'uploading'}

@@ -225,6 +225,41 @@ moderate uploads from a password-protected `/admin` page.
        `ngrok http 5173` for the frontend, then set `VITE_BACKEND_URL` to the
        backend's ngrok URL.
 
+### Production Deployment
+
+Before deploying this branch, configure the following on your actual hosts —
+missing any of these will break the photo feature, and one of them will take
+down the existing chatbot too.
+
+- **Vercel (frontend) project environment variable:**
+  - `VITE_BACKEND_URL` — must point at your deployed backend's real URL (e.g.
+    `https://your-backend.onrender.com`). If unset, the built frontend bundle
+    falls back to `http://localhost:3001`, so every photo-related call will
+    fail in production — and will likely be blocked outright as mixed content
+    since the site is served over https.
+
+- **Backend host (Render/Railway/wherever) environment variables:**
+  - `ALLOWED_ORIGINS` — must include your production Vercel domain (e.g.
+    `https://your-site.vercel.app`), or the browser's CORS preflight will fail
+    on all four photo endpoints (`/api/photos/upload`, `/api/photos`,
+    `/api/admin/photos` GET and DELETE).
+  - `BLOB_READ_WRITE_TOKEN` and `ADMIN_PASSWORD` — both are **required** for
+    the server to start at all. `server/index.js`'s `validateEnvironment()`
+    calls `process.exit(1)` if either is missing.
+
+  **Deploy-ordering trap:** because `validateEnvironment()` now requires
+  `BLOB_READ_WRITE_TOKEN` and `ADMIN_PASSWORD` in addition to
+  `ANTHROPIC_API_KEY`, the entire backend — including the previously-working
+  chatbot — will refuse to boot after this deploy until both new variables are
+  set. **Set `BLOB_READ_WRITE_TOKEN` and `ADMIN_PASSWORD` on the backend host
+  before deploying this code**, not after, or you'll take down the chatbot
+  along with the photo feature.
+
+- **Vercel rewrites:** the repo root includes a `vercel.json` with a catch-all
+  rewrite to `index.html`. This is required for client-side routing — without
+  it, a direct visit to `/upload`, `/gallery`, `/slideshow`, or `/admin` (e.g.
+  scanning the printed QR code) 404s instead of loading the app.
+
 ### QR Code for Guests
 
 Once deployed, generate a printable QR code pointing at your live `/upload` page:

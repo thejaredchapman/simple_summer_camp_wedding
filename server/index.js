@@ -117,8 +117,11 @@ function createRateLimiter(windowMs, maxRequests) {
 }
 
 const chatRateLimiter = createRateLimiter(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_REQUESTS);
-const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 15); // 15 uploads / 10 min / IP
-const photoListRateLimiter = createRateLimiter(60 * 1000, 60); // 60 requests / min / IP
+// Keyed per-IP, but an entire wedding venue's wifi typically NATs all guests behind
+// one public IP — these limits are sized for many guests sharing a single IP, not a lone client.
+const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 100); // 100 uploads / 10 min / IP
+const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
+const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
 
 // =============================================================================
 // INPUT SANITIZATION
@@ -305,7 +308,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-app.get('/api/admin/photos', requireAdmin, async (req, res) => {
+app.get('/api/admin/photos', adminRateLimiter, requireAdmin, async (req, res) => {
   try {
     const photos = await listPhotos();
     res.json({ photos });
@@ -315,7 +318,7 @@ app.get('/api/admin/photos', requireAdmin, async (req, res) => {
   }
 });
 
-app.delete('/api/admin/photos', requireAdmin, async (req, res) => {
+app.delete('/api/admin/photos', adminRateLimiter, requireAdmin, async (req, res) => {
   try {
     const pathname = req.query.id;
     if (!pathname || typeof pathname !== 'string' || !pathname.startsWith('guest-photos/')) {
