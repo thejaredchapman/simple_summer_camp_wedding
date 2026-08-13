@@ -32,7 +32,7 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
 // =============================================================================
 
 function validateEnvironment() {
-  const requiredVars = ['ANTHROPIC_API_KEY'];
+  const requiredVars = ['ANTHROPIC_API_KEY', 'BLOB_READ_WRITE_TOKEN'];
   const missing = requiredVars.filter(varName => !process.env[varName]);
 
   if (missing.length > 0) {
