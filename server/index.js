@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
+import multer from 'multer';
 import { RAGService } from './rag.js';
+import { uploadPhoto } from './photoStorage.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
@@ -73,49 +75,49 @@ ragService.loadDefaultDocuments();
 // RATE LIMITING
 // =============================================================================
 
-const rateLimitStore = new Map();
+function createRateLimiter(windowMs, maxRequests) {
+  const store = new Map();
 
-function cleanupRateLimitStore() {
-  const now = Date.now();
-  for (const [key, data] of rateLimitStore.entries()) {
-    if (now - data.windowStart > RATE_LIMIT_WINDOW_MS) {
-      rateLimitStore.delete(key);
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, data] of store.entries()) {
+      if (now - data.windowStart > windowMs) {
+        store.delete(key);
+      }
     }
-  }
+  }, 60000);
+
+  return function rateLimiter(req, res, next) {
+    const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+    const now = Date.now();
+
+    let clientData = store.get(clientIP);
+
+    if (!clientData || now - clientData.windowStart > windowMs) {
+      clientData = { windowStart: now, requestCount: 1 };
+      store.set(clientIP, clientData);
+    } else {
+      clientData.requestCount++;
+    }
+
+    res.setHeader('X-RateLimit-Limit', maxRequests);
+    res.setHeader('X-RateLimit-Remaining', Math.max(0, maxRequests - clientData.requestCount));
+    res.setHeader('X-RateLimit-Reset', Math.ceil((clientData.windowStart + windowMs) / 1000));
+
+    if (clientData.requestCount > maxRequests) {
+      return res.status(429).json({
+        error: 'Too many requests',
+        message: 'Please wait before making more requests.',
+        retryAfter: Math.ceil((clientData.windowStart + windowMs - now) / 1000)
+      });
+    }
+
+    next();
+  };
 }
 
-// Cleanup old entries every minute
-setInterval(cleanupRateLimitStore, 60000);
-
-function rateLimiter(req, res, next) {
-  const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
-  const now = Date.now();
-
-  let clientData = rateLimitStore.get(clientIP);
-
-  if (!clientData || now - clientData.windowStart > RATE_LIMIT_WINDOW_MS) {
-    // New window
-    clientData = { windowStart: now, requestCount: 1 };
-    rateLimitStore.set(clientIP, clientData);
-  } else {
-    clientData.requestCount++;
-  }
-
-  // Set rate limit headers
-  res.setHeader('X-RateLimit-Limit', RATE_LIMIT_MAX_REQUESTS);
-  res.setHeader('X-RateLimit-Remaining', Math.max(0, RATE_LIMIT_MAX_REQUESTS - clientData.requestCount));
-  res.setHeader('X-RateLimit-Reset', Math.ceil((clientData.windowStart + RATE_LIMIT_WINDOW_MS) / 1000));
-
-  if (clientData.requestCount > RATE_LIMIT_MAX_REQUESTS) {
-    return res.status(429).json({
-      error: 'Too many requests',
-      message: 'Please wait before making more requests.',
-      retryAfter: Math.ceil((clientData.windowStart + RATE_LIMIT_WINDOW_MS - now) / 1000)
-    });
-  }
-
-  next();
-}
+const chatRateLimiter = createRateLimiter(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_REQUESTS);
+const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 15); // 15 uploads / 10 min / IP
 
 // =============================================================================
 // INPUT SANITIZATION
@@ -245,8 +247,47 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB
+});
+
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+
+app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
+  upload.single('photo')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'That photo is too large (max 15MB). Please try a smaller one.' });
+      }
+      console.error('Upload parsing error:', err.message);
+      return res.status(400).json({ error: 'Upload failed. Please try again.' });
+    }
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const guestName = sanitizeInput(req.body.guestName || '').slice(0, 60);
+    if (!guestName) {
+      return res.status(400).json({ error: 'Please enter your name.' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'No photo was uploaded.' });
+    }
+    if (!ALLOWED_IMAGE_TYPES.includes(req.file.mimetype)) {
+      return res.status(400).json({ error: 'Only image files are allowed.' });
+    }
+
+    const blob = await uploadPhoto(req.file.buffer, guestName, req.file.mimetype);
+    res.json({ success: true, url: blob.url });
+  } catch (error) {
+    console.error('Photo upload error:', error.message);
+    res.status(500).json({ error: 'Upload failed. Please try again.' });
+  }
+});
+
 // Chat endpoint with rate limiting and input validation
-app.post('/api/chat', rateLimiter, validateChatInput, async (req, res) => {
+app.post('/api/chat', chatRateLimiter, validateChatInput, async (req, res) => {
   try {
     const { message, conversationHistory = [] } = req.body;
 
@@ -320,7 +361,7 @@ Guidelines:
 });
 
 // Endpoint to add documents to the knowledge base (protected in production)
-app.post('/api/documents', rateLimiter, (req, res) => {
+app.post('/api/documents', chatRateLimiter, (req, res) => {
   // In production, this should require authentication
   if (NODE_ENV === 'production') {
     return res.status(403).json({ error: 'This endpoint is disabled in production' });
