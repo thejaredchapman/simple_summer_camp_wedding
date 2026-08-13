@@ -1,0 +1,37 @@
+import {
+  Navbar,
+  Hero,
+  MeetTheCouple,
+  TheirStory,
+  PhotoGallery,
+  Schedule,
+  RSVP,
+  Lodging,
+  GettingThere,
+  FAQs,
+  ContactUs,
+  Footer,
+  Chatbot
+} from '../components';
+
+export default function HomePage() {
+  return (
+    <>
+      <Navbar />
+      <main id="main-content">
+        <Hero />
+        <TheirStory />
+        <MeetTheCouple />
+        <PhotoGallery />
+        <Schedule />
+        <RSVP />
+        <Lodging />
+        <GettingThere />
+        <FAQs />
+        <ContactUs />
+      </main>
+      <Footer />
+      <Chatbot />
+    </>
+  );
+}

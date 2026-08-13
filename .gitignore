@@ -16,6 +16,7 @@ node_modules
 dist
 dist-ssr
 build
+scripts/output
 *.local
 
 # Environment files
@@ -25,6 +26,7 @@ build
 .env.test.local
 .env.production.local
 server/.env
+server/google-photos-token.json
 
 # Editor directories and files
 .vscode/*

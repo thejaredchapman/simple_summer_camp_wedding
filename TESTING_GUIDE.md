@@ -126,6 +126,26 @@ Check for:
 3. Refresh website
 4. Animations should be minimal/instant
 
+### 10. Guest Photo Upload Testing (10 minutes)
+
+#### Upload Flow
+- [ ] Open `/upload` on a mobile browser (Safari and Chrome)
+- [ ] Submit with no name — should show a validation error before submitting
+- [ ] Take a new photo via the camera option — should upload and show a success message
+- [ ] Choose an existing photo from the photo library — should upload and show a success message
+- [ ] Turn off wifi mid-upload, confirm an error appears after the automatic retry, then turn wifi back on and resubmit — should succeed
+
+#### Gallery & Slideshow
+- [ ] Open `/gallery` — confirm all uploaded photos appear with guest names
+- [ ] Upload a new photo from another device/tab — confirm it appears in `/gallery` within ~20 seconds without a manual refresh
+- [ ] Open `/slideshow` on a large screen — confirm it auto-advances every ~5 seconds and loops
+- [ ] Confirm slideshow order is randomized (not the same order as the upload timestamps)
+
+#### Admin Moderation
+- [ ] Open `/admin`, enter an incorrect password — confirm an inline error, no access granted
+- [ ] Enter the correct password — confirm the full photo list and count appear
+- [ ] Delete a photo — confirm it disappears from `/admin`, `/gallery`, and `/slideshow`
+
 ---
 
 ## Common Issues & Solutions

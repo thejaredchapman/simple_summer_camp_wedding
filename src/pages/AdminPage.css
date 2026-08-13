@@ -1,0 +1,85 @@
+.admin-page {
+  min-height: 100vh;
+  background: var(--color-cream);
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.admin-login {
+  max-width: 320px;
+  margin: 10vh auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  text-align: center;
+}
+
+.admin-login input {
+  padding: 0.75rem;
+  border: 1px solid var(--color-cream-dark);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.admin-login button,
+.admin-item button {
+  padding: 0.75rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-page h1 {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.admin-stats {
+  text-align: center;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-md);
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--spacing-sm);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.admin-item {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.admin-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-item p {
+  padding: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.admin-item button {
+  width: 100%;
+  border-radius: 0;
+  background: var(--color-warm-sunset-4);
+}
+
+.admin-error {
+  color: var(--color-warm-sunset-4);
+  font-weight: 600;
+  text-align: center;
+}

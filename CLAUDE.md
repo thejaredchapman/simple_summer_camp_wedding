@@ -29,9 +29,9 @@ npm run dev:all   # Runs frontend + backend concurrently
 
 ## Architecture
 
-**Frontend** (`src/`) — React 19 + Vite, no router (single page). All sections are components rendered sequentially in `App.jsx`. No state management library; components are mostly presentational. CSS lives in `src/index.css` using CSS variables.
+**Frontend** (`src/`) — React 19 + Vite, using `react-router-dom` with routes at `/` (HomePage), `/upload`, `/gallery`, `/slideshow`, and `/admin` (defined in `App.jsx`). The homepage is still the original single-page layout: all sections are components rendered sequentially. No state management library; components are mostly presentational. CSS lives in `src/index.css` using CSS variables. `src/pages/` holds route-level page components; `src/lib/` holds the shared photo API client (`photosApi.js`) and an image compression helper (`compressImage.js`) — both new conventions alongside the existing `src/components/` convention.
 
-**Backend** (`server/`) — Separate Node.js package with its own `package.json` and `.env`. Express server exposing `/api/chat`, `/api/health`, and dev-only `/api/documents`.
+**Backend** (`server/`) — Separate Node.js package with its own `package.json` and `.env`. Express server exposing `/api/chat`, `/api/health`, dev-only `/api/documents`, and guest photo endpoints: `POST /api/photos/upload`, `GET /api/photos`, and password-protected `GET /api/admin/photos` / `DELETE /api/admin/photos`. Photos are stored in Vercel Blob storage (`server/photoStorage.js`) — there's no database; metadata (guest name, timestamp) is encoded directly in blob pathnames.
 
 **Chatbot flow**: `src/components/Chatbot.jsx` → POST `/api/chat` → `server/index.js` retrieves relevant docs via `RAGService.search()` → injects as context into Claude API system prompt → returns response.
 
@@ -40,6 +40,8 @@ npm run dev:all   # Runs frontend + backend concurrently
 **Decorations** (`src/components/decorations/`) — Pure SVG components (trees, campfire, lanterns, etc.) used for visual flair throughout the page.
 
 **Image optimization** (`src/components/utils/`) — `OptimizedImage.jsx` and `LazyImage.jsx` serve WebP variants from `public/photos/optimized/`.
+
+**Standalone scripts** (`scripts/`) — `generate-qr.js` (prints a QR code image for the `/upload` page) and `sync-to-google-photos.js` (archives guest photos into a Google Photos album). Both are run manually and are not part of the running app.
 
 ## Environment Setup
 
