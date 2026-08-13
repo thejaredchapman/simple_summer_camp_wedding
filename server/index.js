@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import multer from 'multer';
 import { RAGService } from './rag.js';
-import { uploadPhoto, listPhotos } from './photoStorage.js';
+import { uploadPhoto, listPhotos, deletePhoto } from './photoStorage.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
@@ -34,7 +34,7 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
 // =============================================================================
 
 function validateEnvironment() {
-  const requiredVars = ['ANTHROPIC_API_KEY', 'BLOB_READ_WRITE_TOKEN'];
+  const requiredVars = ['ANTHROPIC_API_KEY', 'BLOB_READ_WRITE_TOKEN', 'ADMIN_PASSWORD'];
   const missing = requiredVars.filter(varName => !process.env[varName]);
 
   if (missing.length > 0) {
@@ -294,6 +294,38 @@ app.get('/api/photos', photoListRateLimiter, async (req, res) => {
   } catch (error) {
     console.error('List photos error:', error.message);
     res.status(500).json({ error: 'Unable to load photos right now.' });
+  }
+});
+
+function requireAdmin(req, res, next) {
+  const providedPassword = req.get('x-admin-password');
+  if (!providedPassword || providedPassword !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Incorrect admin password.' });
+  }
+  next();
+}
+
+app.get('/api/admin/photos', requireAdmin, async (req, res) => {
+  try {
+    const photos = await listPhotos();
+    res.json({ photos });
+  } catch (error) {
+    console.error('Admin list photos error:', error.message);
+    res.status(500).json({ error: 'Unable to load photos right now.' });
+  }
+});
+
+app.delete('/api/admin/photos', requireAdmin, async (req, res) => {
+  try {
+    const pathname = req.query.id;
+    if (!pathname || typeof pathname !== 'string' || !pathname.startsWith('guest-photos/')) {
+      return res.status(400).json({ error: 'Invalid photo id.' });
+    }
+    await deletePhoto(pathname);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Delete photo error:', error.message);
+    res.status(500).json({ error: 'Unable to delete photo.' });
   }
 });
 
