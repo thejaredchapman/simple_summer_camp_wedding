@@ -25,3 +25,28 @@ export async function listPhotos() {
   }
   return data.photos;
 }
+
+export async function adminListPhotos(password) {
+  const res = await fetch(`${BACKEND_URL}/api/admin/photos`, {
+    headers: { 'x-admin-password': password },
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Unable to load photos.');
+  }
+  return data.photos;
+}
+
+export async function adminDeletePhoto(id, password) {
+  const res = await fetch(
+    `${BACKEND_URL}/api/admin/photos?id=${encodeURIComponent(id)}`,
+    {
+      method: 'DELETE',
+      headers: { 'x-admin-password': password },
+    }
+  );
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Unable to delete photo.');
+  }
+}
