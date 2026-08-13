@@ -16,6 +16,7 @@ node_modules
 dist
 dist-ssr
 build
+scripts/output
 *.local
 
 # Environment files
