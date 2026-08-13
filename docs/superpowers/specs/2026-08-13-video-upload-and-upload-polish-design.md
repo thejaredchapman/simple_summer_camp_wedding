@@ -6,13 +6,15 @@ Builds on: `2026-08-12-guest-photo-upload-design.md` (already implemented and me
 
 ## Purpose
 
-Three additions to the guest photo upload feature:
+Four additions to the guest photo upload feature:
 
 1. Brand the `/upload` (and new `/upload-video`) pages with the Camp Javery sign.
 2. Give guests real upload progress feedback with a gradient progress bar styled
    after the sign's own sunset colors.
 3. Let guests upload short videos, viewable in a dedicated `/videos` gallery —
    explicitly excluded from `/slideshow`, which stays photos-only.
+4. Add a "Contact Help" link to the pages where a guest or admin could hit an
+   upload/gallery problem, opening a pre-filled email to the couple.
 
 ## Non-goals
 
@@ -157,6 +159,28 @@ out of an otherwise-shared feed.
 API accepts video bytes through the same upload endpoint). Per-item error
 isolation (one failed video doesn't abort the run) matches the existing
 photo-loop behavior.
+
+## 3. Contact help link
+
+A small "Contact Help" link appears on `/upload`, `/upload-video`,
+`/gallery`, `/videos`, and `/admin` — the pages where a guest or the admin
+could actually run into an upload/gallery problem. It's a plain `mailto:`
+link (no backend involved), pre-filled with:
+
+- **To:** `javery.chapmanwine@gmail.com`
+- **Subject:** `Issues uploading photos`
+- **Body:** a short prompt asking the sender to describe what happened and
+  state their name, since a `mailto:` link can't know the sender's identity
+  beyond their own email address — the body text explicitly asks them to
+  identify themselves so Jared can respond appropriately.
+
+Deliberately excluded: `/slideshow` (designed to be a full-bleed,
+chrome-free unattended display — see the original feature spec) and the
+main wedding homepage (already has its own full Contact Us section).
+
+Implemented as a single shared component (`ContactHelpLink`) reused across
+the five pages, styled as an unobtrusive link rather than a prominent
+button.
 
 ## Error handling
 
