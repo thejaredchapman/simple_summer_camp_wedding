@@ -22,7 +22,9 @@ export function uploadWithProgress(url, formData, onProgress) {
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(data);
       } else {
-        reject(new Error(data?.error || 'Something went wrong. Please try again.'));
+        const error = new Error(data?.error || 'Something went wrong. Please try again.');
+        error.status = xhr.status;
+        reject(error);
       }
     });
 

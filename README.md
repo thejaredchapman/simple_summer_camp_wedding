@@ -246,8 +246,8 @@ down the existing chatbot too.
 - **Backend host (Render/Railway/wherever) environment variables:**
   - `ALLOWED_ORIGINS` — must include your production Vercel domain (e.g.
     `https://your-site.vercel.app`), or the browser's CORS preflight will fail
-    on all four photo endpoints (`/api/photos/upload`, `/api/photos`,
-    `/api/admin/photos` GET and DELETE).
+    on all photo and video endpoints (`/api/photos/upload`, `/api/photos`,
+    `/api/admin/photos` GET and DELETE, and their `/api/videos` equivalents).
   - `BLOB_READ_WRITE_TOKEN` and `ADMIN_PASSWORD` — both are **required** for
     the server to start at all. `server/index.js`'s `validateEnvironment()`
     calls `process.exit(1)` if either is missing.
@@ -262,8 +262,10 @@ down the existing chatbot too.
 
 - **Vercel rewrites:** the repo root includes a `vercel.json` with a catch-all
   rewrite to `index.html`. This is required for client-side routing — without
-  it, a direct visit to `/upload`, `/gallery`, `/slideshow`, or `/admin` (e.g.
-  scanning the printed QR code) 404s instead of loading the app.
+  it, a direct visit to `/upload`, `/upload-video`, `/gallery`, `/videos`,
+  `/slideshow`, or `/admin` (e.g. scanning the printed QR code — the most
+  likely way `/upload-video` and `/videos` get hit as a fresh deep link)
+  404s instead of loading the app.
 
 ### QR Code for Guests
 
@@ -282,7 +284,7 @@ access to each). Videos:
 - Are capped at 250MB per upload (roughly a few minutes of phone video) —
   there's no way to compress video in the browser the way photos are
   compressed, so guests with longer clips will need to trim them first.
-- Accept common phone formats: `.mp4` and `.mov` (iPhone), `.webm`.
+- Accept common phone formats: `.mp4`, `.mov` (iPhone), `.webm`, and `.3gp`.
 - Appear in a dedicated gallery at `/videos` — **not** in `/slideshow`,
   which stays photos-only by design.
 - Are moderated from the same `/admin` page as photos, in a separate

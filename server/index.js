@@ -123,7 +123,7 @@ const chatRateLimiter = createRateLimiter(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_R
 const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 100); // 100 uploads / 10 min / IP
 const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
-const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 5); // 5 uploads / 10 min / IP
+const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 50); // 50 uploads / 10 min / IP — shared venue wifi NATs many guests behind one IP
 const videoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 
 // =============================================================================

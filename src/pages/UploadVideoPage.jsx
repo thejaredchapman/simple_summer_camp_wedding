@@ -3,9 +3,10 @@ import { uploadVideo } from '../lib/videosApi';
 import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
 import ContactHelpLink from '../components/ContactHelpLink';
-import './UploadVideoPage.css';
+import './UploadPage.css';
 
 const MAX_VIDEO_SIZE_BYTES = 250 * 1024 * 1024;
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm', 'video/3gpp'];
 
 export default function UploadVideoPage() {
   const [guestName, setGuestName] = useState('');
@@ -19,6 +20,12 @@ export default function UploadVideoPage() {
     if (selected && selected.size > MAX_VIDEO_SIZE_BYTES) {
       setStatus('error');
       setErrorMessage('That video is too large (max 250MB). Please try a shorter clip.');
+      setFile(null);
+      return;
+    }
+    if (selected && !ALLOWED_VIDEO_TYPES.includes(selected.type)) {
+      setStatus('error');
+      setErrorMessage("That file type isn't supported. Please upload an MP4, MOV, or WebM video.");
       setFile(null);
       return;
     }
@@ -41,7 +48,8 @@ export default function UploadVideoPage() {
       await uploadVideo(guestName.trim(), file, setProgress);
       setStatus('success');
     } catch (error) {
-      if (attempt < 2) {
+      const isRetryable = !error.status || error.status >= 500;
+      if (attempt < 2 && isRetryable) {
         return attemptUpload(attempt + 1);
       }
       setStatus('error');
@@ -85,7 +93,7 @@ export default function UploadVideoPage() {
             <input
               id="video"
               type="file"
-              accept="video/*"
+              accept="video/mp4,video/quicktime,video/webm,video/3gpp"
               onChange={handleFileChange}
               required
               disabled={status === 'uploading'}

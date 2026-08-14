@@ -31,7 +31,8 @@
   font-weight: 600;
 }
 
-.admin-page h1 {
+.admin-page h1,
+.admin-page h2 {
   font-family: var(--font-display);
   color: var(--color-primary);
   text-align: center;
@@ -51,11 +52,12 @@
   margin: 0 auto;
 }
 
-.admin-page h1 + .admin-stats {
+.admin-page h1 + .admin-stats,
+.admin-page h2 + .admin-stats {
   margin-top: 0;
 }
 
-.admin-grid + h1 {
+.admin-grid + h2 {
   margin-top: var(--spacing-lg);
 }
 

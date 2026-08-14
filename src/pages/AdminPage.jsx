@@ -17,13 +17,23 @@ export default function AdminPage() {
     setLoading(true);
     setError('');
     try {
-      const [photoData, videoData] = await Promise.all([
+      const [photoResult, videoResult] = await Promise.allSettled([
         adminListPhotos(password),
         adminListVideos(password),
       ]);
-      setPhotos(photoData);
-      setVideos(videoData);
+
+      if (photoResult.status === 'rejected' && videoResult.status === 'rejected') {
+        throw photoResult.reason;
+      }
+
+      setPhotos(photoResult.status === 'fulfilled' ? photoResult.value : []);
+      setVideos(videoResult.status === 'fulfilled' ? videoResult.value : []);
       setAuthed(true);
+
+      const failed = [photoResult, videoResult].find(r => r.status === 'rejected');
+      if (failed) {
+        setError(failed.reason.message || 'Some content failed to load.');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -75,11 +85,11 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page">
+      {error && <p className="admin-error" role="alert">{error}</p>}
       <h1>Photo Moderation</h1>
       <p className="admin-stats">
         {photos.length} photo{photos.length === 1 ? '' : 's'} uploaded
       </p>
-      {error && <p className="admin-error" role="alert">{error}</p>}
       <div className="admin-grid">
         {photos.map(photo => (
           <div key={photo.id} className="admin-item">
@@ -92,7 +102,7 @@ export default function AdminPage() {
         ))}
       </div>
 
-      <h1>Video Moderation</h1>
+      <h2>Video Moderation</h2>
       <p className="admin-stats">
         {videos.length} video{videos.length === 1 ? '' : 's'} uploaded
       </p>

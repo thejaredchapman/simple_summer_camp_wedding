@@ -28,7 +28,8 @@ export default function UploadPage() {
       await uploadPhoto(guestName.trim(), compressed, setProgress);
       setStatus('success');
     } catch (error) {
-      if (attempt < 2) {
+      const isRetryable = !error.status || error.status >= 500;
+      if (attempt < 2 && isRetryable) {
         return attemptUpload(attempt + 1);
       }
       setStatus('error');
