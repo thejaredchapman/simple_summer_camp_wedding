@@ -5,6 +5,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import multer from 'multer';
 import { RAGService } from './rag.js';
 import { uploadPhoto, listPhotos, deletePhoto } from './photoStorage.js';
+import { uploadVideo, listVideos, deleteVideo } from './videoStorage.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
@@ -122,6 +123,7 @@ const chatRateLimiter = createRateLimiter(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_R
 const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 100); // 100 uploads / 10 min / IP
 const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
+const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 5); // 5 uploads / 10 min / IP
 
 // =============================================================================
 // INPUT SANITIZATION
@@ -286,6 +288,45 @@ app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
     res.json({ success: true, url: blob.url });
   } catch (error) {
     console.error('Photo upload error:', error.message);
+    res.status(500).json({ error: 'Upload failed. Please try again.' });
+  }
+});
+
+const videoUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 250 * 1024 * 1024 }, // 250MB
+});
+
+const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm', 'video/3gpp'];
+
+app.post('/api/videos/upload', videoUploadRateLimiter, (req, res, next) => {
+  videoUpload.single('video')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'That video is too large (max 250MB). Please try a shorter clip.' });
+      }
+      console.error('Video upload parsing error:', err.message);
+      return res.status(400).json({ error: 'Upload failed. Please try again.' });
+    }
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const guestName = sanitizeInput(req.body.guestName || '').slice(0, 60);
+    if (!guestName) {
+      return res.status(400).json({ error: 'Please enter your name.' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'No video was uploaded.' });
+    }
+    if (!ALLOWED_VIDEO_TYPES.includes(req.file.mimetype)) {
+      return res.status(400).json({ error: 'Only video files are allowed.' });
+    }
+
+    const blob = await uploadVideo(req.file.buffer, guestName, req.file.mimetype);
+    res.json({ success: true, url: blob.url });
+  } catch (error) {
+    console.error('Video upload error:', error.message);
     res.status(500).json({ error: 'Upload failed. Please try again.' });
   }
 });
