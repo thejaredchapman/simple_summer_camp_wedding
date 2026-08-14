@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listVideos } from '../lib/videosApi';
+import ContactHelpLink from '../components/ContactHelpLink';
 import './VideosPage.css';
 
 const POLL_INTERVAL_MS = 20000;
@@ -46,6 +47,7 @@ export default function VideosPage() {
       {videos.length === 0 && !error && (
         <p className="videos-empty">No videos yet — be the first to share one!</p>
       )}
+      <ContactHelpLink />
     </div>
   );
 }

@@ -176,6 +176,11 @@ Guests scan a QR code, upload photos from their phones (no account needed), and 
 them in a live gallery (`/gallery`) and full-screen slideshow (`/slideshow`). You
 moderate uploads from a password-protected `/admin` page.
 
+Every guest-facing upload/gallery page (`/upload`, `/upload-video`,
+`/gallery`, `/videos`) and the `/admin` page has a small "Contact Help"
+link that opens a pre-filled email to `javery.chapmanwine@gmail.com` if
+something goes wrong.
+
 ### Local Setup
 
 1. **Clone and install dependencies:**

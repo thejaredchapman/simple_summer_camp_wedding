@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listPhotos } from '../lib/photosApi';
+import ContactHelpLink from '../components/ContactHelpLink';
 import './GalleryPage.css';
 
 const POLL_INTERVAL_MS = 20000;
@@ -52,6 +53,7 @@ export default function GalleryPage() {
       {photos.length === 0 && !error && (
         <p className="gallery-empty">No photos yet — be the first to share one!</p>
       )}
+      <ContactHelpLink />
     </div>
   );
 }

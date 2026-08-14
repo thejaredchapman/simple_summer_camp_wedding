@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { adminListPhotos, adminDeletePhoto } from '../lib/photosApi';
 import { adminListVideos, adminDeleteVideo } from '../lib/videosApi';
+import ContactHelpLink from '../components/ContactHelpLink';
 import './AdminPage.css';
 
 export default function AdminPage() {
@@ -67,6 +68,7 @@ export default function AdminPage() {
             {loading ? 'Checking…' : 'Enter'}
           </button>
         </form>
+        <ContactHelpLink />
       </div>
     );
   }
@@ -105,6 +107,7 @@ export default function AdminPage() {
           </div>
         ))}
       </div>
+      <ContactHelpLink />
     </div>
   );
 }

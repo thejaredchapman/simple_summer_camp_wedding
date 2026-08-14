@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { uploadVideo } from '../lib/videosApi';
 import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
+import ContactHelpLink from '../components/ContactHelpLink';
 import './UploadVideoPage.css';
 
 const MAX_VIDEO_SIZE_BYTES = 250 * 1024 * 1024;
@@ -102,6 +103,7 @@ export default function UploadVideoPage() {
           </form>
         )}
       </div>
+      <ContactHelpLink />
     </div>
   );
 }

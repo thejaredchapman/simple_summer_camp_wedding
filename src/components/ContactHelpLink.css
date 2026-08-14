@@ -1,0 +1,18 @@
+.contact-help-link {
+  position: fixed;
+  bottom: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: white;
+  color: var(--color-text-light);
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  transition: color var(--transition-fast);
+}
+
+.contact-help-link:hover {
+  color: var(--color-primary);
+}

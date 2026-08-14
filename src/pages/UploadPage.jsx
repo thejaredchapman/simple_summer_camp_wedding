@@ -3,6 +3,7 @@ import { compressPhoto } from '../lib/compressImage';
 import { uploadPhoto } from '../lib/photosApi';
 import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
+import ContactHelpLink from '../components/ContactHelpLink';
 import './UploadPage.css';
 
 export default function UploadPage() {
@@ -89,6 +90,7 @@ export default function UploadPage() {
           </form>
         )}
       </div>
+      <ContactHelpLink />
     </div>
   );
 }
