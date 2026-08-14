@@ -384,6 +384,30 @@ app.delete('/api/admin/photos', adminRateLimiter, requireAdmin, async (req, res)
   }
 });
 
+app.get('/api/admin/videos', adminRateLimiter, requireAdmin, async (req, res) => {
+  try {
+    const videos = await listVideos();
+    res.json({ videos });
+  } catch (error) {
+    console.error('Admin list videos error:', error.message);
+    res.status(500).json({ error: 'Unable to load videos right now.' });
+  }
+});
+
+app.delete('/api/admin/videos', adminRateLimiter, requireAdmin, async (req, res) => {
+  try {
+    const pathname = req.query.id;
+    if (!pathname || typeof pathname !== 'string' || !pathname.startsWith('guest-videos/')) {
+      return res.status(400).json({ error: 'Invalid video id.' });
+    }
+    await deleteVideo(pathname);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Delete video error:', error.message);
+    res.status(500).json({ error: 'Unable to delete video.' });
+  }
+});
+
 // Chat endpoint with rate limiting and input validation
 app.post('/api/chat', chatRateLimiter, validateChatInput, async (req, res) => {
   try {
