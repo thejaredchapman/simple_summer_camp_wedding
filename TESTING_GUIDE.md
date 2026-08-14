@@ -146,6 +146,38 @@ Check for:
 - [ ] Enter the correct password — confirm the full photo list and count appear
 - [ ] Delete a photo — confirm it disappears from `/admin`, `/gallery`, and `/slideshow`
 
+### 11. Guest Video Upload Testing (10 minutes)
+
+#### Upload Flow
+- [ ] Open `/upload-video` — confirm the camp sign appears and the page
+      only accepts video files
+- [ ] Upload a video recorded on an iPhone (native `.mov`) — confirm it
+      uploads successfully and plays back correctly in `/videos`
+- [ ] Upload a video recorded on an Android phone (native `.mp4`) —
+      confirm the same
+- [ ] Watch the progress bar during a real upload — confirm the percentage
+      counts up accurately and the gradient visibly shifts from gold
+      toward red as it approaches 100%
+- [ ] Try selecting a file over 250MB — confirm it's rejected immediately
+      with a clear message, before any upload starts
+- [ ] Confirm the success screen says "Your video is up" (not "photo")
+
+#### Videos Gallery & Slideshow Isolation
+- [ ] Open `/videos` — confirm uploaded videos appear with working native
+      playback controls
+- [ ] Upload a new video from another tab — confirm it appears in
+      `/videos` within ~20 seconds without a manual refresh
+- [ ] Open `/slideshow` — confirm no video ever appears there, only
+      photos, and there are no console errors
+
+#### Admin Moderation
+- [ ] Log into `/admin` — confirm both "Photo Moderation" and "Video
+      Moderation" sections appear with correct counts
+- [ ] Delete a video from admin — confirm it disappears from `/videos`
+      and the admin grid
+- [ ] Confirm deleting a photo still works correctly (no regression from
+      adding the video section)
+
 ---
 
 ## Common Issues & Solutions

@@ -268,6 +268,26 @@ node scripts/generate-qr.js https://your-deployed-domain.com/upload
 ```
 This saves `scripts/output/upload-qr.png` — print it for signage at the venue.
 
+### Guest Video Uploads
+
+Guests can also share short videos at `/upload-video` (a separate link from
+`/upload` — print or share both QR codes if you want guests to have easy
+access to each). Videos:
+
+- Are capped at 250MB per upload (roughly a few minutes of phone video) —
+  there's no way to compress video in the browser the way photos are
+  compressed, so guests with longer clips will need to trim them first.
+- Accept common phone formats: `.mp4` and `.mov` (iPhone), `.webm`.
+- Appear in a dedicated gallery at `/videos` — **not** in `/slideshow`,
+  which stays photos-only by design.
+- Are moderated from the same `/admin` page as photos, in a separate
+  "Video Moderation" section below the photo grid.
+
+Generate a QR code for the video upload link the same way as the photo one:
+```bash
+node scripts/generate-qr.js https://your-deployed-domain.com/upload-video
+```
+
 ### Post-Wedding Google Photos Archive
 
 After the wedding, archive every guest photo into a Google Photos album in one
@@ -284,7 +304,7 @@ in `scripts/sync-to-google-photos.js`'s Task 11 setup steps, or briefly:
    ```
 4. Open the printed URL, sign in with the Google account you want the album
    created in, and approve access. The script creates a "Camp Javery Wedding"
-   album and uploads every guest photo into it.
+   album and uploads every guest photo and video into it.
 
 This script is never run automatically — it's meant to be run once, manually,
 whenever you're ready to archive.
