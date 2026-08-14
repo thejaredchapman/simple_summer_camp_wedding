@@ -124,6 +124,7 @@ const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 100); // 100 up
 const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
 const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 5); // 5 uploads / 10 min / IP
+const videoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 
 // =============================================================================
 // INPUT SANITIZATION
@@ -328,6 +329,16 @@ app.post('/api/videos/upload', videoUploadRateLimiter, (req, res, next) => {
   } catch (error) {
     console.error('Video upload error:', error.message);
     res.status(500).json({ error: 'Upload failed. Please try again.' });
+  }
+});
+
+app.get('/api/videos', videoListRateLimiter, async (req, res) => {
+  try {
+    const videos = await listVideos();
+    res.json({ videos });
+  } catch (error) {
+    console.error('List videos error:', error.message);
+    res.status(500).json({ error: 'Unable to load videos right now.' });
   }
 });
 
