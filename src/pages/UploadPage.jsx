@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { compressPhoto } from '../lib/compressImage';
 import { uploadPhoto } from '../lib/photosApi';
+import UploadProgressBar from '../components/UploadProgressBar';
+import UploadSuccessScreen from '../components/UploadSuccessScreen';
 import './UploadPage.css';
 
 export default function UploadPage() {
@@ -8,6 +10,7 @@ export default function UploadPage() {
   const [file, setFile] = useState(null);
   const [status, setStatus] = useState('idle'); // idle | uploading | success | error
   const [errorMessage, setErrorMessage] = useState('');
+  const [progress, setProgress] = useState(0);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -18,9 +21,10 @@ export default function UploadPage() {
   async function attemptUpload(attempt) {
     setStatus('uploading');
     setErrorMessage('');
+    setProgress(0);
     try {
       const compressed = await compressPhoto(file);
-      await uploadPhoto(guestName.trim(), compressed);
+      await uploadPhoto(guestName.trim(), compressed, setProgress);
       setStatus('success');
     } catch (error) {
       if (attempt < 2) {
@@ -34,21 +38,22 @@ export default function UploadPage() {
   function handleUploadAnother() {
     setStatus('idle');
     setFile(null);
+    setProgress(0);
   }
 
   return (
     <div className="upload-page">
       <div className="upload-card">
+        <img src="/camp-sign.png" alt="Camp Javery" className="upload-card-sign" />
         <h1>Share Your Photos!</h1>
         <p className="upload-subtitle">Camp Javery — Jared &amp; Avery's Wedding</p>
 
         {status === 'success' ? (
-          <div className="upload-success">
-            <p>Thanks, {guestName}! Your photo is up.</p>
-            <button type="button" onClick={handleUploadAnother}>
-              Upload another photo
-            </button>
-          </div>
+          <UploadSuccessScreen
+            guestName={guestName}
+            mediaType="photo"
+            onUploadAnother={handleUploadAnother}
+          />
         ) : (
           <form onSubmit={handleSubmit} className="upload-form">
             <label htmlFor="guestName">Your name</label>
@@ -71,6 +76,8 @@ export default function UploadPage() {
               required
               disabled={status === 'uploading'}
             />
+
+            {status === 'uploading' && <UploadProgressBar percent={progress} />}
 
             {status === 'error' && (
               <p className="upload-error" role="alert">{errorMessage}</p>

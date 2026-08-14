@@ -1,0 +1,27 @@
+.upload-success {
+  text-align: center;
+}
+
+.upload-success p {
+  color: var(--color-text);
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.upload-success button {
+  margin-top: var(--spacing-md);
+  padding: 0.9rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  width: 100%;
+}
+
+.upload-success button:hover {
+  background: var(--color-secondary);
+}

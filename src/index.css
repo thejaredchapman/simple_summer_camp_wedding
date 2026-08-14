@@ -15,6 +15,7 @@
   --color-cream-dark: #F0EBE0;
   --color-text: #2D5A3D;
   --color-text-light: #4A7C59;
+  --gradient-sunset: linear-gradient(90deg, #E3B152 0%, #E0773C 50%, #E44842 100%);
 
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'Lora', Georgia, serif;
