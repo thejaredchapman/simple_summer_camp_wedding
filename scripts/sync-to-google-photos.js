@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: new URL('../server/.env', import.meta.url).pathname });
 
 const { listPhotos } = await import('../server/photoStorage.js');
+const { listVideos } = await import('../server/videoStorage.js');
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -142,9 +143,11 @@ async function addToAlbum(accessToken, albumId, uploadToken, filename) {
 async function main() {
   console.log('Fetching guest photos from Vercel Blob...');
   const photos = await listPhotos();
-  console.log(`Found ${photos.length} photo(s) to archive.\n`);
+  console.log('Fetching guest videos from Vercel Blob...');
+  const videos = await listVideos();
+  console.log(`Found ${photos.length} photo(s) and ${videos.length} video(s) to archive.\n`);
 
-  if (photos.length === 0) {
+  if (photos.length === 0 && videos.length === 0) {
     console.log('Nothing to sync.');
     return;
   }
@@ -157,6 +160,7 @@ async function main() {
 
   let succeeded = 0;
   let failed = 0;
+  const total = photos.length + videos.length;
 
   for (const photo of photos) {
     try {
@@ -168,10 +172,28 @@ async function main() {
       await addToAlbum(accessToken, albumId, uploadToken, filename);
 
       succeeded += 1;
-      console.log(`Archived (${succeeded}/${photos.length}): ${photo.name}`);
+      console.log(`Archived (${succeeded}/${total}): ${photo.name}`);
     } catch (error) {
       failed += 1;
       console.error(`Failed to archive photo from ${photo.name}: ${error.message}`);
+    }
+  }
+
+  for (const video of videos) {
+    try {
+      const res = await fetch(video.url);
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const extension = video.id.match(/\.([a-z0-9]+)$/i)?.[1] || 'mp4';
+      const filename = `${video.name.replace(/[^a-z0-9]+/gi, '-')}.${extension}`;
+
+      const uploadToken = await uploadBytes(accessToken, buffer, filename);
+      await addToAlbum(accessToken, albumId, uploadToken, filename);
+
+      succeeded += 1;
+      console.log(`Archived (${succeeded}/${total}): ${video.name} (video)`);
+    } catch (error) {
+      failed += 1;
+      console.error(`Failed to archive video from ${video.name}: ${error.message}`);
     }
   }
 
