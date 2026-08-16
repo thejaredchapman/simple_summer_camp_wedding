@@ -83,3 +83,23 @@
   color: var(--color-warm-sunset-4);
   font-weight: 600;
 }
+
+.upload-review-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.upload-review-actions button {
+  margin-top: 0;
+}
+
+.upload-continue-button {
+  background: var(--color-cream-dark);
+  color: var(--color-text);
+}
+
+.upload-form button.upload-continue-button:hover {
+  background: var(--color-warm-sunset-2);
+}
