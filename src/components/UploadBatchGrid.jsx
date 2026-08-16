@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './UploadBatchGrid.css';
 
 const STATUS_LABEL = {
@@ -10,6 +10,10 @@ const STATUS_LABEL = {
 
 export default function UploadBatchGrid({ items }) {
   const [thumbnails, setThumbnails] = useState({});
+  // Mirrors `thumbnails` so the unmount-cleanup effect below can revoke
+  // every outstanding URL by reading the ref directly, instead of going
+  // through a setState updater that may never run on an unmounting fiber.
+  const thumbnailsRef = useRef({});
 
   // Only create a thumbnail URL the first time an item's id appears, and
   // revoke URLs for ids that are no longer present. This deliberately does
@@ -17,42 +21,50 @@ export default function UploadBatchGrid({ items }) {
   // success), since `items` gets a new array reference on every queue
   // update but the underlying File objects don't change.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setThumbnails(prev => {
-      const next = { ...prev };
-      const currentIds = new Set(items.map(item => item.id));
+    const next = { ...thumbnailsRef.current };
+    const currentIds = new Set(items.map(item => item.id));
 
-      items.forEach(item => {
-        if (!next[item.id]) {
-          next[item.id] = URL.createObjectURL(item.file);
-        }
-      });
-
-      Object.keys(next).forEach(id => {
-        if (!currentIds.has(id)) {
-          URL.revokeObjectURL(next[id]);
-          delete next[id];
-        }
-      });
-
-      return next;
+    items.forEach(item => {
+      if (!next[item.id]) {
+        next[item.id] = URL.createObjectURL(item.file);
+      }
     });
+
+    Object.keys(next).forEach(id => {
+      if (!currentIds.has(id)) {
+        URL.revokeObjectURL(next[id]);
+        delete next[id];
+      }
+    });
+
+    thumbnailsRef.current = next;
+    // External resource (Blob URL) sync + cleanup on prop change, not
+    // derivable render state — the ref above is the source of truth for
+    // cleanup; this setState only drives the visible <img> re-render.
+    // (No eslint-disable needed here: since `next` is computed from the
+    // ref rather than the previous `thumbnails` state, the
+    // react-hooks/set-state-in-effect rule no longer flags this call.)
+    setThumbnails(next);
   }, [items]);
 
-  // Revoke every outstanding URL on unmount (e.g. navigating away mid-upload).
+  // Revoke every outstanding URL on unmount (e.g. navigating away mid-upload,
+  // or the grid unmounting because `phase` flips to `success`). Reads from
+  // the ref rather than calling setState, since a setState updater queued
+  // during unmount cleanup can be dropped silently, leaking the URLs.
   useEffect(() => {
     return () => {
-      setThumbnails(current => {
-        Object.values(current).forEach(url => URL.revokeObjectURL(url));
-        return current;
-      });
+      Object.values(thumbnailsRef.current).forEach(url => URL.revokeObjectURL(url));
     };
   }, []);
 
   return (
     <div className="upload-batch-grid">
       {items.map(item => (
-        <div key={item.id} className={`upload-batch-item upload-batch-item-${item.status}`}>
+        <div
+          key={item.id}
+          className={`upload-batch-item upload-batch-item-${item.status}`}
+          title={item.status === 'error' && item.errorMessage ? item.errorMessage : undefined}
+        >
           {thumbnails[item.id] && (
             <img src={thumbnails[item.id]} alt="" className="upload-batch-thumb" />
           )}

@@ -82,7 +82,7 @@ export default function UploadPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!guestName.trim() || items.length === 0) return;
+    if (phase !== 'idle' || !guestName.trim() || items.length === 0) return;
     await runQueue(items);
   }
 
@@ -106,6 +106,9 @@ export default function UploadPage() {
   const successCount = items.filter(i => i.status === 'success').length;
   const failedCount = items.filter(i => i.status === 'error').length;
   const overallPercent = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+  const firstFailureMessage = items.find(
+    i => i.status === 'error' && i.errorMessage
+  )?.errorMessage;
 
   function handleContinue() {
     if (successCount > 0) {
@@ -139,7 +142,7 @@ export default function UploadPage() {
               onChange={e => setGuestName(e.target.value)}
               maxLength={60}
               required
-              disabled={phase === 'uploading'}
+              disabled={phase === 'uploading' || phase === 'review'}
             />
 
             <label htmlFor="photo">Photos</label>
@@ -150,7 +153,7 @@ export default function UploadPage() {
               multiple
               onChange={handleFileChange}
               required
-              disabled={phase === 'uploading'}
+              disabled={phase === 'uploading' || phase === 'review'}
             />
 
             {selectionError && (
@@ -170,6 +173,9 @@ export default function UploadPage() {
 
             {phase === 'review' ? (
               <div className="upload-review-actions">
+                {failedCount > 0 && firstFailureMessage && (
+                  <p className="upload-error" role="alert">{firstFailureMessage}</p>
+                )}
                 {failedCount > 0 && (
                   <button type="button" onClick={handleRetryFailed}>
                     Retry {failedCount} failed photo{failedCount === 1 ? '' : 's'}
