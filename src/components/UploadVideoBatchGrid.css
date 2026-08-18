@@ -1,0 +1,50 @@
+.upload-video-batch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.upload-video-batch-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-cream-dark);
+}
+
+.upload-video-batch-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-video-batch-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.upload-video-batch-badge-pending {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.upload-video-batch-badge-uploading {
+  background: var(--color-warm-sunset-3);
+}
+
+.upload-video-batch-badge-success {
+  background: var(--color-primary);
+}
+
+.upload-video-batch-badge-error {
+  background: var(--color-warm-sunset-4);
+}
