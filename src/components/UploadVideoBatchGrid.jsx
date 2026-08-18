@@ -68,9 +68,10 @@ export default function UploadVideoBatchGrid({ items }) {
         >
           {thumbnails[item.id] && (
             <video
-              src={thumbnails[item.id]}
+              src={`${thumbnails[item.id]}#t=0.1`}
               className="upload-video-batch-thumb"
               muted
+              playsInline
               preload="metadata"
             />
           )}

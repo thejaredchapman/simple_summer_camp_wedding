@@ -57,6 +57,10 @@ export default function UploadVideoPage() {
   }
 
   async function uploadItem(queueItem) {
+    const validationError = validateFile(queueItem.file);
+    if (validationError) {
+      return { status: 'error', errorMessage: validationError, progress: 0 };
+    }
     let lastError = null;
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
@@ -185,7 +189,11 @@ export default function UploadVideoPage() {
               <p className="upload-error" role="alert">{selectionError}</p>
             )}
 
-            {items.length > 0 && (
+            {failedCount > 0 && firstFailureMessage && (
+              <p className="upload-error" role="alert">{firstFailureMessage}</p>
+            )}
+
+            {phase !== 'idle' && items.length > 0 && (
               <UploadProgressBar
                 percent={overallPercent}
                 label={`${completedCount}/${total} uploaded`}
@@ -196,9 +204,6 @@ export default function UploadVideoPage() {
 
             {phase === 'review' ? (
               <div className="upload-review-actions">
-                {failedCount > 0 && firstFailureMessage && (
-                  <p className="upload-error" role="alert">{firstFailureMessage}</p>
-                )}
                 {failedCount > 0 && (
                   <button type="button" onClick={handleRetryFailed}>
                     Retry {failedCount} failed video{failedCount === 1 ? '' : 's'}
