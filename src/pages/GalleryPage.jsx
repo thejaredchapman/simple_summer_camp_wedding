@@ -52,7 +52,13 @@ export default function GalleryPage() {
             className="gallery-item"
             onClick={() => setLightboxPhotoId(photo.id)}
           >
-            <img src={photo.url} alt={`Photo from ${photo.name}`} loading="lazy" />
+            <img
+              src={photo.url}
+              alt={`Photo from ${photo.name}`}
+              loading="lazy"
+              draggable={false}
+              onContextMenu={e => e.preventDefault()}
+            />
             <span className="gallery-item-name">{photo.name}</span>
           </button>
         ))}

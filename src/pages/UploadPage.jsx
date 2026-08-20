@@ -9,6 +9,7 @@ import UploadSuccessScreen from '../components/UploadSuccessScreen';
 import UploadBatchGrid from '../components/UploadBatchGrid';
 import ContactHelpLink from '../components/ContactHelpLink';
 import RandomPhotoPreview from '../components/RandomPhotoPreview';
+import HowItWorksModal from '../components/HowItWorksModal';
 import './UploadPage.css';
 
 const MAX_BATCH_SIZE = 30;
@@ -140,6 +141,9 @@ export default function UploadPage() {
 
   return (
     <div className="upload-page">
+      <Link to="/" className="upload-home-button">
+        🏠 Home
+      </Link>
       <div className="upload-card">
         <img src="/camp-sign.png" alt="Camp Javery" className="upload-card-sign" />
         <h1>Share Your Photos!</h1>
@@ -150,6 +154,8 @@ export default function UploadPage() {
           {' · '}
           <Link to="/upload-video">Share a video instead</Link>
         </p>
+
+        <HowItWorksModal />
 
         {phase === 'idle' && <RandomPhotoPreview />}
 

@@ -39,6 +39,8 @@ export default function RandomPhotoPreview() {
           alt=""
           loading="lazy"
           className="random-photo-preview-thumb"
+          draggable={false}
+          onContextMenu={e => e.preventDefault()}
         />
       ))}
     </div>

@@ -144,7 +144,12 @@ export default function PhotoLightbox({ photos, index, onClose, onIndexChange })
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <img src={photo.url} alt={`Photo from ${photo.name}`} />
+        <img
+          src={photo.url}
+          alt={`Photo from ${photo.name}`}
+          draggable={false}
+          onContextMenu={e => e.preventDefault()}
+        />
         <span className="photo-lightbox-caption">{photo.name}</span>
 
         {metadataOpen && (
