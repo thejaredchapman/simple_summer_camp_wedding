@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 const navLinks = [
   { href: '#home', label: 'Home' },
   { href: '#our-story', label: 'Our Story' },
   { href: '#meet-us', label: 'Campers' },
   { href: '#photos', label: 'Photos' },
+  { href: '/upload', label: 'Share Photos & Videos', route: true },
   { href: '#schedule', label: 'Schedule' },
   { href: '#rsvp', label: 'RSVP' },
   { href: '#lodging', label: 'Lodging' },
@@ -26,7 +28,10 @@ export default function Navbar() {
       setIsScrolled(window.scrollY > 50);
 
       // Update active section based on scroll position
-      const sections = navLinks.map(link => document.querySelector(link.href)).filter(Boolean);
+      const sections = navLinks
+        .filter(link => !link.route && !link.external)
+        .map(link => document.querySelector(link.href))
+        .filter(Boolean);
       const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -155,6 +160,14 @@ export default function Navbar() {
                 >
                   {link.label}
                 </a>
+              ) : link.route ? (
+                <Link
+                  to={link.href}
+                  role="menuitem"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
               ) : (
                 <a
                   href={link.href}

@@ -128,6 +128,8 @@ export default function UploadPage() {
         <p className="upload-subtitle">Camp Javery — Jared &amp; Avery's Wedding</p>
         <p className="upload-gallery-link">
           <Link to="/gallery">View the Gallery</Link>
+          {' · '}
+          <Link to="/upload-video">Share a video instead</Link>
         </p>
 
         {phase === 'success' ? (
