@@ -1,10 +1,11 @@
-import { put, list, del, head, get } from '@vercel/blob';
+import { put, list, del, head } from '@vercel/blob';
+import { createHmac } from 'node:crypto';
 
 const PHOTO_PREFIX = 'guest-photos/';
-// Unwatermarked originals live in a completely separate prefix (not just a
-// different suffix) so listPhotos()'s `list({ prefix: PHOTO_PREFIX })` can
-// never see them, regardless of filename pattern.
-const PHOTO_ORIGINAL_PREFIX = 'guest-photos-original/';
+// Admin-only data (unwatermarked originals, uploader IP/user-agent) lives
+// under this prefix, so listPhotos()'s `list({ prefix: PHOTO_PREFIX })`
+// never sees it regardless of filename pattern.
+const ADMIN_PREFIX = 'admin-private/';
 
 export function buildPhotoPathname(guestName) {
   const randomId = Math.random().toString(36).slice(2, 10);
@@ -12,10 +13,29 @@ export function buildPhotoPathname(guestName) {
   return `${PHOTO_PREFIX}${randomId}__${safeName}.jpg`;
 }
 
-// The original's pathname mirrors the watermarked photo's, just under the
-// private prefix, so the two are trivially derivable from one another.
+// This store was created public-only — Vercel Blob's `access: 'private'`
+// requires the *store* to be provisioned for private access at creation
+// time (an immutable, dashboard/CLI-only setting), so per-blob private
+// access isn't available here. Admin-only blobs use this store's only
+// available access level (public) but at a pathname an outsider cannot
+// derive: an HMAC of the photo's pathname, keyed on ADMIN_PASSWORD (already
+// required and already configured everywhere this app runs — no new
+// secret to provision). Deterministic, so the server can always recompute
+// it from a photo's id without needing a lookup table this repo has
+// nowhere to store. Rotating ADMIN_PASSWORD orphans existing admin blobs —
+// an acceptable tradeoff for a wedding site's admin panel.
+function buildAdminPathname(kind, photoPathname, extension) {
+  const secret = process.env.ADMIN_PASSWORD || '';
+  const hash = createHmac('sha256', secret).update(`${kind}:${photoPathname}`).digest('hex');
+  return `${ADMIN_PREFIX}${hash}.${extension}`;
+}
+
 export function buildPhotoOriginalPathname(photoPathname) {
-  return `${PHOTO_ORIGINAL_PREFIX}${photoPathname.slice(PHOTO_PREFIX.length)}`;
+  return buildAdminPathname('original', photoPathname, 'jpg');
+}
+
+export function buildPhotoAdminMetadataPathname(photoPathname) {
+  return buildAdminPathname('admin-metadata', photoPathname, 'json');
 }
 
 // EXIF metadata (guest-visible via the gallery lightbox) lives as a small
@@ -23,15 +43,6 @@ export function buildPhotoOriginalPathname(photoPathname) {
 // custom-metadata field and this repo has no database.
 export function buildPhotoMetadataPathname(photoPathname) {
   return photoPathname.replace(/\.jpg$/, '.json');
-}
-
-// Admin-only info (uploader IP/user-agent, for identifying who's behind a
-// joke display name) lives in a SEPARATE, `access: 'private'` blob — it
-// must never share a pathname pattern with a public blob, since a public
-// blob's URL is fetchable by anyone who can guess it, bypassing our own
-// admin-auth check entirely.
-export function buildPhotoAdminMetadataPathname(photoPathname) {
-  return photoPathname.replace(/\.jpg$/, '.admin.json');
 }
 
 export function parsePhotoPathname(pathname) {
@@ -65,7 +76,7 @@ export async function uploadPhoto(buffer, guestName, contentType) {
 export async function uploadOriginalPhoto(photoPathname, buffer, contentType) {
   const originalPathname = buildPhotoOriginalPathname(photoPathname);
   await put(originalPathname, buffer, {
-    access: 'private',
+    access: 'public',
     contentType,
     addRandomSuffix: false,
   });
@@ -74,10 +85,11 @@ export async function uploadOriginalPhoto(photoPathname, buffer, contentType) {
 export async function getOriginalPhoto(photoPathname) {
   const originalPathname = buildPhotoOriginalPathname(photoPathname);
   try {
-    const result = await get(originalPathname, { access: 'private' });
-    if (!result || !result.stream) return null;
-    const arrayBuffer = await new Response(result.stream).arrayBuffer();
-    return { buffer: Buffer.from(arrayBuffer), contentType: result.blob.contentType };
+    const blob = await head(originalPathname);
+    const res = await fetch(blob.url);
+    if (!res.ok) return null;
+    const arrayBuffer = await res.arrayBuffer();
+    return { buffer: Buffer.from(arrayBuffer), contentType: blob.contentType };
   } catch {
     return null;
   }
@@ -107,7 +119,7 @@ export async function getPhotoMetadata(photoPathname) {
 export async function uploadPhotoAdminMetadata(photoPathname, adminMetadata) {
   const pathname = buildPhotoAdminMetadataPathname(photoPathname);
   await put(pathname, JSON.stringify(adminMetadata), {
-    access: 'private',
+    access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
   });
@@ -116,10 +128,10 @@ export async function uploadPhotoAdminMetadata(photoPathname, adminMetadata) {
 export async function getPhotoAdminMetadata(photoPathname) {
   const pathname = buildPhotoAdminMetadataPathname(photoPathname);
   try {
-    const result = await get(pathname, { access: 'private' });
-    if (!result || !result.stream) return null;
-    const text = await new Response(result.stream).text();
-    return JSON.parse(text);
+    const blob = await head(pathname);
+    const res = await fetch(blob.url);
+    if (!res.ok) return null;
+    return await res.json();
   } catch {
     return null;
   }
