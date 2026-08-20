@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { compressPhoto } from '../lib/compressImage';
 import { uploadPhoto } from '../lib/photosApi';
 import UploadProgressBar from '../components/UploadProgressBar';
@@ -20,6 +21,7 @@ function createItems(files) {
 }
 
 export default function UploadPage() {
+  const navigate = useNavigate();
   const [guestName, setGuestName] = useState('');
   const [items, setItems] = useState([]);
   const [phase, setPhase] = useState('idle'); // idle | uploading | review | success
@@ -124,13 +126,17 @@ export default function UploadPage() {
         <img src="/camp-sign.png" alt="Camp Javery" className="upload-card-sign" />
         <h1>Share Your Photos!</h1>
         <p className="upload-subtitle">Camp Javery — Jared &amp; Avery's Wedding</p>
+        <p className="upload-gallery-link">
+          <Link to="/gallery">View the Gallery</Link>
+        </p>
 
         {phase === 'success' ? (
           <UploadSuccessScreen
             guestName={guestName}
             mediaType="photo"
             count={successCount}
-            onUploadAnother={handleUploadAnother}
+            onUploadAnother={() => navigate('/gallery')}
+            actionLabel="View Gallery"
           />
         ) : (
           <form onSubmit={handleSubmit} className="upload-form">
@@ -161,10 +167,15 @@ export default function UploadPage() {
             )}
 
             {phase === 'uploading' && (
-              <UploadProgressBar
-                percent={overallPercent}
-                label={`${completedCount}/${total} uploaded`}
-              />
+              <>
+                <UploadProgressBar
+                  percent={overallPercent}
+                  label={`${completedCount}/${total} uploaded`}
+                />
+                <p className="upload-patience-note">
+                  Please be patient — this may take a moment.
+                </p>
+              </>
             )}
 
             {items.length > 0 && (phase === 'uploading' || phase === 'review') && (

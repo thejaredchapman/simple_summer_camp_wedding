@@ -200,6 +200,12 @@ export default function UploadVideoPage() {
               />
             )}
 
+            {phase === 'uploading' && (
+              <p className="upload-patience-note">
+                Please be patient — this may take a moment.
+              </p>
+            )}
+
             {items.length > 0 && <UploadVideoBatchGrid items={items} />}
 
             {phase === 'review' ? (

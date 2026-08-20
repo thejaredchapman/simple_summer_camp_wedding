@@ -1,6 +1,6 @@
 import './UploadSuccessScreen.css';
 
-export default function UploadSuccessScreen({ guestName, mediaType, count = 1, onUploadAnother }) {
+export default function UploadSuccessScreen({ guestName, mediaType, count = 1, onUploadAnother, actionLabel }) {
   const isPlural = count > 1;
   return (
     <div className="upload-success">
@@ -11,7 +11,7 @@ export default function UploadSuccessScreen({ guestName, mediaType, count = 1, o
           : `Your ${mediaType} is up.`}
       </p>
       <button type="button" onClick={onUploadAnother}>
-        {isPlural ? `Upload more ${mediaType}s` : `Upload another ${mediaType}`}
+        {actionLabel ?? (isPlural ? `Upload more ${mediaType}s` : `Upload another ${mediaType}`)}
       </button>
     </div>
   );

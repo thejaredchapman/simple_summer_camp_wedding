@@ -16,6 +16,7 @@ function App() {
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/upload-video" element={<UploadVideoPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/uploadgallery" element={<GalleryPage />} />
         <Route path="/slideshow" element={<SlideshowPage />} />
         <Route path="/videos" element={<VideosPage />} />
         <Route path="/admin" element={<AdminPage />} />

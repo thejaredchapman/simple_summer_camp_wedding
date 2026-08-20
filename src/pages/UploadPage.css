@@ -36,6 +36,27 @@
   margin-bottom: var(--spacing-md);
 }
 
+.upload-gallery-link {
+  margin-bottom: var(--spacing-md);
+}
+
+.upload-gallery-link a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.upload-gallery-link a:hover {
+  text-decoration: underline;
+}
+
+.upload-patience-note {
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: var(--spacing-xs);
+}
+
 .upload-form {
   display: flex;
   flex-direction: column;

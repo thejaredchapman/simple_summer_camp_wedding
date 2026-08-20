@@ -1,6 +1,6 @@
 .contact-help-link {
   position: fixed;
-  bottom: var(--spacing-sm);
+  top: var(--spacing-sm);
   right: var(--spacing-sm);
   background: white;
   color: var(--color-text-light);

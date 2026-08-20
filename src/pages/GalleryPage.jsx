@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { listPhotos } from '../lib/photosApi';
 import ContactHelpLink from '../components/ContactHelpLink';
 import './GalleryPage.css';
@@ -35,6 +36,9 @@ export default function GalleryPage() {
   return (
     <div className="gallery-page">
       <h1>Camp Javery Photos</h1>
+      <p className="gallery-upload-link">
+        <Link to="/upload">Upload More Photos</Link>
+      </p>
       {error && <p className="gallery-error">{error}</p>}
       <div className="gallery-grid">
         {photos.map(photo => (
