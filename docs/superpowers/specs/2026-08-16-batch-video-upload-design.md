@@ -91,9 +91,13 @@ the existing single-video endpoint's contract.
 
 ## Progress UI
 
-Two pieces, both visible whenever `items.length > 0` — including the `idle`
-phase, unlike the photo grid, so pre-flagged invalid files are visible
-immediately:
+Two pieces, with different visibility rules — the per-video grid (below)
+shows from selection onward, but the overall bar only once
+`phase !== 'idle'`, i.e. once a real upload attempt is underway or has
+completed. Showing the bar pre-submit would be actively misleading:
+`completedCount` counts `'error'`-status items too, so a guest who selected
+one invalid file would see a literal "1/1 uploaded" (100%) bar for a file
+that was never uploaded. This was caught in review and fixed before merge.
 
 **Overall bar** — reuses `UploadProgressBar` with its existing `label` prop
 (already added for the photo batch, no further changes needed):
@@ -106,9 +110,11 @@ immediately:
 semantics as the photo batch.
 
 **Per-video grid** — a new `UploadVideoBatchGrid` component renders one tile
-per queue item: a `<video>` thumbnail (`muted`, `preload="metadata"`, `src` =
-`URL.createObjectURL(file)`, revoked on unmount or once the item leaves the
-grid — same lifecycle pattern as `UploadBatchGrid`) with a status badge
+per queue item: a `<video>` thumbnail (`muted`, `playsInline`,
+`preload="metadata"`, `src` = `URL.createObjectURL(file)` with a `#t=0.1`
+media fragment appended so iOS Safari decodes a real frame instead of
+showing blank — added in review; revoked on unmount or once the item leaves
+the grid — same lifecycle pattern as `UploadBatchGrid`) with a status badge
 overlaid. Unlike the photo grid's badge-only design, the badge shows a live
 percentage while `status === 'uploading'` (e.g. "Uploading… 42%"), driven by
 `uploadVideo`'s existing `onProgress` callback (`uploadWithProgress.js`
