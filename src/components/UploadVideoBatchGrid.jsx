@@ -8,9 +8,14 @@ const STATUS_LABEL = {
   error: 'Failed',
 };
 
+// Shows the specific failure reason on the tile itself rather than relying
+// solely on the `title` tooltip, which touch devices have no way to reveal.
 function statusLabel(item) {
   if (item.status === 'uploading') {
     return `Uploading… ${item.progress ?? 0}%`;
+  }
+  if (item.status === 'error') {
+    return item.errorMessage || STATUS_LABEL.error;
   }
   return STATUS_LABEL[item.status];
 }

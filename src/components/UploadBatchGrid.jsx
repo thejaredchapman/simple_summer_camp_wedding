@@ -8,6 +8,15 @@ const STATUS_LABEL = {
   error: 'Failed',
 };
 
+// Shows the specific failure reason on the tile itself rather than relying
+// solely on the `title` tooltip, which touch devices have no way to reveal.
+function badgeLabel(item) {
+  if (item.status === 'error') {
+    return item.errorMessage || STATUS_LABEL.error;
+  }
+  return STATUS_LABEL[item.status];
+}
+
 export default function UploadBatchGrid({ items }) {
   const [thumbnails, setThumbnails] = useState({});
   // Mirrors `thumbnails` so the unmount-cleanup effect below can revoke
@@ -69,7 +78,7 @@ export default function UploadBatchGrid({ items }) {
             <img src={thumbnails[item.id]} alt="" className="upload-batch-thumb" />
           )}
           <span className={`upload-batch-badge upload-batch-badge-${item.status}`}>
-            {STATUS_LABEL[item.status]}
+            {badgeLabel(item)}
           </span>
         </div>
       ))}
