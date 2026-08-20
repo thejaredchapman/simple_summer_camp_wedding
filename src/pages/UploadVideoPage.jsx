@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { uploadVideo } from '../lib/videosApi';
 import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
@@ -35,6 +36,7 @@ function createItems(files) {
 }
 
 export default function UploadVideoPage() {
+  const navigate = useNavigate();
   const [guestName, setGuestName] = useState('');
   const [items, setItems] = useState([]);
   const [phase, setPhase] = useState('idle'); // idle | uploading | review | success
@@ -153,13 +155,17 @@ export default function UploadVideoPage() {
         <img src="/camp-sign.png" alt="Camp Javery" className="upload-card-sign" />
         <h1>Share Your Videos!</h1>
         <p className="upload-subtitle">Camp Javery — Jared &amp; Avery's Wedding</p>
+        <p className="upload-gallery-link">
+          <Link to="/videos">View the Videos</Link>
+        </p>
 
         {phase === 'success' ? (
           <UploadSuccessScreen
             guestName={guestName}
             mediaType="video"
             count={successCount}
-            onUploadAnother={handleUploadAnother}
+            onUploadAnother={() => navigate('/videos')}
+            actionLabel="View Videos"
           />
         ) : (
           <form onSubmit={handleSubmit} className="upload-form">

@@ -8,7 +8,22 @@
   font-family: var(--font-display);
   color: var(--color-primary);
   text-align: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.videos-upload-link {
+  text-align: center;
   margin-bottom: var(--spacing-md);
+}
+
+.videos-upload-link a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.videos-upload-link a:hover {
+  text-decoration: underline;
 }
 
 .videos-grid {

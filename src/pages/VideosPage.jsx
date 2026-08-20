@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { listVideos } from '../lib/videosApi';
 import ContactHelpLink from '../components/ContactHelpLink';
 import './VideosPage.css';
@@ -35,6 +36,9 @@ export default function VideosPage() {
   return (
     <div className="videos-page">
       <h1>Camp Javery Videos</h1>
+      <p className="videos-upload-link">
+        <Link to="/upload-video">Upload More Videos</Link>
+      </p>
       {error && <p className="videos-error">{error}</p>}
       <div className="videos-grid">
         {videos.map(video => (
