@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { compressPhoto } from '../lib/compressImage';
 import { uploadPhoto } from '../lib/photosApi';
+import { extractPhotoMetadata } from '../lib/exifMetadata';
 import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
 import UploadBatchGrid from '../components/UploadBatchGrid';
@@ -45,11 +46,14 @@ export default function UploadPage() {
   }
 
   async function uploadItem(queueItem) {
+    // Extracted from the original file, once — compression below strips EXIF,
+    // and the source file doesn't change between retry attempts.
+    const metadata = await extractPhotoMetadata(queueItem.file);
     let lastError = null;
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
         const compressed = await compressPhoto(queueItem.file);
-        await uploadPhoto(guestName.trim(), compressed);
+        await uploadPhoto(guestName.trim(), compressed, metadata);
         return { status: 'success', errorMessage: '' };
       } catch (error) {
         lastError = error;

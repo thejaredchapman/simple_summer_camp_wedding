@@ -1,4 +1,4 @@
-import { put, list, del } from '@vercel/blob';
+import { put, list, del, head } from '@vercel/blob';
 
 const PHOTO_PREFIX = 'guest-photos/';
 
@@ -6,6 +6,12 @@ export function buildPhotoPathname(guestName) {
   const randomId = Math.random().toString(36).slice(2, 10);
   const safeName = encodeURIComponent((guestName || '').trim().slice(0, 60) || 'Guest');
   return `${PHOTO_PREFIX}${randomId}__${safeName}.jpg`;
+}
+
+// Metadata lives as a small companion JSON blob next to the photo, since
+// Vercel Blob has no custom-metadata field and this repo has no database.
+export function buildPhotoMetadataPathname(photoPathname) {
+  return photoPathname.replace(/\.jpg$/, '.json');
 }
 
 export function parsePhotoPathname(pathname) {
@@ -36,9 +42,31 @@ export async function uploadPhoto(buffer, guestName, contentType) {
   return blob;
 }
 
+export async function uploadPhotoMetadata(photoPathname, metadata) {
+  const metadataPathname = buildPhotoMetadataPathname(photoPathname);
+  await put(metadataPathname, JSON.stringify(metadata), {
+    access: 'public',
+    contentType: 'application/json',
+    addRandomSuffix: false,
+  });
+}
+
+export async function getPhotoMetadata(photoPathname) {
+  const metadataPathname = buildPhotoMetadataPathname(photoPathname);
+  try {
+    const blob = await head(metadataPathname);
+    const res = await fetch(blob.url);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function listPhotos() {
   const { blobs } = await list({ prefix: PHOTO_PREFIX });
   return blobs
+    .filter(blob => blob.pathname.endsWith('.jpg'))
     .map(blob => {
       const { name } = parsePhotoPathname(blob.pathname);
       return {
@@ -53,4 +81,9 @@ export async function listPhotos() {
 
 export async function deletePhoto(pathname) {
   await del(pathname);
+  try {
+    await del(buildPhotoMetadataPathname(pathname));
+  } catch {
+    // No companion metadata blob for photos uploaded before this feature — fine to ignore.
+  }
 }

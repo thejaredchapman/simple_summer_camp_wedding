@@ -66,6 +66,7 @@ export default function GalleryPage() {
         if (lightboxIndex === -1) return null;
         return (
           <PhotoLightbox
+            key={lightboxPhotoId}
             photos={photos}
             index={lightboxIndex}
             onClose={() => setLightboxPhotoId(null)}

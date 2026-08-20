@@ -13,10 +13,13 @@ async function parseErrorMessage(res) {
   }
 }
 
-export async function uploadPhoto(guestName, file, onProgress) {
+export async function uploadPhoto(guestName, file, metadata, onProgress) {
   const formData = new FormData();
   formData.append('guestName', guestName);
   formData.append('photo', file);
+  if (metadata) {
+    formData.append('metadata', JSON.stringify(metadata));
+  }
   return uploadWithProgress(`${BACKEND_URL}/api/photos/upload`, formData, onProgress);
 }
 
@@ -28,6 +31,19 @@ export async function listPhotos() {
   }
   const data = await res.json();
   return data.photos;
+}
+
+export async function getPhotoMetadata(photoId) {
+  const res = await fetch(`${BACKEND_URL}/api/photos/metadata?id=${encodeURIComponent(photoId)}`);
+
+  if (res.status === 404) {
+    return null;
+  }
+  if (!res.ok) {
+    throw new Error(await parseErrorMessage(res));
+  }
+  const data = await res.json();
+  return data.metadata;
 }
 
 export async function adminListPhotos(password) {

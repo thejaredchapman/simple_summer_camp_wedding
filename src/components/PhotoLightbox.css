@@ -3,18 +3,22 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
   display: flex;
-  align-items: center;
   justify-content: center;
+  overflow-y: auto;
   z-index: 1000;
+  padding: var(--spacing-md) 0;
 }
 
 .photo-lightbox-content {
   max-width: 90vw;
-  max-height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   touch-action: pan-y;
+  /* Centers vertically when shorter than the viewport, but lets
+     .photo-lightbox scroll instead of clipping when content (e.g. the
+     metadata panel) makes it taller than the viewport. */
+  margin: auto 0;
 }
 
 .photo-lightbox-content img {
@@ -32,7 +36,7 @@
 }
 
 .photo-lightbox-close {
-  position: absolute;
+  position: fixed;
   top: var(--spacing-md);
   right: var(--spacing-md);
   background: none;
@@ -44,8 +48,69 @@
   padding: 0.5rem;
 }
 
+.photo-lightbox-info-toggle {
+  position: fixed;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  transition: background var(--transition-fast);
+}
+
+.photo-lightbox-info-toggle:hover,
+.photo-lightbox-info-toggle[aria-pressed='true'] {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.photo-lightbox-metadata {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.photo-lightbox-metadata dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem var(--spacing-sm);
+  margin: 0;
+}
+
+.photo-lightbox-metadata dl + dl {
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.photo-lightbox-metadata dt {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.8rem;
+}
+
+.photo-lightbox-metadata dd {
+  margin: 0;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.photo-lightbox-metadata-status {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  margin: var(--spacing-xs) 0 0;
+}
+
 .photo-lightbox-nav {
-  position: absolute;
+  position: fixed;
   top: 50%;
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.15);

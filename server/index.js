@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import multer from 'multer';
 import { RAGService } from './rag.js';
-import { uploadPhoto, listPhotos, deletePhoto } from './photoStorage.js';
+import { uploadPhoto, uploadPhotoMetadata, getPhotoMetadata, listPhotos, deletePhoto } from './photoStorage.js';
 import { uploadVideo, listVideos, deleteVideo } from './videoStorage.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
@@ -143,6 +143,36 @@ function sanitizeInput(input) {
   }
 
   return sanitized;
+}
+
+// Photo EXIF metadata sent by the client is whitelisted and re-validated
+// here rather than trusted as-is — GPS fields are deliberately excluded.
+const ALLOWED_PHOTO_METADATA_FIELDS = [
+  'Make', 'Model', 'LensModel', 'FocalLength', 'FNumber', 'ExposureTime',
+  'ISO', 'Flash', 'DateTimeOriginal', 'Orientation', 'ExifImageWidth', 'ExifImageHeight', 'Software',
+];
+const MAX_METADATA_FIELD_LENGTH = 200;
+
+function sanitizePhotoMetadata(raw) {
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+
+  const sanitized = {};
+  for (const field of ALLOWED_PHOTO_METADATA_FIELDS) {
+    const value = parsed[field];
+    if (value === undefined || value === null) continue;
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      sanitized[field] = value;
+    } else if (typeof value === 'string' && value.length > 0 && value.length <= MAX_METADATA_FIELD_LENGTH) {
+      sanitized[field] = value;
+    }
+  }
+  return Object.keys(sanitized).length > 0 ? sanitized : null;
 }
 
 function validateChatInput(req, res, next) {
@@ -286,6 +316,17 @@ app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
     }
 
     const blob = await uploadPhoto(req.file.buffer, guestName, req.file.mimetype);
+
+    const metadata = req.body.metadata ? sanitizePhotoMetadata(req.body.metadata) : null;
+    if (metadata) {
+      try {
+        await uploadPhotoMetadata(blob.pathname, metadata);
+      } catch (error) {
+        // Non-fatal — the photo itself uploaded fine; it just won't have metadata available.
+        console.error('Photo metadata upload error:', error.message);
+      }
+    }
+
     res.json({ success: true, url: blob.url });
   } catch (error) {
     console.error('Photo upload error:', error.message);
@@ -349,6 +390,23 @@ app.get('/api/photos', photoListRateLimiter, async (req, res) => {
   } catch (error) {
     console.error('List photos error:', error.message);
     res.status(500).json({ error: 'Unable to load photos right now.' });
+  }
+});
+
+app.get('/api/photos/metadata', photoListRateLimiter, async (req, res) => {
+  try {
+    const pathname = req.query.id;
+    if (!pathname || typeof pathname !== 'string' || !pathname.startsWith('guest-photos/')) {
+      return res.status(400).json({ error: 'Invalid photo id.' });
+    }
+    const metadata = await getPhotoMetadata(pathname);
+    if (!metadata) {
+      return res.status(404).json({ error: 'No metadata available for this photo.' });
+    }
+    res.json({ metadata });
+  } catch (error) {
+    console.error('Get photo metadata error:', error.message);
+    res.status(500).json({ error: 'Unable to load photo metadata right now.' });
   }
 });
 
