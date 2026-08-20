@@ -1,8 +1,19 @@
-import { useState } from 'react';
-import { adminListPhotos, adminDeletePhoto } from '../lib/photosApi';
+import { Fragment, useState } from 'react';
+import {
+  adminListPhotos,
+  adminDeletePhoto,
+  adminGetPhotoMetadata,
+  adminGetOriginalPhotoUrl,
+} from '../lib/photosApi';
 import { adminListVideos, adminDeleteVideo } from '../lib/videosApi';
 import ContactHelpLink from '../components/ContactHelpLink';
 import './AdminPage.css';
+
+const UPLOADER_INFO_LABELS = {
+  Make: 'Camera Make',
+  Model: 'Camera Model',
+  LensModel: 'Lens',
+};
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');
@@ -11,6 +22,8 @@ export default function AdminPage() {
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  // photoId -> { state: 'loading'|'loaded'|'empty'|'error', metadata }
+  const [uploaderInfo, setUploaderInfo] = useState({});
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -38,6 +51,44 @@ export default function AdminPage() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleToggleUploaderInfo(id) {
+    const current = uploaderInfo[id];
+    if (current) {
+      // Already fetched (or in flight) — toggle away just collapses it;
+      // clicking again re-expands without re-fetching.
+      setUploaderInfo(prev => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+      return;
+    }
+
+    setUploaderInfo(prev => ({ ...prev, [id]: { state: 'loading', metadata: null } }));
+    try {
+      const metadata = await adminGetPhotoMetadata(id, password);
+      setUploaderInfo(prev => ({
+        ...prev,
+        [id]: { state: metadata ? 'loaded' : 'empty', metadata },
+      }));
+    } catch {
+      setUploaderInfo(prev => ({ ...prev, [id]: { state: 'error', metadata: null } }));
+    }
+  }
+
+  async function handleViewOriginal(id) {
+    try {
+      const url = await adminGetOriginalPhotoUrl(id, password);
+      if (!url) {
+        window.alert('No unwatermarked original was captured for this photo.');
+        return;
+      }
+      window.open(url, '_blank');
+    } catch (err) {
+      setError(err.message);
     }
   }
 
@@ -95,9 +146,49 @@ export default function AdminPage() {
           <div key={photo.id} className="admin-item">
             <img src={photo.url} alt={`Photo from ${photo.name}`} />
             <p>{photo.name}</p>
+            <button
+              type="button"
+              className="admin-uploader-toggle"
+              onClick={() => handleToggleUploaderInfo(photo.id)}
+            >
+              Uploader Info
+            </button>
+            <button
+              type="button"
+              className="admin-uploader-toggle"
+              onClick={() => handleViewOriginal(photo.id)}
+            >
+              View Original
+            </button>
             <button type="button" onClick={() => handleDeletePhoto(photo.id)}>
               Delete
             </button>
+
+            {uploaderInfo[photo.id] && (
+              <div className="admin-uploader-info">
+                {uploaderInfo[photo.id].state === 'loading' && <p>Loading…</p>}
+                {uploaderInfo[photo.id].state === 'error' && <p>Couldn't load uploader info.</p>}
+                {uploaderInfo[photo.id].state === 'empty' && <p>No info captured for this photo.</p>}
+                {uploaderInfo[photo.id].state === 'loaded' && (
+                  <dl>
+                    <dt>IP address</dt>
+                    <dd>{uploaderInfo[photo.id].metadata.admin?.ip || 'Unknown'}</dd>
+                    <dt>Device / browser</dt>
+                    <dd>{uploaderInfo[photo.id].metadata.admin?.userAgent || 'Unknown'}</dd>
+                    {Object.entries(UPLOADER_INFO_LABELS).map(([field, label]) => {
+                      const value = uploaderInfo[photo.id].metadata.exif?.[field];
+                      if (!value) return null;
+                      return (
+                        <Fragment key={field}>
+                          <dt>{label}</dt>
+                          <dd>{value}</dd>
+                        </Fragment>
+                      );
+                    })}
+                  </dl>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

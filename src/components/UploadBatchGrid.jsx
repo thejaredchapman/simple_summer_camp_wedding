@@ -14,6 +14,9 @@ function badgeLabel(item) {
   if (item.status === 'error') {
     return item.errorMessage || STATUS_LABEL.error;
   }
+  if (item.status === 'uploading') {
+    return `Uploading… ${item.progress ?? 0}%`;
+  }
   return STATUS_LABEL[item.status];
 }
 

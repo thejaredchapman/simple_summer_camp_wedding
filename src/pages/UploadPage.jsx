@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { compressPhoto } from '../lib/compressImage';
 import { uploadPhoto } from '../lib/photosApi';
 import { extractPhotoMetadata } from '../lib/exifMetadata';
+import { addWatermark } from '../lib/watermarkImage';
 import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
 import UploadBatchGrid from '../components/UploadBatchGrid';
@@ -19,6 +20,7 @@ function createItems(files) {
     file,
     status: 'pending',
     errorMessage: '',
+    progress: 0,
   }));
 }
 
@@ -53,8 +55,16 @@ export default function UploadPage() {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
         const compressed = await compressPhoto(queueItem.file);
-        await uploadPhoto(guestName.trim(), compressed, metadata);
-        return { status: 'success', errorMessage: '' };
+        // If watermarking fails for any reason, fall back to uploading the
+        // same (unwatermarked) file for both copies rather than failing the
+        // whole upload over a cosmetic step.
+        const watermarked = await addWatermark(compressed).catch(() => compressed);
+        await uploadPhoto(guestName.trim(), watermarked, compressed, metadata, percent => {
+          setItems(prev =>
+            prev.map(i => (i.id === queueItem.id ? { ...i, progress: percent } : i))
+          );
+        });
+        return { status: 'success', errorMessage: '', progress: 100 };
       } catch (error) {
         lastError = error;
         const isRetryable = !error.status || error.status >= 500;
@@ -67,6 +77,7 @@ export default function UploadPage() {
     return {
       status: 'error',
       errorMessage: lastError?.message || 'Upload failed. Please try again.',
+      progress: 0,
     };
   }
 
@@ -75,7 +86,7 @@ export default function UploadPage() {
     const results = [];
     for (const queueItem of queueItems) {
       setItems(prev =>
-        prev.map(i => (i.id === queueItem.id ? { ...i, status: 'uploading' } : i))
+        prev.map(i => (i.id === queueItem.id ? { ...i, status: 'uploading', progress: 0 } : i))
       );
       const result = await uploadItem(queueItem);
       results.push(result);
@@ -97,7 +108,9 @@ export default function UploadPage() {
     const failedItems = items.filter(i => i.status === 'error');
     if (failedItems.length === 0) return;
     setItems(prev =>
-      prev.map(i => (i.status === 'error' ? { ...i, status: 'pending', errorMessage: '' } : i))
+      prev.map(i =>
+        i.status === 'error' ? { ...i, status: 'pending', errorMessage: '', progress: 0 } : i
+      )
     );
     await runQueue(failedItems);
   }
@@ -131,6 +144,7 @@ export default function UploadPage() {
         <img src="/camp-sign.png" alt="Camp Javery" className="upload-card-sign" />
         <h1>Share Your Photos!</h1>
         <p className="upload-subtitle">Camp Javery — Jared &amp; Avery's Wedding</p>
+        <p className="upload-hashtag">#CampJavery</p>
         <p className="upload-gallery-link">
           <Link to="/gallery">View the Gallery</Link>
           {' · '}

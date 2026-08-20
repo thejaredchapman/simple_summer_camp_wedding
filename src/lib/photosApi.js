@@ -13,10 +13,11 @@ async function parseErrorMessage(res) {
   }
 }
 
-export async function uploadPhoto(guestName, file, metadata, onProgress) {
+export async function uploadPhoto(guestName, watermarkedFile, originalFile, metadata, onProgress) {
   const formData = new FormData();
   formData.append('guestName', guestName);
-  formData.append('photo', file);
+  formData.append('photo', watermarkedFile);
+  formData.append('original', originalFile);
   if (metadata) {
     formData.append('metadata', JSON.stringify(metadata));
   }
@@ -56,6 +57,38 @@ export async function adminListPhotos(password) {
   }
   const data = await res.json();
   return data.photos;
+}
+
+export async function adminGetPhotoMetadata(photoId, password) {
+  const res = await fetch(
+    `${BACKEND_URL}/api/admin/photos/metadata?id=${encodeURIComponent(photoId)}`,
+    { headers: { 'x-admin-password': password } }
+  );
+
+  if (res.status === 404) {
+    return null;
+  }
+  if (!res.ok) {
+    throw new Error(await parseErrorMessage(res));
+  }
+  const data = await res.json();
+  return data.metadata;
+}
+
+export async function adminGetOriginalPhotoUrl(photoId, password) {
+  const res = await fetch(
+    `${BACKEND_URL}/api/admin/photos/original?id=${encodeURIComponent(photoId)}`,
+    { headers: { 'x-admin-password': password } }
+  );
+
+  if (res.status === 404) {
+    return null;
+  }
+  if (!res.ok) {
+    throw new Error(await parseErrorMessage(res));
+  }
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
 }
 
 export async function adminDeletePhoto(id, password) {

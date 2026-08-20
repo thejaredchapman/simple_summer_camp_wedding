@@ -36,6 +36,13 @@
   margin-bottom: var(--spacing-md);
 }
 
+.upload-hashtag {
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-top: calc(var(--spacing-md) * -1);
+  margin-bottom: var(--spacing-md);
+}
+
 .upload-gallery-link {
   margin-bottom: var(--spacing-md);
 }

@@ -4,7 +4,17 @@ import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import multer from 'multer';
 import { RAGService } from './rag.js';
-import { uploadPhoto, uploadPhotoMetadata, getPhotoMetadata, listPhotos, deletePhoto } from './photoStorage.js';
+import {
+  uploadPhoto,
+  uploadOriginalPhoto,
+  getOriginalPhoto,
+  uploadPhotoMetadata,
+  getPhotoMetadata,
+  uploadPhotoAdminMetadata,
+  getPhotoAdminMetadata,
+  listPhotos,
+  deletePhoto,
+} from './photoStorage.js';
 import { uploadVideo, listVideos, deleteVideo } from './videoStorage.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
@@ -291,8 +301,15 @@ const upload = multer({
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 
+// 'photo' is the watermarked, publicly-displayed version; 'original' is the
+// same photo without the watermark, stored privately alongside it.
+const photoUploadFields = upload.fields([
+  { name: 'photo', maxCount: 1 },
+  { name: 'original', maxCount: 1 },
+]);
+
 app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
-  upload.single('photo')(req, res, (err) => {
+  photoUploadFields(req, res, (err) => {
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).json({ error: 'That photo is too large (max 15MB). Please try a smaller one.' });
@@ -308,14 +325,26 @@ app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
     if (!guestName) {
       return res.status(400).json({ error: 'Please enter your name.' });
     }
-    if (!req.file) {
+    const photoFile = req.files?.photo?.[0];
+    const originalFile = req.files?.original?.[0];
+    if (!photoFile) {
       return res.status(400).json({ error: 'No photo was uploaded.' });
     }
-    if (!ALLOWED_IMAGE_TYPES.includes(req.file.mimetype)) {
+    if (!ALLOWED_IMAGE_TYPES.includes(photoFile.mimetype)) {
       return res.status(400).json({ error: 'Only image files are allowed.' });
     }
 
-    const blob = await uploadPhoto(req.file.buffer, guestName, req.file.mimetype);
+    const blob = await uploadPhoto(photoFile.buffer, guestName, photoFile.mimetype);
+
+    if (originalFile && ALLOWED_IMAGE_TYPES.includes(originalFile.mimetype)) {
+      try {
+        await uploadOriginalPhoto(blob.pathname, originalFile.buffer, originalFile.mimetype);
+      } catch (error) {
+        // Non-fatal — the watermarked photo itself uploaded fine; the
+        // unwatermarked original just won't be available for this one.
+        console.error('Original photo upload error:', error.message);
+      }
+    }
 
     const metadata = req.body.metadata ? sanitizePhotoMetadata(req.body.metadata) : null;
     if (metadata) {
@@ -325,6 +354,17 @@ app.post('/api/photos/upload', photoUploadRateLimiter, (req, res, next) => {
         // Non-fatal — the photo itself uploaded fine; it just won't have metadata available.
         console.error('Photo metadata upload error:', error.message);
       }
+    }
+
+    // Admin-only — never exposed via the public metadata endpoint. Helps
+    // identify who's actually behind a joke guest name.
+    try {
+      await uploadPhotoAdminMetadata(blob.pathname, {
+        ip: req.ip,
+        userAgent: req.get('user-agent') || null,
+      });
+    } catch (error) {
+      console.error('Photo admin metadata upload error:', error.message);
     }
 
     res.json({ success: true, url: blob.url });
@@ -439,6 +479,48 @@ app.delete('/api/admin/photos', adminRateLimiter, requireAdmin, async (req, res)
   } catch (error) {
     console.error('Delete photo error:', error.message);
     res.status(500).json({ error: 'Unable to delete photo.' });
+  }
+});
+
+// Admin-only — includes uploader IP/user-agent alongside the same EXIF
+// fields the public endpoint returns. Never exposed to guests.
+app.get('/api/admin/photos/metadata', adminRateLimiter, requireAdmin, async (req, res) => {
+  try {
+    const pathname = req.query.id;
+    if (!pathname || typeof pathname !== 'string' || !pathname.startsWith('guest-photos/')) {
+      return res.status(400).json({ error: 'Invalid photo id.' });
+    }
+    const [exif, admin] = await Promise.all([
+      getPhotoMetadata(pathname),
+      getPhotoAdminMetadata(pathname),
+    ]);
+    if (!exif && !admin) {
+      return res.status(404).json({ error: 'No metadata available for this photo.' });
+    }
+    res.json({ metadata: { exif, admin } });
+  } catch (error) {
+    console.error('Get admin photo metadata error:', error.message);
+    res.status(500).json({ error: 'Unable to load photo metadata right now.' });
+  }
+});
+
+// Admin-only — streams back the unwatermarked original for a photo, if one
+// was captured (photos uploaded before this feature won't have one).
+app.get('/api/admin/photos/original', adminRateLimiter, requireAdmin, async (req, res) => {
+  try {
+    const pathname = req.query.id;
+    if (!pathname || typeof pathname !== 'string' || !pathname.startsWith('guest-photos/')) {
+      return res.status(400).json({ error: 'Invalid photo id.' });
+    }
+    const original = await getOriginalPhoto(pathname);
+    if (!original) {
+      return res.status(404).json({ error: 'No original available for this photo.' });
+    }
+    res.set('Content-Type', original.contentType || 'image/jpeg');
+    res.send(original.buffer);
+  } catch (error) {
+    console.error('Get original photo error:', error.message);
+    res.status(500).json({ error: 'Unable to load the original photo right now.' });
   }
 });
 

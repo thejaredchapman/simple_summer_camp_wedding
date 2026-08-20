@@ -96,6 +96,41 @@
   background: var(--color-warm-sunset-4);
 }
 
+.admin-item button.admin-uploader-toggle {
+  background: var(--color-secondary);
+}
+
+.admin-uploader-info {
+  padding: 0.5rem;
+  text-align: left;
+  border-top: 1px solid var(--color-cream-dark);
+}
+
+.admin-uploader-info p {
+  padding: 0;
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+}
+
+.admin-uploader-info dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem var(--spacing-xs);
+  margin: 0;
+}
+
+.admin-uploader-info dt {
+  color: var(--color-text-light);
+  font-size: 0.75rem;
+}
+
+.admin-uploader-info dd {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.75rem;
+  word-break: break-word;
+}
+
 .admin-error {
   color: var(--color-warm-sunset-4);
   font-weight: 600;
