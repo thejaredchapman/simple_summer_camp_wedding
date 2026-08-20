@@ -6,6 +6,7 @@ import UploadProgressBar from '../components/UploadProgressBar';
 import UploadSuccessScreen from '../components/UploadSuccessScreen';
 import UploadBatchGrid from '../components/UploadBatchGrid';
 import ContactHelpLink from '../components/ContactHelpLink';
+import RandomPhotoPreview from '../components/RandomPhotoPreview';
 import './UploadPage.css';
 
 const MAX_BATCH_SIZE = 30;
@@ -131,6 +132,8 @@ export default function UploadPage() {
           {' · '}
           <Link to="/upload-video">Share a video instead</Link>
         </p>
+
+        {phase === 'idle' && <RandomPhotoPreview />}
 
         {phase === 'success' ? (
           <UploadSuccessScreen

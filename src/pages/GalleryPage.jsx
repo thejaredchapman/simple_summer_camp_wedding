@@ -36,9 +36,9 @@ export default function GalleryPage() {
   return (
     <div className="gallery-page">
       <h1>Camp Javery Photos</h1>
-      <p className="gallery-upload-link">
-        <Link to="/upload">Upload More Photos</Link>
-      </p>
+      <Link to="/upload" className="gallery-upload-button">
+        Upload More Photos
+      </Link>
       {error && <p className="gallery-error">{error}</p>}
       <div className="gallery-grid">
         {photos.map(photo => (
