@@ -1,4 +1,4 @@
-const WATERMARK_SRC = '/camp-sign.png';
+const WATERMARK_SRC = '/camp-sign-watermark.png';
 const WATERMARK_OPACITY = 0.9; // Solid/noticeable, not a faint ghost mark.
 const WATERMARK_WIDTH_RATIO = 0.18; // ~18% of the photo's width.
 const WATERMARK_MARGIN_RATIO = 0.03;
