@@ -66,3 +66,5 @@ documents/
 # API keys and secrets
 .env.api
 secrets.json
+.vercel
+.env*
