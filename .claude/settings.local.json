@@ -4,7 +4,16 @@
       "Bash(npm run *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(vercel --version)",
+      "Bash(vercel whoami *)",
+      "Bash(vercel projects *)",
+      "Bash(vercel project *)",
+      "Bash(vercel link *)",
+      "Bash([ -f \"$WT/server/.env\" ])",
+      "Bash(nohup node index.js)",
+      "Bash(disown)",
+      "Bash(curl *)"
     ]
   }
 }
