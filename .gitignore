@@ -68,3 +68,4 @@ documents/
 secrets.json
 .vercel
 .env*
+!.env.example
