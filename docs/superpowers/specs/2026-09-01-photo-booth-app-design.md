@@ -7,8 +7,9 @@ Status: Approved, ready for implementation planning
 
 A dedicated Android photo booth, running on a Samsung Galaxy Z Flip 7 propped up at
 the venue. Guests pick a 1/2/3/4-photo strip mode, the booth walks them through a
-countdown-driven capture sequence, composites the shots into one branded strip
-(camp sign + #CampJavery), and lets them email and/or text themselves a copy — while
+countdown-driven capture sequence, stamps the camp sign + #CampJavery into the
+bottom-right corner of every individual photo, composites them into one
+Instagram-ready strip, and lets them email and/or text themselves a copy — while
 the strip also lands in the existing shared guest gallery, tagged as "Photo Booth" so
 it's filterable alongside regular guest uploads.
 
@@ -52,10 +53,23 @@ wrapped in Capacitor, **separate from** the main `simple_summer_camp_wedding` si
      blank — this is a shared kiosk, typing a full name every time is friction) and
      an email and/or phone number, taps **Send**. Confirmation screen, then an idle
      timeout (~20s) returns to Home for the next guest.
-- **Strip compositing**: a new canvas function modeled directly on the existing
-  `src/lib/watermarkImage.js` pattern — stacks the N captured shots vertically into
-  one tall canvas, then draws `camp-sign.png` + "#CampJavery" once across a footer
-  band at the bottom of the full strip (not per-photo).
+- **Per-photo watermark**: each captured shot gets the camp sign stamped into its
+  own bottom-right corner (same bottom-right placement `addWatermark()` already
+  uses in `src/lib/watermarkImage.js`, extended with "#CampJavery" rendered as
+  small text directly beneath the sign, so every individual photo in the strip
+  carries both the logo and the hashtag — not just the strip as a whole). Uses the
+  new sign artwork already saved at `public/camp-sign-new.png` on the main site;
+  implementation copies it into `photo-booth-app`'s own assets.
+- **Strip compositing, Instagram-ready sizing**: a new canvas function modeled on
+  the same pattern as `watermarkImage.js`, stacking the N already-watermarked shots
+  vertically into one fixed-size canvas matched to a standard Instagram ratio so
+  guests can post the result directly with no cropping:
+  - **1-photo mode** → 1080×1350 canvas (4:5 portrait feed ratio).
+  - **2/3/4-photo modes** → 1080×1920 canvas (9:16 Stories/Reels ratio) — tall
+    enough for stacked photos to read as a real strip rather than being crammed
+    into a shorter ratio. The canvas height divides evenly across the N shots
+    (e.g. four 1080×480 tiles for the 4-photo mode), each carrying its own
+    corner watermark from the per-photo step above.
 - Reuses the main site's color/font tokens (copied, not shared as a package — this
   is a one-off wedding app, not worth monorepo tooling) so the booth visually
   matches the rest of Camp Javery branding.
@@ -159,8 +173,10 @@ Manual testing on the physical Z Flip 7, following the existing
 
 - Capture flow for all four modes (1/2/3/4), confirming countdown timing and
   correct shot count in the final strip.
-- Confirm the composited strip's watermark/hashtag placement looks right across
-  all four strip lengths (aspect ratio changes with shot count).
+- Confirm each photo's corner watermark (sign + #CampJavery) stays legible at the
+  smaller tile sizes in the 3- and 4-photo strips, and that the 4:5 (1-photo) and
+  9:16 (2/3/4-photo) canvases both come out as valid, croppable-free Instagram
+  dimensions.
 - Retake flow discards the in-progress strip and restarts cleanly.
 - Delivery: email-only, phone-only, and both — confirm real inbox/phone delivery.
 - Confirm a partial failure (e.g. valid email + invalid phone) reports per-channel
