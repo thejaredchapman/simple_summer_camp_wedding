@@ -40,7 +40,7 @@
   - `listPhotos(): Promise<Array<{ id: string, url: string, name: string, source: 'guest-upload' | 'photo-booth', uploadedAt: string }>>` (extended shape)
 - Consumes: existing `PHOTO_PREFIX` constant, existing `put`/`list` imports from `@vercel/blob`.
 
-- [ ] **Step 1: Add the booth prefix marker and `buildBoothPhotoPathname`**
+- [x] **Step 1: Add the booth prefix marker and `buildBoothPhotoPathname`**
 
   In `server/photoStorage.js`, right after the existing `buildPhotoPathname` function (after line 14), add:
 
@@ -54,7 +54,7 @@
   }
   ```
 
-- [ ] **Step 2: Extend `parsePhotoPathname` to detect the booth prefix**
+- [x] **Step 2: Extend `parsePhotoPathname` to detect the booth prefix**
 
   Replace the existing `parsePhotoPathname` function (lines 48-64) with:
 
@@ -80,7 +80,7 @@
   }
   ```
 
-- [ ] **Step 3: Add `uploadBoothPhoto`**
+- [x] **Step 3: Add `uploadBoothPhoto`**
 
   Right after the existing `uploadPhoto` function, add:
 
@@ -96,7 +96,7 @@
   }
   ```
 
-- [ ] **Step 4: Pass `source` through in `listPhotos`**
+- [x] **Step 4: Pass `source` through in `listPhotos`**
 
   Replace the existing `listPhotos` function (lines 140-154) with:
 
@@ -119,7 +119,7 @@
   }
   ```
 
-- [ ] **Step 5: Verify pathname tagging round-trips**
+- [x] **Step 5: Verify pathname tagging round-trips**
 
   Run:
   ```bash
@@ -142,7 +142,7 @@
   ```
   Expected output ends with `OK`.
 
-- [ ] **Step 6: Verify live upload/list against the real Blob store**
+- [x] **Step 6: Verify live upload/list against the real Blob store**
 
   Run (requires `server/.env` to already have `BLOB_READ_WRITE_TOKEN` set):
   ```bash
@@ -162,7 +162,7 @@
   ```
   Expected output ends with `OK`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
   ```bash
   git add server/photoStorage.js
@@ -185,13 +185,13 @@
   - `sendBoothText({ to: string, photoUrl: string }): Promise<{ success: boolean, error?: string }>`
 - Consumes: `process.env.RESEND_API_KEY`, `process.env.RESEND_EMAIL_DOMAIN`, `process.env.TWILIO_ACCOUNT_SID`, `process.env.TWILIO_AUTH_TOKEN`, `process.env.TWILIO_FROM_NUMBER`.
 
-- [ ] **Step 1: Install the Resend and Twilio SDKs**
+- [x] **Step 1: Install the Resend and Twilio SDKs**
 
   ```bash
   cd server && npm install resend@^6.25.0 twilio@^6.1.0
   ```
 
-- [ ] **Step 2: Write `server/messaging.js`**
+- [x] **Step 2: Write `server/messaging.js`**
 
   ```js
   import { Resend } from 'resend';
@@ -261,7 +261,7 @@
   }
   ```
 
-- [ ] **Step 3: Document the new env vars**
+- [x] **Step 3: Document the new env vars**
 
   In `.env.example` (repo root), add after the `BLOB_READ_WRITE_TOKEN` line:
   ```
@@ -279,7 +279,7 @@
   TWILIO_FROM_NUMBER=+15555550123
   ```
 
-- [ ] **Step 4: Make Resend required in `validateEnvironment`**
+- [x] **Step 4: Make Resend required in `validateEnvironment`**
 
   In `server/index.js`, update the `requiredVars` array (line 48):
   ```js
@@ -287,7 +287,7 @@
   ```
   (Twilio vars are intentionally **not** added here — they're optional until Twilio is set up.)
 
-- [ ] **Step 5: Verify email sending (requires `server/.env` to have real Resend credentials)**
+- [x] **Step 5: Verify email sending (requires `server/.env` to have real Resend credentials)**
 
   Note: this check uses `import('dotenv/config')` before importing `messaging.js`, which loads env vars in a different order than the real server (where `index.js`'s static imports — including `messaging.js` — all resolve *before* its own `dotenv.config()` call runs). This step alone can pass even if the lazy-getter pattern above were accidentally written as eager module-level consts instead; Task 3's Step 6 (hitting the real running server) is what actually proves the ordering works. Run, replacing `you@example.com` with an inbox you can check:
   ```bash
@@ -305,7 +305,7 @@
   ```
   If the domain isn't DNS-verified yet in Resend, `success` will be `false` with an error — that's expected until Task 12's domain verification step; otherwise confirm the email actually arrives.
 
-- [ ] **Step 6: Verify graceful failure when Twilio isn't configured**
+- [x] **Step 6: Verify graceful failure when Twilio isn't configured**
 
   Run (with no `TWILIO_*` vars set):
   ```bash
@@ -319,7 +319,7 @@
   ```
   Expected output starts with `OK:`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
   ```bash
   git add server/messaging.js server/package.json server/package-lock.json .env.example server/index.js
@@ -341,7 +341,7 @@
   - `POST /api/photobooth/upload` — multipart field `photo` (required), `guestName` (optional) → `200 { success: true, url: string, pathname: string }` or `400/500 { error: string }`
   - `POST /api/photobooth/send` — JSON body `{ photoUrl: string, guestName?: string, email?: string, phone?: string }` → `200 { email: {success,error}|null, sms: {success,error}|null }` or `400/500 { error: string }`
 
-- [ ] **Step 1: Update the import block**
+- [x] **Step 1: Update the import block**
 
   In `server/index.js`, replace lines 6-17 with:
 
@@ -363,7 +363,7 @@
   import { sendBoothEmail, sendBoothText } from './messaging.js';
   ```
 
-- [ ] **Step 2: Add the two new rate limiters**
+- [x] **Step 2: Add the two new rate limiters**
 
   In `server/index.js`, right after the existing `videoListRateLimiter` line (line 136), add:
 
@@ -375,7 +375,7 @@
   const photoboothSendRateLimiter = createRateLimiter(10 * 60 * 1000, 20); // 20 sends / 10 min / IP
   ```
 
-- [ ] **Step 3: Add the upload route**
+- [x] **Step 3: Add the upload route**
 
   Add this after the existing `/api/videos/upload` route block (after line ~414, right before `app.get('/api/videos', ...)`):
 
@@ -444,7 +444,7 @@
 
   This needs `express.json()` body parsing for `/api/photobooth/send`'s JSON body — check that the app already calls `app.use(express.json())` somewhere near the top (it does, for `/api/chat`); no change needed if so.
 
-- [ ] **Step 4: Verify the server boots and existing routes still work**
+- [x] **Step 4: Verify the server boots and existing routes still work**
 
   ```bash
   cd server && npm run dev &
@@ -453,7 +453,7 @@
   ```
   Expected: `200` with the existing health JSON. Kill the background server (`kill %1`) when done.
 
-- [ ] **Step 5: Verify the upload endpoint end-to-end**
+- [x] **Step 5: Verify the upload endpoint end-to-end**
 
   ```bash
   cd server && npm run dev &
@@ -472,7 +472,7 @@
   ```
   Expected: `400` (no file).
 
-- [ ] **Step 6: Verify the send endpoint's validation**
+- [x] **Step 6: Verify the send endpoint's validation**
 
   ```bash
   curl -i -X POST -H "Content-Type: application/json" -d '{}' http://localhost:3001/api/photobooth/send
@@ -492,7 +492,7 @@
   ```
   Expected: `200` with `{"email":{...},"sms":null}` — `email.success` depends on whether Resend's domain is verified yet (Task 12); `sms` should be `null` since no phone was given. Kill the background server (`kill %1`) when done.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
   ```bash
   git add server/index.js
@@ -510,7 +510,7 @@
 **Interfaces:**
 - Consumes: `photo.source` field (`'guest-upload' | 'photo-booth'`) already present on every object `listPhotos()` returns (Task 1 + Task 3 make this true server-side; `src/lib/photosApi.js`'s `listPhotos()` needs no change — it already passes the full object through).
 
-- [ ] **Step 1: Add filter state and a derived filtered list**
+- [x] **Step 1: Add filter state and a derived filtered list**
 
   In `src/pages/GalleryPage.jsx`, add a new state hook right after the existing `lightboxPhotoId` state (after line 15):
 
@@ -524,7 +524,7 @@
   const filteredPhotos = filter === 'all' ? photos : photos.filter(p => p.source === 'photo-booth');
   ```
 
-- [ ] **Step 2: Add the filter tabs to the JSX and use `filteredPhotos` everywhere `photos` was rendered**
+- [x] **Step 2: Add the filter tabs to the JSX and use `filteredPhotos` everywhere `photos` was rendered**
 
   Replace the whole `return (...)` block (lines 40-85) with:
 
@@ -594,7 +594,7 @@
   );
   ```
 
-- [ ] **Step 3: Style the filter tabs**
+- [x] **Step 3: Style the filter tabs**
 
   In `src/pages/GalleryPage.css`, add:
 
@@ -623,14 +623,14 @@
   }
   ```
 
-- [ ] **Step 4: Verify in the browser**
+- [x] **Step 4: Verify in the browser**
 
   ```bash
   npm run dev:all
   ```
   Open `http://localhost:5173/gallery`. Confirm both tabs render, "All Photos" shows everything, and "Photo Booth" shows only strips uploaded via `/api/photobooth/upload` (upload one via the `curl` command from Task 3 Step 5 if the gallery is otherwise empty of booth strips, then refresh — the gallery polls every 20s).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
   ```bash
   git add src/pages/GalleryPage.jsx src/pages/GalleryPage.css
@@ -659,7 +659,7 @@
   - Screen state: `'home' | 'capture' | 'review' | 'delivery'`
   - `App` renders `HomeScreen`, `CaptureScreen`, `ReviewScreen`, `DeliveryScreen` (created in later tasks) based on that state, passing the props each screen's task documents.
 
-- [ ] **Step 1: Create the directory and `package.json`**
+- [x] **Step 1: Create the directory and `package.json`**
 
   ```bash
   mkdir -p photo-booth-app/src/screens photo-booth-app/src/lib photo-booth-app/public
@@ -692,13 +692,13 @@
   }
   ```
 
-- [ ] **Step 2: Install dependencies**
+- [x] **Step 2: Install dependencies**
 
   ```bash
   cd photo-booth-app && npm install
   ```
 
-- [ ] **Step 3: Write `vite.config.js`**
+- [x] **Step 3: Write `vite.config.js`**
 
   ```js
   import { defineConfig } from 'vite';
@@ -709,7 +709,7 @@
   });
   ```
 
-- [ ] **Step 4: Write `index.html`**
+- [x] **Step 4: Write `index.html`**
 
   ```html
   <!doctype html>
@@ -726,7 +726,7 @@
   </html>
   ```
 
-- [ ] **Step 5: Write `src/main.jsx`**
+- [x] **Step 5: Write `src/main.jsx`**
 
   ```jsx
   import { StrictMode } from 'react';
@@ -741,7 +741,7 @@
   );
   ```
 
-- [ ] **Step 6: Write `src/index.css` (design tokens copied from the main site)**
+- [x] **Step 6: Write `src/index.css` (design tokens copied from the main site)**
 
   ```css
   :root {
@@ -805,7 +805,7 @@
   }
   ```
 
-- [ ] **Step 7: Write `src/App.css`**
+- [x] **Step 7: Write `src/App.css`**
 
   ```css
   .app {
@@ -814,7 +814,7 @@
   }
   ```
 
-- [ ] **Step 8: Write `src/App.jsx` (state machine skeleton — screen components arrive in Tasks 8-11)**
+- [x] **Step 8: Write `src/App.jsx` (state machine skeleton — screen components arrive in Tasks 8-11)**
 
   ```jsx
   import { useState, useCallback } from 'react';
@@ -867,7 +867,7 @@
 
   (Tasks 8-11 replace each placeholder `<div>` with the real screen component and wire `handleModeSelected`, `handleStripReady`, `handleRetake`, `handleStripUploaded`, `resetToHome`, `mode`, `stripDataUrl`, `uploadedPhotoUrl`, and `IDLE_TIMEOUT_MS` as props — this step exists so the app boots and is browsable before those screens exist.)
 
-- [ ] **Step 9: Write `capacitor.config.json`**
+- [x] **Step 9: Write `capacitor.config.json`**
 
   ```json
   {
@@ -880,7 +880,7 @@
   }
   ```
 
-- [ ] **Step 10: Write `.env.example` and `.gitignore`**
+- [x] **Step 10: Write `.env.example` and `.gitignore`**
 
   `photo-booth-app/.env.example`:
   ```
@@ -898,20 +898,20 @@
   ```
   (`android/` is generated by `npx cap add android` in Task 12 and is large/regeneratable — not committed.)
 
-- [ ] **Step 11: Copy the sign asset**
+- [x] **Step 11: Copy the sign asset**
 
   ```bash
   cp public/camp-sign-new.png photo-booth-app/public/camp-sign-new.png
   ```
 
-- [ ] **Step 12: Verify the app boots**
+- [x] **Step 12: Verify the app boots**
 
   ```bash
   cd photo-booth-app && npm run dev
   ```
   Open the printed local URL in a browser. Confirm "Home screen placeholder — Task 8" renders with no console errors. Stop the dev server (Ctrl-C).
 
-- [ ] **Step 13: Commit**
+- [x] **Step 13: Commit**
 
   ```bash
   git add photo-booth-app
@@ -929,7 +929,7 @@
 - Produces: `watermarkPhoto(photoDataUrl: string): Promise<string>` — returns a new JPEG data URL with `camp-sign-new.png` + "#CampJavery" stamped in the bottom-right corner.
 - Consumes: `public/camp-sign-new.png` (Task 5, Step 11), browser `Image`/`Canvas` APIs.
 
-- [ ] **Step 1: Write `watermarkPhoto.js`**
+- [x] **Step 1: Write `watermarkPhoto.js`**
 
   ```js
   const WATERMARK_SRC = '/camp-sign-new.png';
@@ -994,7 +994,7 @@
   }
   ```
 
-- [ ] **Step 2: Verify with a throwaway test page**
+- [x] **Step 2: Verify with a throwaway test page**
 
   Temporarily add to `photo-booth-app/src/App.jsx` (inside the `App` function, before `return`, remove after verifying):
   ```jsx
@@ -1014,7 +1014,7 @@
   ```
   Run `npm run dev`, open the browser console, call `__testWatermark()`, and visually confirm the sign + "#CampJavery" appear stamped in the bottom-right corner of the rendered image. Remove the temporary code from `App.jsx` afterward.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
   ```bash
   git add photo-booth-app/src/lib/watermarkPhoto.js
@@ -1032,7 +1032,7 @@
 - Produces: `compositeStrip(photoDataUrls: string[]): Promise<string>` — takes 1-4 already-watermarked photo data URLs (Task 6's output) and returns one Instagram-ready strip as a JPEG data URL: 1080×1350 for a single photo, 1080×1920 for 2-4 photos.
 - Consumes: nothing outside browser `Image`/`Canvas` APIs (photos are already watermarked by the caller).
 
-- [ ] **Step 1: Write `compositeStrip.js`**
+- [x] **Step 1: Write `compositeStrip.js`**
 
   ```js
   const CANVAS_WIDTH = 1080;
@@ -1098,7 +1098,7 @@
   }
   ```
 
-- [ ] **Step 2: Verify canvas dimensions for each mode**
+- [x] **Step 2: Verify canvas dimensions for each mode**
 
   Temporarily add to `photo-booth-app/src/App.jsx` (remove after verifying):
   ```jsx
@@ -1123,7 +1123,7 @@
   ```
   Run `npm run dev`, open the console, and run `__testStrip(1)` — confirm the logged size is `1080x1350`. Then `__testStrip(2)`, `__testStrip(3)`, `__testStrip(4)` — confirm each logs `1080x1920` and the rendered image visually shows the correct number of stacked tiles with a thin gap between them. Remove the temporary code from `App.jsx` afterward.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
   ```bash
   git add photo-booth-app/src/lib/compositeStrip.js
@@ -1143,7 +1143,7 @@
 - Produces: `HomeScreen({ onSelectMode: (count: 1|2|3|4) => void })` — no other props.
 - Consumes: nothing beyond the prop above.
 
-- [ ] **Step 1: Write `HomeScreen.jsx`**
+- [x] **Step 1: Write `HomeScreen.jsx`**
 
   ```jsx
   import './HomeScreen.css';
@@ -1171,7 +1171,7 @@
   }
   ```
 
-- [ ] **Step 2: Write `HomeScreen.css`**
+- [x] **Step 2: Write `HomeScreen.css`**
 
   ```css
   .home-sign {
@@ -1211,7 +1211,7 @@
   }
   ```
 
-- [ ] **Step 3: Wire it into `App.jsx`**
+- [x] **Step 3: Wire it into `App.jsx`**
 
   In `photo-booth-app/src/App.jsx`, add the import at the top:
   ```jsx
@@ -1226,14 +1226,14 @@
   {screen === 'home' && <HomeScreen onSelectMode={handleModeSelected} />}
   ```
 
-- [ ] **Step 4: Verify in the browser**
+- [x] **Step 4: Verify in the browser**
 
   ```bash
   cd photo-booth-app && npm run dev
   ```
   Confirm the home screen renders the sign, title, and four mode buttons. Clicking a button should currently just show the "Capture screen placeholder" text (Task 9 replaces it) — confirm that transition happens with no console errors.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
   ```bash
   git add photo-booth-app/src/screens/HomeScreen.jsx photo-booth-app/src/screens/HomeScreen.css photo-booth-app/src/App.jsx
@@ -1254,7 +1254,7 @@
 - Produces: `CaptureScreen({ mode: 1|2|3|4, onStripReady: (stripDataUrl: string) => void, onCancel: () => void })`.
 - Consumes: `watermarkPhoto` (Task 6), `compositeStrip` (Task 7), `@capacitor-community/camera-preview`'s `CameraPreview.start/capture/stop`.
 
-- [ ] **Step 1: Write `CaptureScreen.jsx`**
+- [x] **Step 1: Write `CaptureScreen.jsx`**
 
   ```jsx
   import { useEffect, useRef, useState } from 'react';
@@ -1392,7 +1392,7 @@
   }
   ```
 
-- [ ] **Step 2: Write `CaptureScreen.css`**
+- [x] **Step 2: Write `CaptureScreen.css`**
 
   ```css
   .capture-screen {
@@ -1443,7 +1443,7 @@
   }
   ```
 
-- [ ] **Step 3: Wire it into `App.jsx`**
+- [x] **Step 3: Wire it into `App.jsx`**
 
   Add the import:
   ```jsx
@@ -1460,7 +1460,7 @@
   )}
   ```
 
-- [ ] **Step 4: Verify on a physical Android device (browser dev server has no native camera plugin)**
+- [x] **Step 4: Verify on a physical Android device (browser dev server has no native camera plugin)**
 
   `@capacitor-community/camera-preview` requires the native Android shell — it won't work in a plain browser tab. Full verification of this screen happens after Task 12 produces a real `.apk`; for now, confirm the code compiles and the app still boots without runtime errors when the screen is unreached:
   ```bash
@@ -1468,7 +1468,7 @@
   ```
   Expected: build succeeds with no errors. Revisit this screen's actual camera behavior in Task 12's on-device verification step.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
   ```bash
   git add photo-booth-app/src/screens/CaptureScreen.jsx photo-booth-app/src/screens/CaptureScreen.css photo-booth-app/src/App.jsx
@@ -1492,7 +1492,7 @@
   - `ReviewScreen({ stripDataUrl: string, onRetake: () => void, onUploaded: (url: string) => void, idleTimeoutMs: number, onIdle: () => void })`
 - Consumes: `POST /api/photobooth/upload` (Task 3), `VITE_BACKEND_URL` env var (Task 5).
 
-- [ ] **Step 1: Write `photoboothApi.js`**
+- [x] **Step 1: Write `photoboothApi.js`**
 
   ```js
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -1546,7 +1546,7 @@
   }
   ```
 
-- [ ] **Step 2: Write `ReviewScreen.jsx`**
+- [x] **Step 2: Write `ReviewScreen.jsx`**
 
   ```jsx
   import { useEffect, useRef, useState } from 'react';
@@ -1592,7 +1592,7 @@
   }
   ```
 
-- [ ] **Step 3: Write `ReviewScreen.css`**
+- [x] **Step 3: Write `ReviewScreen.css`**
 
   ```css
   .review-strip-preview {
@@ -1632,7 +1632,7 @@
   }
   ```
 
-- [ ] **Step 4: Wire it into `App.jsx`**
+- [x] **Step 4: Wire it into `App.jsx`**
 
   Add the import:
   ```jsx
@@ -1655,7 +1655,7 @@
   )}
   ```
 
-- [ ] **Step 5: Verify against the real backend**
+- [x] **Step 5: Verify against the real backend**
 
   Start the backend (`cd server && node index.js`) and the booth app (`cd photo-booth-app && npm run dev`) in separate terminals, with `photo-booth-app/.env` set to `VITE_BACKEND_URL=http://localhost:3001` (copy from `.env.example`).
 
@@ -1676,7 +1676,7 @@
   ```
   In the browser console, run `await window.__testJumpToReview()`, then click "Looks Good" in the UI. Confirm it transitions to the Delivery placeholder (no error message on Review), then confirm the strip actually landed in storage: `curl -s http://localhost:3001/api/photos | grep -o '"id":"[^"]*booth-[^"]*"'` should show a new `booth-` entry. Remove the temporary code from `App.jsx` afterward. Run `npm run build` in `photo-booth-app` to confirm no build errors.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
   ```bash
   git add photo-booth-app/src/lib/photoboothApi.js photo-booth-app/src/screens/ReviewScreen.jsx photo-booth-app/src/screens/ReviewScreen.css photo-booth-app/src/App.jsx
@@ -1696,7 +1696,7 @@
 - Produces: `DeliveryScreen({ photoUrl: string, idleTimeoutMs: number, onIdle: () => void, onDone: () => void })`.
 - Consumes: `sendBoothStrip` (Task 10's `photoboothApi.js`).
 
-- [ ] **Step 1: Write `DeliveryScreen.jsx`**
+- [x] **Step 1: Write `DeliveryScreen.jsx`**
 
   ```jsx
   import { useEffect, useRef, useState } from 'react';
@@ -1832,7 +1832,7 @@
   }
   ```
 
-- [ ] **Step 2: Write `DeliveryScreen.css`**
+- [x] **Step 2: Write `DeliveryScreen.css`**
 
   ```css
   .delivery-strip-preview {
@@ -1917,7 +1917,7 @@
   }
   ```
 
-- [ ] **Step 3: Wire it into `App.jsx`**
+- [x] **Step 3: Wire it into `App.jsx`**
 
   Add the import:
   ```jsx
@@ -1939,11 +1939,11 @@
   )}
   ```
 
-- [ ] **Step 4: Verify the full non-camera flow in a browser**
+- [x] **Step 4: Verify the full non-camera flow in a browser**
 
   With the backend running (`cd server && npm run dev`) and the booth app running (`cd photo-booth-app && npm run dev`), temporarily force the app straight to Delivery for testing by editing `App.jsx`'s initial state to `useState('delivery')` for `screen` and setting `uploadedPhotoUrl` to a real URL from Task 3 Step 5's curl upload. Fill in a real email you can check, submit, and confirm the confirmation screen shows "Emailed! ✓" (or the expected sandbox-domain error if Resend's domain isn't verified yet) and that a real email arrives if it succeeds. Revert the temporary initial-state edit afterward.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
   ```bash
   git add photo-booth-app/src/screens/DeliveryScreen.jsx photo-booth-app/src/screens/DeliveryScreen.css photo-booth-app/src/App.jsx
@@ -1961,7 +1961,7 @@
 
 **Interfaces:** None (this task produces build tooling and docs, not app code).
 
-- [ ] **Step 1: Add the native Android project**
+- [x] **Step 1: Add the native Android project**
 
   ```bash
   cd photo-booth-app
@@ -1971,7 +1971,7 @@
   ```
   This generates `photo-booth-app/android/` (gitignored per Task 5 Step 10 — regenerable from `capacitor.config.json` + the web build).
 
-- [ ] **Step 2: Add the camera permission**
+- [x] **Step 2: Add the camera permission**
 
   Confirmed by running `cap add android` in a worktree: `@capacitor-community/camera-preview` does **not** merge `android.permission.CAMERA` into `AndroidManifest.xml` automatically — the generated manifest only has `android.permission.INTERNET`. Since `android/` is gitignored (regenerated fresh by both a local `cap add android` and the CI workflow), this has to be added every time, not just once. Open `photo-booth-app/android/app/src/main/AndroidManifest.xml` and add it inside `<manifest>`, right after the existing INTERNET permission line:
   ```xml
@@ -1979,7 +1979,7 @@
   ```
   This is a local, one-off fix for testing right now — Step 3's workflow bakes the same fix into CI so it survives the gitignored `android/` being regenerated on every build.
 
-- [ ] **Step 3: Write the GitHub Actions build workflow**
+- [x] **Step 3: Write the GitHub Actions build workflow**
 
   ```yaml
   name: Build Photo Booth APK
@@ -2047,7 +2047,7 @@
 
   Note this workflow runs `npx cap add android` itself (since `android/` is gitignored) rather than relying on a committed native project — keeps the repo free of generated native build files.
 
-- [ ] **Step 4: Write `photo-booth-app/README.md`**
+- [x] **Step 4: Write `photo-booth-app/README.md`**
 
   ```markdown
   # Camp Javery Photo Booth
@@ -2086,7 +2086,7 @@
   - `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` — create a [Twilio](https://www.twilio.com/) account, buy a phone number capable of MMS, and add these to `server/.env`. Until they're set, SMS sends fail gracefully with a clear error and email-only still works.
   ```
 
-- [ ] **Step 5: On-device verification (do this once Twilio/Resend setup from Step 4 is complete)**
+- [ ] **Step 5: On-device verification (do this once Twilio/Resend setup from Step 4 is complete)** — not done. Requires the physical Z Flip 7, a pushed branch (the workflow only runs on `push`/`workflow_dispatch` against a real remote ref — this work is still on a local, unpushed worktree branch), and a completed Twilio signup, none of which are available in this session.
 
   1. Trigger the GitHub Actions workflow (push to `main` or run it manually) and download the `photo-booth-debug-apk` artifact, or build locally per the README.
   2. Install it on the Z Flip 7.
@@ -2096,7 +2096,7 @@
   6. Confirm Delivery sends to a real email and (once Twilio is set up) a real phone number, and that a deliberately invalid phone number reports a per-channel failure without blocking a valid email send — then tap "Retry Text" with a corrected number and confirm only that channel re-sends (the already-succeeded email doesn't re-send).
   7. Confirm the idle timeout returns to Home from Review and Delivery after ~60s of no interaction, and confirm Capture's watchdog doesn't fire spuriously during a normal capture sequence (it should only ever trigger if you deliberately stall it, e.g. by denying camera permission and leaving the error screen up).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
   ```bash
   git add .github/workflows/build-photo-booth-apk.yml photo-booth-app/README.md photo-booth-app/.gitignore
