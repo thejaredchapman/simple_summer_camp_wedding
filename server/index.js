@@ -12,10 +12,12 @@ import {
   getPhotoMetadata,
   uploadPhotoAdminMetadata,
   getPhotoAdminMetadata,
+  uploadBoothPhoto,
   listPhotos,
   deletePhoto,
 } from './photoStorage.js';
 import { uploadVideo, listVideos, deleteVideo } from './videoStorage.js';
+import { sendBoothEmail, sendBoothText } from './messaging.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
@@ -135,6 +137,11 @@ const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests 
 const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
 const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 50); // 50 uploads / 10 min / IP — shared venue wifi NATs many guests behind one IP
 const videoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
+// Booth is a single kiosk device, but shared venue wifi NATs many guests
+// behind one IP over the course of the night — sized generously.
+const photoboothUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 60); // 60 strips / 10 min / IP
+// Tighter than uploads — sends trigger paid Twilio messages.
+const photoboothSendRateLimiter = createRateLimiter(10 * 60 * 1000, 20); // 20 sends / 10 min / IP
 
 // =============================================================================
 // INPUT SANITIZATION
@@ -410,6 +417,67 @@ app.post('/api/videos/upload', videoUploadRateLimiter, (req, res, next) => {
   } catch (error) {
     console.error('Video upload error:', error.message);
     res.status(500).json({ error: 'Upload failed. Please try again.' });
+  }
+});
+
+const photoboothUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB
+});
+
+app.post('/api/photobooth/upload', photoboothUploadRateLimiter, (req, res, next) => {
+  photoboothUpload.single('photo')(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'That strip is too large (max 15MB).' });
+      }
+      console.error('Photo booth upload parsing error:', err.message);
+      return res.status(400).json({ error: 'Upload failed. Please try again.' });
+    }
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const guestName = sanitizeInput(req.body.guestName || '').slice(0, 60) || 'Photo Booth Guest';
+    const photoFile = req.file;
+    if (!photoFile) {
+      return res.status(400).json({ error: 'No photo strip was uploaded.' });
+    }
+    if (!ALLOWED_IMAGE_TYPES.includes(photoFile.mimetype)) {
+      return res.status(400).json({ error: 'Only image files are allowed.' });
+    }
+
+    const blob = await uploadBoothPhoto(photoFile.buffer, guestName, photoFile.mimetype);
+    res.json({ success: true, url: blob.url, pathname: blob.pathname });
+  } catch (error) {
+    console.error('Photo booth upload error:', error.message);
+    res.status(500).json({ error: 'Upload failed. Please try again.' });
+  }
+});
+
+app.post('/api/photobooth/send', photoboothSendRateLimiter, async (req, res) => {
+  try {
+    const photoUrl = typeof req.body.photoUrl === 'string' ? req.body.photoUrl : '';
+    const guestName = sanitizeInput(req.body.guestName || '').slice(0, 60) || 'Photo Booth Guest';
+    const email = sanitizeInput(req.body.email || '').slice(0, 200);
+    const phone = sanitizeInput(req.body.phone || '').slice(0, 30);
+
+    if (!photoUrl || !photoUrl.startsWith('https://')) {
+      return res.status(400).json({ error: 'Missing or invalid photo URL.' });
+    }
+    if (!email && !phone) {
+      return res.status(400).json({ error: 'Provide an email or phone number.' });
+    }
+
+    const [emailResult, smsResult] = await Promise.all([
+      email ? sendBoothEmail({ to: email, guestName, photoUrl }) : Promise.resolve(null),
+      phone ? sendBoothText({ to: phone, photoUrl }) : Promise.resolve(null),
+    ]);
+
+    res.json({ email: emailResult, sms: smsResult });
+  } catch (error) {
+    console.error('Photo booth send error:', error.message);
+    res.status(500).json({ error: 'Send failed. Please try again.' });
   }
 });
 

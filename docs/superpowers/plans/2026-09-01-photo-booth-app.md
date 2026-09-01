@@ -197,14 +197,27 @@
   import { Resend } from 'resend';
   import twilio from 'twilio';
 
-  const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+  // Lazily constructed on first use, not at module import time — ESM import
+  // statements execute before index.js's later `dotenv.config()` call, so
+  // reading process.env.* at the top level here would always see undefined.
+  let resendClient = null;
+  function getResendClient() {
+    if (!process.env.RESEND_API_KEY) return null;
+    if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+    return resendClient;
+  }
 
-  const twilioClient =
-    process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN
-      ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
-      : null;
+  let twilioClient = null;
+  function getTwilioClient() {
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) return null;
+    if (!twilioClient) {
+      twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    }
+    return twilioClient;
+  }
 
   export async function sendBoothEmail({ to, guestName, photoUrl }) {
+    const resend = getResendClient();
     if (!resend || !process.env.RESEND_EMAIL_DOMAIN) {
       return { success: false, error: 'Email is not configured on this server.' };
     }
@@ -229,11 +242,12 @@
   }
 
   export async function sendBoothText({ to, photoUrl }) {
-    if (!twilioClient || !process.env.TWILIO_FROM_NUMBER) {
+    const client = getTwilioClient();
+    if (!client || !process.env.TWILIO_FROM_NUMBER) {
       return { success: false, error: 'Text messaging is not configured on this server.' };
     }
     try {
-      await twilioClient.messages.create({
+      await client.messages.create({
         from: process.env.TWILIO_FROM_NUMBER,
         to,
         body: 'Your Camp Javery photo booth strip! #CampJavery',
@@ -275,7 +289,7 @@
 
 - [ ] **Step 5: Verify email sending (requires `server/.env` to have real Resend credentials)**
 
-  Run, replacing `you@example.com` with an inbox you can check:
+  Note: this check uses `import('dotenv/config')` before importing `messaging.js`, which loads env vars in a different order than the real server (where `index.js`'s static imports — including `messaging.js` — all resolve *before* its own `dotenv.config()` call runs). This step alone can pass even if the lazy-getter pattern above were accidentally written as eager module-level consts instead; Task 3's Step 6 (hitting the real running server) is what actually proves the ordering works. Run, replacing `you@example.com` with an inbox you can check:
   ```bash
   cd server && node -e "
   import('dotenv/config').then(async () => {
