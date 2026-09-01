@@ -13,6 +13,14 @@ export function buildPhotoPathname(guestName) {
   return `${PHOTO_PREFIX}${randomId}__${safeName}.jpg`;
 }
 
+const BOOTH_PREFIX_MARKER = 'booth-';
+
+export function buildBoothPhotoPathname(guestName) {
+  const randomId = Math.random().toString(36).slice(2, 10);
+  const safeName = encodeURIComponent((guestName || '').trim().slice(0, 60) || 'Guest');
+  return `${PHOTO_PREFIX}${BOOTH_PREFIX_MARKER}${randomId}__${safeName}.jpg`;
+}
+
 // This store was created public-only — Vercel Blob's `access: 'private'`
 // requires the *store* to be provisioned for private access at creation
 // time (an immutable, dashboard/CLI-only setting), so per-blob private
@@ -47,10 +55,12 @@ export function buildPhotoMetadataPathname(photoPathname) {
 
 export function parsePhotoPathname(pathname) {
   const filename = pathname.slice(PHOTO_PREFIX.length);
-  const separatorIndex = filename.indexOf('__');
+  const source = filename.startsWith(BOOTH_PREFIX_MARKER) ? 'photo-booth' : 'guest-upload';
+  const idAndName = source === 'photo-booth' ? filename.slice(BOOTH_PREFIX_MARKER.length) : filename;
+  const separatorIndex = idAndName.indexOf('__');
   const encodedName = separatorIndex === -1
     ? ''
-    : filename.slice(separatorIndex + 2).replace(/\.jpg$/, '');
+    : idAndName.slice(separatorIndex + 2).replace(/\.jpg$/, '');
 
   let name = 'Guest';
   if (encodedName) {
@@ -60,11 +70,21 @@ export function parsePhotoPathname(pathname) {
       name = 'Guest';
     }
   }
-  return { name };
+  return { name, source };
 }
 
 export async function uploadPhoto(buffer, guestName, contentType) {
   const pathname = buildPhotoPathname(guestName);
+  const blob = await put(pathname, buffer, {
+    access: 'public',
+    contentType,
+    addRandomSuffix: false,
+  });
+  return blob;
+}
+
+export async function uploadBoothPhoto(buffer, guestName, contentType) {
+  const pathname = buildBoothPhotoPathname(guestName);
   const blob = await put(pathname, buffer, {
     access: 'public',
     contentType,
@@ -142,11 +162,12 @@ export async function listPhotos() {
   return blobs
     .filter(blob => blob.pathname.endsWith('.jpg'))
     .map(blob => {
-      const { name } = parsePhotoPathname(blob.pathname);
+      const { name, source } = parsePhotoPathname(blob.pathname);
       return {
         id: blob.pathname,
         url: blob.url,
         name,
+        source,
         uploadedAt: blob.uploadedAt,
       };
     })
