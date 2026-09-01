@@ -1,5 +1,4 @@
 import { Resend } from 'resend';
-import twilio from 'twilio';
 
 // Lazily constructed on first use, not at module import time — ESM import
 // statements execute before index.js's later `dotenv.config()` call, so
@@ -9,15 +8,6 @@ function getResendClient() {
   if (!process.env.RESEND_API_KEY) return null;
   if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
   return resendClient;
-}
-
-let twilioClient = null;
-function getTwilioClient() {
-  if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN) return null;
-  if (!twilioClient) {
-    twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-  }
-  return twilioClient;
 }
 
 export async function sendBoothEmail({ to, guestName, photoUrl }) {
@@ -42,24 +32,5 @@ export async function sendBoothEmail({ to, guestName, photoUrl }) {
   } catch (error) {
     console.error('Booth email send error:', error.message);
     return { success: false, error: 'Could not send the email. Please try again.' };
-  }
-}
-
-export async function sendBoothText({ to, photoUrl }) {
-  const client = getTwilioClient();
-  if (!client || !process.env.TWILIO_FROM_NUMBER) {
-    return { success: false, error: 'Text messaging is not configured on this server.' };
-  }
-  try {
-    await client.messages.create({
-      from: process.env.TWILIO_FROM_NUMBER,
-      to,
-      body: 'Your Camp Javery photo booth strip! #CampJavery',
-      mediaUrl: [photoUrl],
-    });
-    return { success: true };
-  } catch (error) {
-    console.error('Booth text send error:', error.message);
-    return { success: false, error: 'Could not send the text. Check the phone number and try again.' };
   }
 }

@@ -17,7 +17,7 @@ import {
   deletePhoto,
 } from './photoStorage.js';
 import { uploadVideo, listVideos, deleteVideo } from './videoStorage.js';
-import { sendBoothEmail, sendBoothText } from './messaging.js';
+import { sendBoothEmail } from './messaging.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
 
@@ -455,26 +455,24 @@ app.post('/api/photobooth/upload', photoboothUploadRateLimiter, (req, res, next)
   }
 });
 
+// Texting isn't a backend call — the booth app opens the phone's own
+// Messages app via a native share-intent plugin instead (Android won't let
+// a regular app send MMS silently). This route only ever handles email.
 app.post('/api/photobooth/send', photoboothSendRateLimiter, async (req, res) => {
   try {
     const photoUrl = typeof req.body.photoUrl === 'string' ? req.body.photoUrl : '';
     const guestName = sanitizeInput(req.body.guestName || '').slice(0, 60) || 'Photo Booth Guest';
     const email = sanitizeInput(req.body.email || '').slice(0, 200);
-    const phone = sanitizeInput(req.body.phone || '').slice(0, 30);
 
     if (!photoUrl || !photoUrl.startsWith('https://')) {
       return res.status(400).json({ error: 'Missing or invalid photo URL.' });
     }
-    if (!email && !phone) {
-      return res.status(400).json({ error: 'Provide an email or phone number.' });
+    if (!email) {
+      return res.status(400).json({ error: 'Provide an email address.' });
     }
 
-    const [emailResult, smsResult] = await Promise.all([
-      email ? sendBoothEmail({ to: email, guestName, photoUrl }) : Promise.resolve(null),
-      phone ? sendBoothText({ to: phone, photoUrl }) : Promise.resolve(null),
-    ]);
-
-    res.json({ email: emailResult, sms: smsResult });
+    const emailResult = await sendBoothEmail({ to: email, guestName, photoUrl });
+    res.json({ email: emailResult });
   } catch (error) {
     console.error('Photo booth send error:', error.message);
     res.status(500).json({ error: 'Send failed. Please try again.' });
