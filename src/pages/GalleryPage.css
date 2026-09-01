@@ -81,3 +81,26 @@
   text-align: center;
   color: var(--color-text-light);
 }
+
+.gallery-filter-tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+}
+
+.gallery-filter-tab {
+  background: var(--color-cream-dark);
+  color: var(--color-text);
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.gallery-filter-tab-active {
+  background: var(--color-primary);
+  color: white;
+}

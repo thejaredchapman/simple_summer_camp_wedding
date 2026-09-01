@@ -13,6 +13,7 @@ export default function GalleryPage() {
   // Tracked by id, not array index — the list re-sorts on every poll as new
   // photos arrive, so an index would silently point at the wrong photo.
   const [lightboxPhotoId, setLightboxPhotoId] = useState(null);
+  const [filter, setFilter] = useState('all'); // 'all' | 'photo-booth'
 
   useEffect(() => {
     let cancelled = false;
@@ -37,15 +38,33 @@ export default function GalleryPage() {
     };
   }, []);
 
+  const filteredPhotos = filter === 'all' ? photos : photos.filter(p => p.source === 'photo-booth');
+
   return (
     <div className="gallery-page">
       <h1>Camp Javery Photos</h1>
       <Link to="/upload" className="gallery-upload-button">
         Upload More Photos
       </Link>
+      <div className="gallery-filter-tabs">
+        <button
+          type="button"
+          className={filter === 'all' ? 'gallery-filter-tab gallery-filter-tab-active' : 'gallery-filter-tab'}
+          onClick={() => setFilter('all')}
+        >
+          All Photos
+        </button>
+        <button
+          type="button"
+          className={filter === 'photo-booth' ? 'gallery-filter-tab gallery-filter-tab-active' : 'gallery-filter-tab'}
+          onClick={() => setFilter('photo-booth')}
+        >
+          Photo Booth
+        </button>
+      </div>
       {error && <p className="gallery-error">{error}</p>}
       <div className="gallery-grid">
-        {photos.map(photo => (
+        {filteredPhotos.map(photo => (
           <button
             key={photo.id}
             type="button"
@@ -63,20 +82,22 @@ export default function GalleryPage() {
           </button>
         ))}
       </div>
-      {photos.length === 0 && !error && (
-        <p className="gallery-empty">No photos yet — be the first to share one!</p>
+      {filteredPhotos.length === 0 && !error && (
+        <p className="gallery-empty">
+          {filter === 'photo-booth' ? 'No photo booth strips yet!' : 'No photos yet — be the first to share one!'}
+        </p>
       )}
       <ContactHelpLink />
       {lightboxPhotoId && (() => {
-        const lightboxIndex = photos.findIndex(p => p.id === lightboxPhotoId);
+        const lightboxIndex = filteredPhotos.findIndex(p => p.id === lightboxPhotoId);
         if (lightboxIndex === -1) return null;
         return (
           <PhotoLightbox
             key={lightboxPhotoId}
-            photos={photos}
+            photos={filteredPhotos}
             index={lightboxIndex}
             onClose={() => setLightboxPhotoId(null)}
-            onIndexChange={i => setLightboxPhotoId(photos[i]?.id ?? null)}
+            onIndexChange={i => setLightboxPhotoId(filteredPhotos[i]?.id ?? null)}
           />
         );
       })()}
