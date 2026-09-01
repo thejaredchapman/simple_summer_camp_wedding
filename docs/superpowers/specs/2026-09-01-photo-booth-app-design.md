@@ -15,8 +15,10 @@ it's filterable alongside regular guest uploads.
 
 ## Non-goals
 
-- No native Android (Kotlin/CameraX) build — the app is a Capacitor-wrapped web app,
-  reusing the existing site's watermarking approach and backend.
+- No full native Android (Kotlin/CameraX) app — the app is a Capacitor-wrapped
+  web app, reusing the existing site's watermarking approach and backend. One
+  small custom native plugin (the SMS/Messages share-intent, see Backend &
+  delivery) is the only native code involved — everything else is JS/React.
 - No native Samsung Flex Mode split-screen (camera-on-top/controls-on-bottom when
   half-folded). That requires a custom native plugin bridging Android's
   `WindowManager` fold-posture APIs into the WebView; out of scope for v1. The app
@@ -24,9 +26,10 @@ it's filterable alongside regular guest uploads.
   stand, it just won't auto-split its own layout.
 - No guest accounts/authentication for the booth itself — same trust model as the
   existing `/upload` flow.
-- No offline queueing of sends — if the venue's connectivity drops, sending fails
-  with a retry option (the strip is already uploaded and safe; only the
-  email/SMS step needs a retry).
+- No offline queueing of sends — if the venue's connectivity drops, the email
+  send fails with a retry option (the strip is already uploaded and safe; only
+  the email step needs a retry). The Messages share-intent for texting doesn't
+  need connectivity at all until the guest actually taps Send inside Messages.
 - Not distributed to guests' own phones — one (or two) kiosk devices, set up by
   Jared/Avery, not something guests install.
 
@@ -81,29 +84,41 @@ Two new routes, following the existing rate-limiter/handler conventions:
 | Route | Method | Auth | Purpose |
 |---|---|---|---|
 | `/api/photobooth/upload` | POST | none (public, rate-limited) | Uploads the composited strip |
-| `/api/photobooth/send` | POST | none (public, rate-limited) | Emails/texts the strip to the guest |
+| `/api/photobooth/send` | POST | none (public, rate-limited) | Emails the strip to the guest |
 
 - `photoUploadRateLimiter`-style limiter reused/cloned for `/api/photobooth/upload`.
-- A new, tighter limiter for `/api/photobooth/send` (e.g. 10 sends / 10 min / IP) —
-  it triggers paid Twilio sends, so it needs its own ceiling separate from the
-  free upload path.
+- A new, tighter limiter for `/api/photobooth/send` (e.g. 10 sends / 10 min / IP).
 - `/api/photobooth/upload` reuses `uploadPhoto()` from `photoStorage.js`, but with a
   `booth-` pathname prefix (e.g. `guest-photos/booth-<id>__<name>.jpg`) instead of
   the plain guest-upload prefix — same blob store, same `guest-photos/` prefix so it
   already shows up in `listPhotos()`, just distinguishable by pathname.
-- `/api/photobooth/send` takes `{ photoUrl, guestName, email, phone }`, and sends via:
-  - **Resend** (email) — provisioned via Vercel Marketplace; `RESEND_API_KEY` and
-    `RESEND_EMAIL_DOMAIN` (`campjavery.com`) are already in `.env.local`. Domain
-    still needs DNS verification in the Resend dashboard before real sends work
-    (see Setup Requirements).
-  - **Twilio MMS** (SMS) — not a Vercel Marketplace integration, so this is a
-    standard third-party setup: you create a Twilio account, buy a phone number,
-    and I add `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM_NUMBER` to
-    `server/.env`. Twilio's MMS `MediaUrl` parameter takes the already-uploaded
-    blob's public URL directly — no re-encoding or duplicate upload needed.
-  - If both email and phone are provided, both sends fire; the response reports
-    per-channel success/failure so the Delivery screen can show "Emailed ✓ /
-    Texting failed, retry?" rather than an all-or-nothing result.
+- `/api/photobooth/send` takes `{ photoUrl, guestName, email }` and sends via
+  **Resend** — provisioned via Vercel Marketplace; `RESEND_API_KEY` and
+  `RESEND_EMAIL_DOMAIN` (`campjavery.com`) are already in `.env.local`. Domain
+  still needs DNS verification in the Resend dashboard before real sends work
+  (see Setup Requirements).
+
+**Texting is not a backend integration.** No SMS provider is used —
+Android does not allow a regular app to send MMS silently; only an app set
+as the phone's *default* SMS handler can do that, which would be a much
+bigger, more invasive change than a photo booth warrants (it would take
+over the device's actual messaging). Instead, texting happens **entirely
+on-device**: a small custom Capacitor plugin (`photo-booth-app/plugins/sms-share/`)
+writes the strip to a local cache file and fires an Android
+`ACTION_SEND` intent targeted at the phone's own default Messages app,
+with the recipient's number pre-filled via the `address` extra and the
+image attached via `EXTRA_STREAM`/`FileProvider`. This opens Messages with
+everything already filled in — a human (the guest or the booth attendant)
+taps **Send** once inside Messages to actually dispatch it. No account, no
+per-message cost, no `TWILIO_*` env vars.
+
+Email and text are independent: email fires automatically through the
+backend, while "text it to yourself" is one tap after the Messages app
+opens. The Delivery screen still collects both an email and phone field;
+only email participates in the backend's per-channel retry logic described
+below, since the text path has no server-side call to retry — if the
+guest backs out of Messages without sending, they just tap "Send My
+Photos" again to reopen it.
 
 ### Gallery integration (`GalleryPage.jsx`, `photoStorage.js`)
 
@@ -118,6 +133,12 @@ Two new routes, following the existing rate-limiter/handler conventions:
 
 - `npx cap add android` scaffolds the native Android project inside
   `photo-booth-app/`; `npx cap sync` copies the web build into it.
+- The custom SMS-share plugin's Kotlin source lives in its own local package
+  (`photo-booth-app/plugins/sms-share/`), **not** inside `android/` — `android/`
+  is gitignored and regenerated fresh by every `cap add android` (locally and
+  in CI), so anything hand-written directly in it would be lost. A proper
+  Capacitor plugin package is auto-discovered and pulled into the generated
+  `android/` project by `cap sync`, so its source survives regeneration.
 - Producing the actual signed `.apk` needs a JDK + Android SDK + Gradle. **None of
   that is installed on this machine** (confirmed: no `java`, no Android Studio, no
   `$ANDROID_HOME`, no `gradle`/`adb`). Two options, both documented in the README:
@@ -141,12 +162,13 @@ Two new routes, following the existing rate-limiter/handler conventions:
 
 ## Setup requirements (manual, not something I can do for you)
 
-1. **Twilio**: create an account, buy a phone number capable of MMS in your region,
-   provide the Account SID / Auth Token / phone number.
-2. **Resend domain verification**: `campjavery.com` is provisioned as the sending
+1. **Resend domain verification**: `campjavery.com` is provisioned as the sending
    domain, but Resend requires DNS records (SPF/DKIM) added at your domain
    registrar before it'll send real (non-sandbox) email. I'll provide the exact
    records once we reach implementation.
+2. **Android build tooling** (unchanged from the Build & distribution section
+   above): install Android Studio if you want local device debugging, or rely on
+   the GitHub Actions build.
 3. **Android build tooling**: install Android Studio (recommended) if you want to
    iterate/debug locally, or rely solely on the GitHub Actions build.
 
@@ -159,9 +181,11 @@ Two new routes, following the existing rate-limiter/handler conventions:
 - Upload failure (`/api/photobooth/upload`) → Review screen shows a retry button;
   the composited strip stays in memory client-side so retrying doesn't require
   retaking photos.
-- Send failure (`/api/photobooth/send`) → Delivery screen reports which channel(s)
-  failed with a retry button scoped to just the failed channel(s); a successful
-  channel isn't re-sent.
+- Email send failure (`/api/photobooth/send`) → Delivery screen shows the error
+  with a retry button for the email channel.
+- SMS share-intent failure (e.g. no default Messages app resolvable, or the
+  native call throws) → Delivery screen shows an inline error for the text
+  channel; tapping "Send My Photos" again just re-attempts opening Messages.
 - Rate limit hit → friendly inline message, no crash.
 - Idle timeout mid-flow (guest walks away) → after ~60s of inactivity on any screen
   but Home, auto-return to Home so the booth doesn't get stuck for the next guest.
@@ -178,9 +202,12 @@ Manual testing on the physical Z Flip 7, following the existing
   9:16 (2/3/4-photo) canvases both come out as valid, croppable-free Instagram
   dimensions.
 - Retake flow discards the in-progress strip and restarts cleanly.
-- Delivery: email-only, phone-only, and both — confirm real inbox/phone delivery.
-- Confirm a partial failure (e.g. valid email + invalid phone) reports per-channel
-  status instead of failing the whole send.
+- Delivery: email-only, phone-only, and both — confirm the email actually
+  lands in a real inbox, and confirm the phone number opens Messages with the
+  strip attached and the number pre-filled, ready to send.
+- Confirm submitting only a phone number doesn't call the backend at all
+  (network tab should show no `/api/photobooth/send` request), and that email
+  alone still works normally when no phone is entered.
 - Confirm booth strips appear in `/gallery` tagged as "Photo Booth" and the filter
   tab correctly separates them from regular guest uploads.
 - Confirm idle timeout returns to Home from every screen.
