@@ -1,0 +1,59 @@
+:root {
+  --color-primary: #2D5A3D;
+  --color-secondary: #4A7C59;
+  --color-accent: #3D6B4D;
+  --color-warm-sunset-1: #F5F0E6;
+  --color-warm-sunset-2: #E8E0D0;
+  --color-warm-sunset-3: #D4694A;
+  --color-warm-sunset-4: #C43D3D;
+  --color-cream: #FAF8F3;
+  --color-cream-dark: #F0EBE0;
+  --color-text: #2D5A3D;
+  --gradient-sunset: linear-gradient(90deg, #E3B152 0%, #E0773C 50%, #E44842 100%);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lora', Georgia, serif;
+
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 4rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* @capacitor-community/camera-preview renders the native camera view
+   BEHIND the webview (toBack: true) — the webview's own background must
+   be transparent while it's active, or the native preview is invisible. */
+body.camera-preview-active,
+body.camera-preview-active #root,
+body.camera-preview-active .screen {
+  background: transparent !important;
+}
+
+.screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+  text-align: center;
+}
