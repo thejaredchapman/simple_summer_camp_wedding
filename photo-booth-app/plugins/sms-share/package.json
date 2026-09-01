@@ -1,0 +1,19 @@
+{
+  "name": "camp-javery-sms-share",
+  "version": "0.0.1",
+  "description": "Opens the device's default Messages app with an image attached and a recipient pre-filled.",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "files": [
+    "android",
+    "src"
+  ],
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^8.0.0"
+  }
+}

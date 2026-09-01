@@ -57,6 +57,7 @@ export default function App() {
       {screen === 'delivery' && (
         <DeliveryScreen
           photoUrl={uploadedPhotoUrl}
+          stripDataUrl={stripDataUrl}
           idleTimeoutMs={IDLE_TIMEOUT_MS}
           onIdle={resetToHome}
           onDone={resetToHome}

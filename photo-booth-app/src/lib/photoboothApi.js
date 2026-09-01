@@ -1,3 +1,5 @@
+import SmsShare from 'camp-javery-sms-share';
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 function dataUrlToBlob(dataUrl) {
@@ -36,14 +38,22 @@ export async function uploadBoothStrip(stripDataUrl, guestName = '') {
   return res.json();
 }
 
-export async function sendBoothStrip({ photoUrl, guestName, email, phone }) {
+export async function sendBoothEmail({ photoUrl, guestName, email }) {
   const res = await fetch(`${BACKEND_URL}/api/photobooth/send`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ photoUrl, guestName, email, phone }),
+    body: JSON.stringify({ photoUrl, guestName, email }),
   });
   if (!res.ok) {
     throw new Error(await parseErrorMessage(res));
   }
   return res.json();
+}
+
+// Opens the phone's own Messages app with the strip attached and the number
+// pre-filled — no backend call, no SMS provider. `stripDataUrl` is the
+// in-memory data URL from Capture/Review, not a re-fetch of the uploaded URL.
+export async function shareBoothStripBySms(phoneNumber, stripDataUrl) {
+  const base64Image = stripDataUrl.split(',')[1];
+  return SmsShare.shareImage({ phoneNumber, base64Image });
 }

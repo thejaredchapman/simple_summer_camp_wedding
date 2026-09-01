@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { sendBoothStrip } from '../lib/photoboothApi';
+import { sendBoothEmail, shareBoothStripBySms } from '../lib/photoboothApi';
 import './DeliveryScreen.css';
 
-export default function DeliveryScreen({ photoUrl, idleTimeoutMs, onIdle, onDone }) {
+export default function DeliveryScreen({ photoUrl, stripDataUrl, idleTimeoutMs, onIdle, onDone }) {
   const [guestName, setGuestName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [status, setStatus] = useState('idle'); // idle | sending | sent
-  const [result, setResult] = useState(null);
-  const [retryingChannel, setRetryingChannel] = useState(null); // null | 'email' | 'sms'
+  const [emailResult, setEmailResult] = useState(null); // { success, error? } | null
+  const [smsOpened, setSmsOpened] = useState(false);
+  const [smsError, setSmsError] = useState('');
+  const [retryingEmail, setRetryingEmail] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const idleTimerRef = useRef(null);
 
@@ -20,46 +22,66 @@ export default function DeliveryScreen({ photoUrl, idleTimeoutMs, onIdle, onDone
 
   async function handleSend(e) {
     e.preventDefault();
-    if (!email.trim() && !phone.trim()) {
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+    if (!trimmedEmail && !trimmedPhone) {
       setErrorMessage('Enter an email or phone number.');
       return;
     }
     setStatus('sending');
     setErrorMessage('');
+
+    // Email first — it's a real network call. Opening Messages backgrounds
+    // this app immediately, so anything still in flight afterward risks
+    // being suspended.
+    if (trimmedEmail) {
+      try {
+        const result = await sendBoothEmail({
+          photoUrl,
+          guestName: guestName.trim() || 'Photo Booth Guest',
+          email: trimmedEmail,
+        });
+        setEmailResult(result.email);
+      } catch (error) {
+        setEmailResult({ success: false, error: error.message || 'Send failed.' });
+      }
+    }
+
+    if (trimmedPhone) {
+      try {
+        await shareBoothStripBySms(trimmedPhone, stripDataUrl);
+        setSmsOpened(true);
+      } catch (error) {
+        setSmsError(error.message || 'Could not open Messages.');
+      }
+    }
+
+    setStatus('sent');
+  }
+
+  async function handleRetryEmail() {
+    setRetryingEmail(true);
     try {
-      const sendResult = await sendBoothStrip({
+      const result = await sendBoothEmail({
         photoUrl,
         guestName: guestName.trim() || 'Photo Booth Guest',
-        email: email.trim() || undefined,
-        phone: phone.trim() || undefined,
+        email: email.trim(),
       });
-      setResult(sendResult);
-      setStatus('sent');
+      setEmailResult(result.email);
     } catch (error) {
-      setStatus('idle');
-      setErrorMessage(error.message || 'Send failed. Please try again.');
+      setEmailResult({ success: false, error: error.message || 'Retry failed.' });
+    } finally {
+      setRetryingEmail(false);
     }
   }
 
-  // Retries only the one failed channel — a channel that already succeeded
-  // is never re-sent.
-  async function handleRetryChannel(channel) {
-    setRetryingChannel(channel);
+  async function handleRetrySms() {
+    setSmsError('');
     try {
-      const retryResult = await sendBoothStrip({
-        photoUrl,
-        guestName: guestName.trim() || 'Photo Booth Guest',
-        email: channel === 'email' ? email.trim() : undefined,
-        phone: channel === 'sms' ? phone.trim() : undefined,
-      });
-      setResult(prev => ({ ...prev, [channel]: retryResult[channel] }));
+      await shareBoothStripBySms(phone.trim(), stripDataUrl);
+      setSmsOpened(true);
     } catch (error) {
-      setResult(prev => ({
-        ...prev,
-        [channel]: { success: false, error: error.message || 'Retry failed.' },
-      }));
-    } finally {
-      setRetryingChannel(null);
+      setSmsError(error.message || 'Could not open Messages.');
     }
   }
 
@@ -67,34 +89,28 @@ export default function DeliveryScreen({ photoUrl, idleTimeoutMs, onIdle, onDone
     return (
       <div className="screen delivery-screen">
         <img src={photoUrl} alt="Your photo strip" className="delivery-strip-preview" />
-        {result?.email && (
-          <p className={result.email.success ? 'delivery-success' : 'delivery-error'}>
-            {result.email.success ? 'Emailed! ✓' : `Email failed: ${result.email.error}`}
+        {emailResult && (
+          <p className={emailResult.success ? 'delivery-success' : 'delivery-error'}>
+            {emailResult.success ? 'Emailed! ✓' : `Email failed: ${emailResult.error}`}
           </p>
         )}
-        {result?.email && !result.email.success && (
+        {emailResult && !emailResult.success && (
           <button
             type="button"
             className="delivery-retry-button"
-            onClick={() => handleRetryChannel('email')}
-            disabled={retryingChannel === 'email'}
+            onClick={handleRetryEmail}
+            disabled={retryingEmail}
           >
-            {retryingChannel === 'email' ? 'Retrying…' : 'Retry Email'}
+            {retryingEmail ? 'Retrying…' : 'Retry Email'}
           </button>
         )}
-        {result?.sms && (
-          <p className={result.sms.success ? 'delivery-success' : 'delivery-error'}>
-            {result.sms.success ? 'Texted! ✓' : `Text failed: ${result.sms.error}`}
-          </p>
+        {smsOpened && (
+          <p className="delivery-success">Opened Messages — tap Send there to finish texting it!</p>
         )}
-        {result?.sms && !result.sms.success && (
-          <button
-            type="button"
-            className="delivery-retry-button"
-            onClick={() => handleRetryChannel('sms')}
-            disabled={retryingChannel === 'sms'}
-          >
-            {retryingChannel === 'sms' ? 'Retrying…' : 'Retry Text'}
+        {smsError && <p className="delivery-error">{smsError}</p>}
+        {smsError && (
+          <button type="button" className="delivery-retry-button" onClick={handleRetrySms}>
+            Retry Text
           </button>
         )}
         <button type="button" className="delivery-done-button" onClick={onDone}>
@@ -116,6 +132,7 @@ export default function DeliveryScreen({ photoUrl, idleTimeoutMs, onIdle, onDone
 
         <label htmlFor="booth-phone">Phone number</label>
         <input id="booth-phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
+        <p className="delivery-phone-hint">Opens Messages with your photo attached — you'll tap Send there.</p>
 
         {errorMessage && <p className="delivery-error" role="alert">{errorMessage}</p>}
 
