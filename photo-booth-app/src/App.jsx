@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import HomeScreen from './screens/HomeScreen';
 import CaptureScreen from './screens/CaptureScreen';
 import ReviewScreen from './screens/ReviewScreen';
+import DeliveryScreen from './screens/DeliveryScreen';
 import './App.css';
 
 const IDLE_TIMEOUT_MS = 60000;
@@ -53,7 +54,14 @@ export default function App() {
           onIdle={resetToHome}
         />
       )}
-      {screen === 'delivery' && <div className="screen">Delivery screen placeholder — Task 11</div>}
+      {screen === 'delivery' && (
+        <DeliveryScreen
+          photoUrl={uploadedPhotoUrl}
+          idleTimeoutMs={IDLE_TIMEOUT_MS}
+          onIdle={resetToHome}
+          onDone={resetToHome}
+        />
+      )}
     </div>
   );
 }
