@@ -1973,10 +1973,11 @@
 
 - [ ] **Step 2: Add the camera permission**
 
-  Open `photo-booth-app/android/app/src/main/AndroidManifest.xml` and confirm `<uses-permission android:name="android.permission.CAMERA" />` is present inside the `<manifest>` element (the `@capacitor-community/camera-preview` plugin's own manifest merges this in automatically via Gradle manifest merging — verify it's actually present after `cap sync`, and add it manually if not):
+  Confirmed by running `cap add android` in a worktree: `@capacitor-community/camera-preview` does **not** merge `android.permission.CAMERA` into `AndroidManifest.xml` automatically — the generated manifest only has `android.permission.INTERNET`. Since `android/` is gitignored (regenerated fresh by both a local `cap add android` and the CI workflow), this has to be added every time, not just once. Open `photo-booth-app/android/app/src/main/AndroidManifest.xml` and add it inside `<manifest>`, right after the existing INTERNET permission line:
   ```xml
   <uses-permission android:name="android.permission.CAMERA" />
   ```
+  This is a local, one-off fix for testing right now — Step 3's workflow bakes the same fix into CI so it survives the gitignored `android/` being regenerated on every build.
 
 - [ ] **Step 3: Write the GitHub Actions build workflow**
 
@@ -2024,6 +2025,15 @@
             npx cap add android
             npx cap sync android
 
+        - name: Add CAMERA permission
+          # @capacitor-community/camera-preview doesn't merge this into the
+          # manifest automatically, and android/ is gitignored (regenerated
+          # fresh here each run), so it has to be (re-)injected every build.
+          working-directory: photo-booth-app
+          run: |
+            sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />#' android/app/src/main/AndroidManifest.xml
+            grep -q 'android.permission.CAMERA' android/app/src/main/AndroidManifest.xml
+
         - name: Build debug APK
           working-directory: photo-booth-app/android
           run: ./gradlew assembleDebug
@@ -2062,8 +2072,9 @@
   **Option B — Local build (for on-device debugging via USB):**
   1. Install [Android Studio](https://developer.android.com/studio) (bundles the JDK, Android SDK, and Gradle).
   2. `npm run build && npx cap add android && npx cap sync android`
-  3. Open `android/` in Android Studio, or run `cd android && ./gradlew assembleDebug` from the terminal.
-  4. Connect the Z Flip 7 via USB with USB debugging enabled, then `npx cap run android` for live-reload development.
+  3. Add `<uses-permission android:name="android.permission.CAMERA" />` to `android/app/src/main/AndroidManifest.xml` (not merged in automatically by the camera-preview plugin — see the CI workflow for the equivalent automated step).
+  4. Open `android/` in Android Studio, or run `cd android && ./gradlew assembleDebug` from the terminal.
+  5. Connect the Z Flip 7 via USB with USB debugging enabled, then `npx cap run android` for live-reload development.
 
   ## Installing on the kiosk device
 
