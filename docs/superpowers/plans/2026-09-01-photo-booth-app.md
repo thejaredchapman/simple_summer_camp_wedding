@@ -2031,7 +2031,7 @@
           # fresh here each run), so it has to be (re-)injected every build.
           working-directory: photo-booth-app
           run: |
-            sed -i 's#<uses-permission android:name="android.permission.INTERNET" />#<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.CAMERA" />#' android/app/src/main/AndroidManifest.xml
+            sed -i '/android.permission.INTERNET/a\    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
             grep -q 'android.permission.CAMERA' android/app/src/main/AndroidManifest.xml
 
         - name: Build debug APK
