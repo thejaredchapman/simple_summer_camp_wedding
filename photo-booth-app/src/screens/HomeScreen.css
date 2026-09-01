@@ -1,0 +1,35 @@
+.home-sign {
+  width: 60vw;
+  max-width: 320px;
+  margin-bottom: var(--spacing-md);
+}
+
+.home-screen h1 {
+  font-family: var(--font-display);
+  color: var(--color-primary);
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.home-subtitle {
+  margin-bottom: var(--spacing-md);
+}
+
+.mode-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  width: 100%;
+  max-width: 420px;
+}
+
+.mode-button {
+  background: var(--gradient-sunset);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
