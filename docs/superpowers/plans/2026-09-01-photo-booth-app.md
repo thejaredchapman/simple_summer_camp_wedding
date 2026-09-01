@@ -1657,17 +1657,24 @@
 
 - [ ] **Step 5: Verify against the real backend**
 
-  Start the backend (`cd server && npm run dev`) and the booth app (`cd photo-booth-app && npm run dev`) in separate terminals, with `photo-booth-app/.env` set to `VITE_BACKEND_URL=http://localhost:3001` (copy from `.env.example`). In the browser console on the booth app's page, run:
-  ```js
-  window.__reviewTest = () => {
-    // Simulate arriving at Review with a fake strip, bypassing Capture (which needs a real device).
-    const canvas = document.createElement('canvas');
-    canvas.width = 100; canvas.height = 100;
-    canvas.getContext('2d').fillRect(0, 0, 100, 100);
-    return canvas.toDataURL('image/jpeg');
+  Start the backend (`cd server && node index.js`) and the booth app (`cd photo-booth-app && npm run dev`) in separate terminals, with `photo-booth-app/.env` set to `VITE_BACKEND_URL=http://localhost:3001` (copy from `.env.example`).
+
+  Important: the main site's own Vite dev server also defaults to port 5173. If both are running, the booth app's dev server auto-shifts to 5174 — but the backend's CORS `ALLOWED_ORIGINS` only allows 5173 by default, so requests from 5174 fail client-side as an opaque `TypeError: Failed to fetch` (no CORS error surfaces in the console; check with `curl -i -H "Origin: http://localhost:5174" http://localhost:3001/api/health` — a non-200 confirms it). Stop whatever's on 5173 first so the booth app's dev server binds there.
+
+  Temporarily add this to `App.jsx` (inside the `App` function, after `handleStripUploaded`; remove after verifying) to jump straight to Review with a real image, bypassing Capture (which needs a real device):
+  ```jsx
+  window.__testJumpToReview = async () => {
+    const res = await fetch('/camp-sign-new.png');
+    const blob = await res.blob();
+    const reader = new FileReader();
+    const dataUrl = await new Promise(resolve => {
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+    handleStripReady(dataUrl);
   };
   ```
-  This confirms the upload call shape compiles; full end-to-end verification (real captured photos reaching Review) happens on-device in Task 12. Run `npm run build` in `photo-booth-app` to confirm no build errors.
+  In the browser console, run `await window.__testJumpToReview()`, then click "Looks Good" in the UI. Confirm it transitions to the Delivery placeholder (no error message on Review), then confirm the strip actually landed in storage: `curl -s http://localhost:3001/api/photos | grep -o '"id":"[^"]*booth-[^"]*"'` should show a new `booth-` entry. Remove the temporary code from `App.jsx` afterward. Run `npm run build` in `photo-booth-app` to confirm no build errors.
 
 - [ ] **Step 6: Commit**
 

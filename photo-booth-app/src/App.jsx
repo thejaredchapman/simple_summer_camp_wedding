@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import HomeScreen from './screens/HomeScreen';
 import CaptureScreen from './screens/CaptureScreen';
+import ReviewScreen from './screens/ReviewScreen';
 import './App.css';
 
 const IDLE_TIMEOUT_MS = 60000;
@@ -43,7 +44,15 @@ export default function App() {
       {screen === 'capture' && (
         <CaptureScreen mode={mode} onStripReady={handleStripReady} onCancel={resetToHome} />
       )}
-      {screen === 'review' && <div className="screen">Review screen placeholder — Task 10</div>}
+      {screen === 'review' && (
+        <ReviewScreen
+          stripDataUrl={stripDataUrl}
+          onRetake={handleRetake}
+          onUploaded={handleStripUploaded}
+          idleTimeoutMs={IDLE_TIMEOUT_MS}
+          onIdle={resetToHome}
+        />
+      )}
       {screen === 'delivery' && <div className="screen">Delivery screen placeholder — Task 11</div>}
     </div>
   );

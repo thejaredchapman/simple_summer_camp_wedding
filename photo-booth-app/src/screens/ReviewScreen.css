@@ -1,0 +1,35 @@
+.review-strip-preview {
+  max-height: 60vh;
+  max-width: 90vw;
+  border-radius: 12px;
+  margin-bottom: var(--spacing-md);
+}
+
+.review-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.review-actions button {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-retake-button {
+  background: var(--color-cream-dark);
+  color: var(--color-text);
+}
+
+.review-continue-button {
+  background: var(--gradient-sunset);
+  color: white;
+}
+
+.review-error {
+  color: var(--color-warm-sunset-4);
+  margin-bottom: var(--spacing-sm);
+}
