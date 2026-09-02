@@ -55,14 +55,108 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.85);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md);
+  gap: var(--spacing-sm);
+  padding: calc(var(--spacing-md) + var(--safe-top)) var(--spacing-md) calc(var(--spacing-md) + var(--safe-bottom));
   z-index: 10;
+  overflow-y: auto;
 }
 
 .gallery-lightbox img {
   max-width: 100%;
-  max-height: 100%;
+  max-height: 60vh;
   border-radius: var(--radius-sm);
+}
+
+.gallery-send-button {
+  flex-shrink: 0;
+}
+
+.send-panel {
+  width: 100%;
+  max-width: 380px;
+  flex-shrink: 0;
+}
+
+.send-panel-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  text-align: left;
+}
+
+.send-panel-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.send-panel-actions .btn {
+  flex: 1;
+}
+
+.send-panel-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* Shared with DeliveryScreen's form field layout */
+.delivery-field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-cream-dark);
+}
+
+.delivery-field:last-of-type {
+  border-bottom: none;
+}
+
+.delivery-field-icon {
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.delivery-field-input {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.delivery-field-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.65;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.send-panel input {
+  border: none;
+  font-size: 1.05rem;
+  padding: 0.2rem 0;
+  background: transparent;
+  color: var(--color-text);
+  width: 100%;
+}
+
+.send-panel input:focus {
+  outline: none;
+}
+
+.delivery-success {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.delivery-error {
+  color: var(--color-warm-sunset-4);
+  font-weight: 600;
 }

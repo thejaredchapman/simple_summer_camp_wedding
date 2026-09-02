@@ -66,3 +66,26 @@ export async function shareBoothStripBySms(phoneNumber, stripDataUrl) {
   const base64Image = stripDataUrl.split(',')[1];
   return SmsShare.shareImage({ phoneNumber, base64Image });
 }
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Failed to read the photo.'));
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Same as shareBoothStripBySms, but for a photo that's already uploaded
+// (e.g. an older strip opened from the Gallery) — fetches it first since
+// only its remote URL is on hand, not an in-memory data URL.
+export async function shareBoothPhotoUrlBySms(phoneNumber, photoUrl) {
+  const res = await fetch(photoUrl);
+  if (!res.ok) {
+    throw new Error('Could not load the photo to share.');
+  }
+  const blob = await res.blob();
+  const dataUrl = await blobToDataUrl(blob);
+  const base64Image = dataUrl.split(',')[1];
+  return SmsShare.shareImage({ phoneNumber, base64Image });
+}
