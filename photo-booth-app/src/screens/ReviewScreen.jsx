@@ -26,14 +26,17 @@ export default function ReviewScreen({ stripDataUrl, onRetake, onUploaded, idleT
 
   return (
     <div className="screen review-screen">
-      <img src={stripDataUrl} alt="Your photo strip" className="review-strip-preview" />
+      <span className="app-bar-title review-title">How's it look?</span>
+      <div className="card review-card">
+        <img src={stripDataUrl} alt="Your photo strip" className="review-strip-preview" />
+      </div>
       {errorMessage && <p className="review-error" role="alert">{errorMessage}</p>}
       <div className="review-actions">
-        <button type="button" className="review-retake-button" onClick={onRetake} disabled={status === 'uploading'}>
-          Retake
+        <button type="button" className="btn btn-secondary" onClick={onRetake} disabled={status === 'uploading'}>
+          ↺ Retake
         </button>
-        <button type="button" className="review-continue-button" onClick={handleLooksGood} disabled={status === 'uploading'}>
-          {status === 'uploading' ? 'Uploading…' : 'Looks Good'}
+        <button type="button" className="btn btn-primary" onClick={handleLooksGood} disabled={status === 'uploading'}>
+          {status === 'uploading' ? 'Uploading…' : '✓ Looks Good'}
         </button>
       </div>
     </div>

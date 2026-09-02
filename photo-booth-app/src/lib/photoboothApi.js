@@ -23,6 +23,15 @@ async function parseErrorMessage(res) {
   }
 }
 
+export async function listBoothPhotos() {
+  const res = await fetch(`${BACKEND_URL}/api/photos`);
+  if (!res.ok) {
+    throw new Error(await parseErrorMessage(res));
+  }
+  const data = await res.json();
+  return data.photos.filter(photo => photo.source === 'photo-booth');
+}
+
 export async function uploadBoothStrip(stripDataUrl, guestName = '') {
   const formData = new FormData();
   formData.append('photo', dataUrlToBlob(stripDataUrl), 'strip.jpg');

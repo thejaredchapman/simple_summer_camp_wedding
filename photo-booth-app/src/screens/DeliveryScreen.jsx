@@ -88,16 +88,18 @@ export default function DeliveryScreen({ photoUrl, stripDataUrl, idleTimeoutMs, 
   if (status === 'sent') {
     return (
       <div className="screen delivery-screen">
-        <img src={photoUrl} alt="Your photo strip" className="delivery-strip-preview" />
+        <div className="card delivery-card">
+          <img src={photoUrl} alt="Your photo strip" className="delivery-strip-preview" />
+        </div>
         {emailResult && (
           <p className={emailResult.success ? 'delivery-success' : 'delivery-error'}>
-            {emailResult.success ? 'Emailed! ✓' : `Email failed: ${emailResult.error}`}
+            {emailResult.success ? '✓ Emailed!' : `Email failed: ${emailResult.error}`}
           </p>
         )}
         {emailResult && !emailResult.success && (
           <button
             type="button"
-            className="delivery-retry-button"
+            className="btn btn-secondary delivery-retry-button"
             onClick={handleRetryEmail}
             disabled={retryingEmail}
           >
@@ -109,11 +111,11 @@ export default function DeliveryScreen({ photoUrl, stripDataUrl, idleTimeoutMs, 
         )}
         {smsError && <p className="delivery-error">{smsError}</p>}
         {smsError && (
-          <button type="button" className="delivery-retry-button" onClick={handleRetrySms}>
+          <button type="button" className="btn btn-secondary delivery-retry-button" onClick={handleRetrySms}>
             Retry Text
           </button>
         )}
-        <button type="button" className="delivery-done-button" onClick={onDone}>
+        <button type="button" className="btn btn-primary" onClick={onDone}>
           Done
         </button>
       </div>
@@ -122,24 +124,41 @@ export default function DeliveryScreen({ photoUrl, stripDataUrl, idleTimeoutMs, 
 
   return (
     <div className="screen delivery-screen">
-      <img src={photoUrl} alt="Your photo strip" className="delivery-strip-preview" />
-      <form onSubmit={handleSend} className="delivery-form">
-        <label htmlFor="booth-name">Your name (optional)</label>
-        <input id="booth-name" type="text" value={guestName} onChange={e => setGuestName(e.target.value)} maxLength={60} />
+      <div className="card delivery-card">
+        <img src={photoUrl} alt="Your photo strip" className="delivery-strip-preview" />
+      </div>
+      <form onSubmit={handleSend} className="delivery-form card">
+        <label className="delivery-field" htmlFor="booth-name">
+          <span className="delivery-field-icon">🙂</span>
+          <span className="delivery-field-input">
+            <span className="delivery-field-label">Your name (optional)</span>
+            <input id="booth-name" type="text" value={guestName} onChange={e => setGuestName(e.target.value)} maxLength={60} placeholder="Photo Booth Guest" />
+          </span>
+        </label>
 
-        <label htmlFor="booth-email">Email</label>
-        <input id="booth-email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <label className="delivery-field" htmlFor="booth-email">
+          <span className="delivery-field-icon">✉️</span>
+          <span className="delivery-field-input">
+            <span className="delivery-field-label">Email</span>
+            <input id="booth-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" />
+          </span>
+        </label>
 
-        <label htmlFor="booth-phone">Phone number</label>
-        <input id="booth-phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} />
-        <p className="delivery-phone-hint">Opens Messages with your photo attached — you'll tap Send there.</p>
+        <label className="delivery-field" htmlFor="booth-phone">
+          <span className="delivery-field-icon">💬</span>
+          <span className="delivery-field-input">
+            <span className="delivery-field-label">Phone number</span>
+            <input id="booth-phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="(555) 555-5555" />
+          </span>
+        </label>
+        <p className="delivery-phone-hint">Texting opens Messages with your photo attached — you'll tap Send there.</p>
 
         {errorMessage && <p className="delivery-error" role="alert">{errorMessage}</p>}
 
-        <button type="submit" disabled={status === 'sending'}>
+        <button type="submit" className="btn btn-primary btn-block" disabled={status === 'sending'}>
           {status === 'sending' ? 'Sending…' : 'Send My Photos'}
         </button>
-        <button type="button" className="delivery-skip-button" onClick={onDone}>
+        <button type="button" className="btn btn-ghost" onClick={onDone}>
           Skip, just save to gallery
         </button>
       </form>

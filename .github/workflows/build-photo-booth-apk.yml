@@ -57,6 +57,16 @@ jobs:
           sed -i '/android.permission.INTERNET/a\    <uses-permission android:name="android.permission.CAMERA" />' android/app/src/main/AndroidManifest.xml
           grep -q 'android.permission.CAMERA' android/app/src/main/AndroidManifest.xml
 
+      - name: Generate app icon and splash screen
+        # android/ is gitignored and regenerated fresh every run, so the
+        # launcher icon (from photo-booth-app/assets/logo.png) has to be
+        # (re-)generated every build too.
+        working-directory: photo-booth-app
+        run: |
+          npx @capacitor/assets generate --android \
+            --iconBackgroundColor '#FAF8F3' --iconBackgroundColorDark '#2D5A3D' \
+            --splashBackgroundColor '#FAF8F3' --splashBackgroundColorDark '#2D5A3D'
+
       - name: Build debug APK
         working-directory: photo-booth-app/android
         run: ./gradlew assembleDebug

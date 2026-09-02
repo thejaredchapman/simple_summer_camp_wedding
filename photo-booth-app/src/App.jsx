@@ -3,12 +3,13 @@ import HomeScreen from './screens/HomeScreen';
 import CaptureScreen from './screens/CaptureScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import DeliveryScreen from './screens/DeliveryScreen';
+import GalleryScreen from './screens/GalleryScreen';
 import './App.css';
 
 const IDLE_TIMEOUT_MS = 60000;
 
 export default function App() {
-  const [screen, setScreen] = useState('home'); // 'home' | 'capture' | 'review' | 'delivery'
+  const [screen, setScreen] = useState('home'); // 'home' | 'capture' | 'review' | 'delivery' | 'gallery'
   const [mode, setMode] = useState(1); // 1 | 2 | 3 | 4
   const [stripDataUrl, setStripDataUrl] = useState(null);
   const [uploadedPhotoUrl, setUploadedPhotoUrl] = useState(null);
@@ -22,6 +23,10 @@ export default function App() {
   function handleModeSelected(selectedMode) {
     setMode(selectedMode);
     setScreen('capture');
+  }
+
+  function handleOpenGallery() {
+    setScreen('gallery');
   }
 
   function handleStripReady(dataUrl) {
@@ -41,7 +46,8 @@ export default function App() {
 
   return (
     <div className="app">
-      {screen === 'home' && <HomeScreen onSelectMode={handleModeSelected} />}
+      {screen === 'home' && <HomeScreen onSelectMode={handleModeSelected} onOpenGallery={handleOpenGallery} />}
+      {screen === 'gallery' && <GalleryScreen onBack={resetToHome} />}
       {screen === 'capture' && (
         <CaptureScreen mode={mode} onStripReady={handleStripReady} onCancel={resetToHome} />
       )}

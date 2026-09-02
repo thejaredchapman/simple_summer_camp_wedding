@@ -1,35 +1,58 @@
-.home-sign {
-  width: 60vw;
-  max-width: 320px;
-  margin-bottom: var(--spacing-md);
-}
-
-.home-screen h1 {
-  font-family: var(--font-display);
-  color: var(--color-primary);
-  font-size: 1.8rem;
-  margin-bottom: var(--spacing-xs);
+.home-screen {
+  justify-content: center;
 }
 
 .home-subtitle {
   margin-bottom: var(--spacing-md);
+  opacity: 0.75;
 }
 
-.mode-buttons {
+.mode-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-sm);
   width: 100%;
   max-width: 420px;
+  margin-bottom: var(--spacing-md);
 }
 
-.mode-button {
+.mode-card {
+  background: white;
+  color: var(--color-text);
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.mode-card:active {
+  transform: scale(0.96);
+}
+
+.mode-card-count {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
   background: var(--gradient-sunset);
   color: white;
-  border: none;
-  border-radius: 16px;
-  padding: 1.5rem 1rem;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mode-card-label {
+  font-size: 1rem;
   font-weight: 700;
-  cursor: pointer;
+}
+
+.home-gallery-button {
+  max-width: 420px;
 }

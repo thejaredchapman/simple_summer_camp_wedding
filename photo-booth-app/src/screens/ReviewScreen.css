@@ -1,8 +1,17 @@
-.review-strip-preview {
-  max-height: 60vh;
-  max-width: 90vw;
-  border-radius: 12px;
+.review-title {
+  margin-bottom: var(--spacing-sm);
+}
+
+.review-card {
+  padding: 0.6rem;
   margin-bottom: var(--spacing-md);
+}
+
+.review-strip-preview {
+  display: block;
+  max-height: 55vh;
+  max-width: 80vw;
+  border-radius: var(--radius-sm);
 }
 
 .review-actions {
@@ -10,26 +19,8 @@
   gap: var(--spacing-sm);
 }
 
-.review-actions button {
-  padding: 1rem 1.5rem;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.review-retake-button {
-  background: var(--color-cream-dark);
-  color: var(--color-text);
-}
-
-.review-continue-button {
-  background: var(--gradient-sunset);
-  color: white;
-}
-
 .review-error {
   color: var(--color-warm-sunset-4);
   margin-bottom: var(--spacing-sm);
+  font-weight: 600;
 }

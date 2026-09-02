@@ -1,26 +1,28 @@
 .capture-screen {
   position: relative;
   justify-content: flex-start;
-  padding-top: var(--spacing-lg);
+  padding-top: calc(var(--spacing-lg) + var(--safe-top));
 }
 
 .capture-cancel-button {
   position: absolute;
-  top: var(--spacing-sm);
-  left: var(--spacing-sm);
+  top: calc(var(--spacing-sm) + var(--safe-top));
+  left: calc(var(--spacing-sm) + var(--safe-left));
   background: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   border-radius: 999px;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .capture-shot-counter {
   background: rgba(0, 0, 0, 0.5);
   color: white;
   border-radius: 999px;
-  padding: 0.4rem 1rem;
-  font-weight: 600;
+  padding: 0.5rem 1.1rem;
+  font-weight: 700;
 }
 
 .capture-countdown {

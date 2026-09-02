@@ -1,87 +1,95 @@
-.delivery-strip-preview {
-  max-height: 40vh;
-  max-width: 80vw;
-  border-radius: 12px;
+.delivery-screen {
+  justify-content: flex-start;
+  padding-top: calc(var(--spacing-sm) + var(--safe-top));
+}
+
+.delivery-card {
+  padding: 0.5rem;
   margin-bottom: var(--spacing-sm);
+}
+
+.delivery-strip-preview {
+  display: block;
+  max-height: 32vh;
+  max-width: 70vw;
+  border-radius: var(--radius-sm);
 }
 
 .delivery-form {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: var(--spacing-xs);
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
+  text-align: left;
 }
 
-.delivery-form label {
-  text-align: left;
-  font-weight: 600;
-  margin-top: var(--spacing-xs);
+.delivery-field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-cream-dark);
+}
+
+.delivery-field:last-of-type {
+  border-bottom: none;
+}
+
+.delivery-field-icon {
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.delivery-field-input {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.delivery-field-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.65;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .delivery-form input {
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-cream-dark);
-  font-size: 1rem;
+  border: none;
+  font-size: 1.05rem;
+  padding: 0.2rem 0;
+  background: transparent;
+  color: var(--color-text);
+  width: 100%;
+}
+
+.delivery-form input:focus {
+  outline: none;
 }
 
 .delivery-phone-hint {
   font-size: 0.8rem;
   color: var(--color-text);
-  opacity: 0.7;
-  margin-top: 0.25rem;
-}
-
-.delivery-form button[type="submit"] {
-  margin-top: var(--spacing-sm);
-  background: var(--gradient-sunset);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 1rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.delivery-skip-button {
-  background: none;
-  border: none;
-  color: var(--color-text);
-  text-decoration: underline;
-  padding: 0.5rem;
-  cursor: pointer;
-}
-
-.delivery-done-button {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 999px;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
+  opacity: 0.65;
+  margin: 0.25rem 0 0.5rem;
 }
 
 .delivery-retry-button {
-  background: var(--color-cream-dark);
-  color: var(--color-text);
-  border: none;
-  border-radius: 999px;
-  padding: 0.5rem 1.25rem;
-  font-weight: 600;
-  cursor: pointer;
   margin-bottom: var(--spacing-xs);
 }
 
 .delivery-success {
   color: var(--color-primary);
   font-weight: 600;
+  margin-bottom: var(--spacing-xs);
 }
 
 .delivery-error {
   color: var(--color-warm-sunset-4);
   font-weight: 600;
+  margin-bottom: var(--spacing-xs);
 }

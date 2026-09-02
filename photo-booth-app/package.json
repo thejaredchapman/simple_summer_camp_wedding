@@ -17,6 +17,7 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.1",
     "@vitejs/plugin-react": "^5.1.1",
     "vite": "^7.2.4"
