@@ -33,6 +33,13 @@ jobs:
 
       - name: Build web assets
         working-directory: photo-booth-app
+        # Without this, VITE_BACKEND_URL falls back to localhost:3001 (the
+        # dev default in photoboothApi.js) baked right into the APK — on a
+        # real phone that's the phone itself, not a server, so every fetch
+        # fails with "Failed to fetch". Same backend URL the main site's
+        # production build already points at.
+        env:
+          VITE_BACKEND_URL: https://camp-javery-backend.onrender.com
         run: npm run build
 
       - name: Add Android platform and sync
