@@ -1,7 +1,8 @@
 const CANVAS_WIDTH = 1080;
 const SINGLE_PHOTO_HEIGHT = 1350; // Instagram 4:5 portrait feed ratio
 const STRIP_HEIGHT = 1920; // Instagram 9:16 Stories/Reels ratio
-const TILE_GAP = 6; // thin border between stacked photos, like a real photobooth strip
+const TILE_GAP = 24; // gap between stacked photos, like a real photobooth strip
+const OUTER_PADDING = 24; // matching border around the whole strip
 
 function loadImage(dataUrl) {
   return new Promise((resolve, reject) => {
@@ -49,12 +50,13 @@ export async function compositeStrip(photoDataUrls) {
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  const tileWidth = CANVAS_WIDTH - OUTER_PADDING * 2;
   const totalGap = TILE_GAP * (count - 1);
-  const tileHeight = (canvasHeight - totalGap) / count;
+  const tileHeight = (canvasHeight - OUTER_PADDING * 2 - totalGap) / count;
 
   images.forEach((image, index) => {
-    const y = index * (tileHeight + TILE_GAP);
-    drawCover(ctx, image, 0, y, CANVAS_WIDTH, tileHeight);
+    const y = OUTER_PADDING + index * (tileHeight + TILE_GAP);
+    drawCover(ctx, image, OUTER_PADDING, y, tileWidth, tileHeight);
   });
 
   return canvas.toDataURL('image/jpeg', 0.92);
