@@ -39,7 +39,7 @@ const RATE_LIMIT_MAX_REQUESTS = 20; // Max 20 requests per minute per IP
 
 // CORS configuration
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',')
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
   : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
 
 // =============================================================================
