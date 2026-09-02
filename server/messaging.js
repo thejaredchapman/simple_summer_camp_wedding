@@ -18,6 +18,7 @@ export async function sendBoothEmail({ to, guestName, photoUrl }) {
   try {
     await resend.emails.send({
       from: `Camp Javery Photo Booth <photobooth@${process.env.RESEND_EMAIL_DOMAIN}>`,
+      replyTo: 'javery.chapmanwine@gmail.com',
       to,
       subject: 'Your Camp Javery photo booth strip!',
       html: `
