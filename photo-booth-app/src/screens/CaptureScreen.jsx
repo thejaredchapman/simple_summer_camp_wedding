@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { CameraPreview } from '@capacitor-community/camera-preview';
-import { watermarkPhoto } from '../lib/watermarkPhoto';
 import { compositeStrip } from '../lib/compositeStrip';
 import './CaptureScreen.css';
 
@@ -36,10 +35,9 @@ export default function CaptureScreen({ mode, onStripReady, onCancel }) {
       setCountdown(null);
     }
 
-    async function captureAndWatermark() {
+    async function captureShot() {
       const result = await CameraPreview.capture({ quality: 90 });
-      const rawDataUrl = `data:image/jpeg;base64,${result.value}`;
-      return watermarkPhoto(rawDataUrl);
+      return `data:image/jpeg;base64,${result.value}`;
     }
 
     async function runShotSequence() {
@@ -48,7 +46,7 @@ export default function CaptureScreen({ mode, onStripReady, onCancel }) {
         setShotIndex(i);
         await runCountdown();
         if (cancelledRef.current) return;
-        const dataUrl = await captureAndWatermark();
+        const dataUrl = await captureShot();
         if (cancelledRef.current) return;
         capturedShotsRef.current.push(dataUrl);
         setFreezeFrameUrl(dataUrl);
