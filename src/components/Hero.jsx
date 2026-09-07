@@ -1,5 +1,8 @@
 import { ScrollReveal } from './utils';
 
+const ALBUM_URL =
+  'https://photos.google.com/share/AF1QipPdzWwWAusgYWOb92nfkCyRNZavjQu5bAA6dsbK4N8wduKhya_FxIsHeAblOhTVTw?key=OUxTdkVleTBXWWIweTdGSnU0dlI5RWpaeWQ4Q3RR';
+
 export default function Hero() {
 
   const handleScrollDown = () => {
@@ -35,8 +38,21 @@ export default function Hero() {
             <p className="hero-thank-you-message">
               We appreciate all of the love, friendships, pets, and frogs.
               <br />
+              Thank you for the memories.
+              <br />
               Photos to come soon!
             </p>
+          </ScrollReveal>
+
+          <ScrollReveal animation="fade-up" delay={700}>
+            <a
+              className="hero-cta"
+              href={ALBUM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              📸 Add &amp; View Photos
+            </a>
           </ScrollReveal>
         </div>
 

@@ -17,6 +17,7 @@ import {
   deletePhoto,
 } from './photoStorage.js';
 import { uploadVideo, listVideos, deleteVideo } from './videoStorage.js';
+import { getAlbumPreview } from './albumPreview.js';
 import { sendBoothEmail } from './messaging.js';
 
 dotenv.config({ path: new URL('.env', import.meta.url).pathname });
@@ -134,6 +135,7 @@ const chatRateLimiter = createRateLimiter(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_R
 // one public IP — these limits are sized for many guests sharing a single IP, not a lone client.
 const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 100); // 100 uploads / 10 min / IP
 const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
+const albumPreviewRateLimiter = createRateLimiter(60 * 1000, 60); // 60 requests / min / IP — response is cached server-side anyway
 const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
 const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 50); // 50 uploads / 10 min / IP — shared venue wifi NATs many guests behind one IP
 const videoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
@@ -496,6 +498,16 @@ app.get('/api/photos', photoListRateLimiter, async (req, res) => {
   } catch (error) {
     console.error('List photos error:', error.message);
     res.status(500).json({ error: 'Unable to load photos right now.' });
+  }
+});
+
+app.get('/api/album-preview', albumPreviewRateLimiter, async (req, res) => {
+  try {
+    const preview = await getAlbumPreview();
+    res.json(preview);
+  } catch (error) {
+    console.error('Album preview error:', error.message);
+    res.status(502).json({ error: 'Unable to load the album preview right now.' });
   }
 });
 

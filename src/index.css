@@ -455,7 +455,7 @@ img {
 
 @media (max-width: 768px) {
   .hero-banner-media {
-    object-position: center 20%;
+    object-position: 30% 20%;
   }
 }
 

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import ContactHelpLink from '../components/ContactHelpLink';
+import GooglePhotosAlbum from '../components/GooglePhotosAlbum';
 import './UploadPage.css';
 
 const SHARE_EMAIL = 'javery.chapmanwine@gmail.com';
@@ -24,8 +25,12 @@ export default function UploadPage() {
         </p>
 
         <p className="upload-share-intro">
-          Send us your favorite photos and videos from the weekend — we'd love to see them!
+          Add your photos straight to our shared album — anyone with the link can add to it!
         </p>
+
+        <GooglePhotosAlbum />
+
+        <p className="upload-share-divider">Or:</p>
 
         <div className="upload-share-options">
           <a className="upload-share-button" href={`mailto:${SHARE_EMAIL}?subject=${encodeURIComponent('Camp Javery Photos & Videos')}`}>
