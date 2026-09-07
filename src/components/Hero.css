@@ -99,9 +99,15 @@
   text-align: center;
   z-index: 10;
   max-width: 900px;
-  padding: var(--spacing-lg) var(--spacing-md);
+  padding: 160px var(--spacing-md) var(--spacing-lg);
   position: relative;
   z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    padding-top: 130px;
+  }
 }
 
 .hero-welcome {
@@ -133,6 +139,32 @@
   border-radius: 8px;
   padding: 8px;
   background: white;
+}
+
+.hero-thank-you-message {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-cream);
+  max-width: 600px;
+  margin: 0 auto var(--spacing-md);
+  line-height: 1.6;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.75), 0 1px 12px rgba(0, 0, 0, 0.55);
+}
+
+.hero-thank-you-image {
+  max-width: 380px;
+}
+
+@media (max-width: 768px) {
+  .hero-thank-you-message {
+    font-size: 1.1rem;
+  }
+
+  .hero-thank-you-image {
+    max-width: 280px;
+  }
 }
 
 .hero-camp-sign {

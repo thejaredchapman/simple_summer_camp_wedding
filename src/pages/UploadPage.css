@@ -67,6 +67,44 @@
   margin-bottom: var(--spacing-md);
 }
 
+.upload-share-intro {
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.upload-share-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.upload-share-button {
+  display: block;
+  padding: 0.9rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition-fast);
+  word-break: break-word;
+}
+
+.upload-share-button:hover {
+  background: var(--color-secondary);
+}
+
+.upload-share-button-secondary {
+  background: var(--color-cream-dark);
+  color: var(--color-text);
+}
+
+.upload-share-button-secondary:hover {
+  background: var(--color-warm-sunset-2);
+}
+
 .upload-gallery-link a {
   color: var(--color-primary);
   font-weight: 600;
