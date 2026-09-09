@@ -91,6 +91,25 @@ export async function adminGetOriginalPhotoUrl(photoId, password) {
   return URL.createObjectURL(blob);
 }
 
+export async function adminDownloadAllPhotos(password) {
+  const res = await fetch(`${BACKEND_URL}/api/admin/photos/download-all`, {
+    headers: { 'x-admin-password': password },
+  });
+
+  if (!res.ok) {
+    throw new Error(await parseErrorMessage(res));
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'camp-javery-photos.zip';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 export async function adminDeletePhoto(id, password) {
   const res = await fetch(
     `${BACKEND_URL}/api/admin/photos?id=${encodeURIComponent(id)}`,

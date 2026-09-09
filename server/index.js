@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import multer from 'multer';
+import { ZipArchive } from 'archiver';
 import { RAGService } from './rag.js';
 import {
   uploadPhoto,
@@ -137,6 +138,7 @@ const photoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 100); // 100 up
 const photoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 const albumPreviewRateLimiter = createRateLimiter(60 * 1000, 60); // 60 requests / min / IP — response is cached server-side anyway
 const adminRateLimiter = createRateLimiter(60 * 1000, 30); // 30 requests / min / IP
+const adminDownloadAllRateLimiter = createRateLimiter(10 * 60 * 1000, 5); // 5 requests / 10 min / IP — builds a zip of every photo, so kept tight
 const videoUploadRateLimiter = createRateLimiter(10 * 60 * 1000, 50); // 50 uploads / 10 min / IP — shared venue wifi NATs many guests behind one IP
 const videoListRateLimiter = createRateLimiter(60 * 1000, 300); // 300 requests / min / IP
 // Booth is a single kiosk device, but shared venue wifi NATs many guests
@@ -600,6 +602,65 @@ app.get('/api/admin/photos/original', adminRateLimiter, requireAdmin, async (req
     console.error('Get original photo error:', error.message);
     res.status(500).json({ error: 'Unable to load the original photo right now.' });
   }
+});
+
+// Admin-only — zips up every guest photo (unwatermarked original where one
+// was captured, otherwise the watermarked upload) and streams it back as a
+// single download. Skips any individual photo that fails to fetch rather
+// than failing the whole archive.
+app.get('/api/admin/photos/download-all', adminDownloadAllRateLimiter, requireAdmin, async (req, res) => {
+  let photos;
+  try {
+    photos = await listPhotos();
+  } catch (error) {
+    console.error('List photos for download-all error:', error.message);
+    return res.status(500).json({ error: 'Unable to load photos right now.' });
+  }
+
+  res.set({
+    'Content-Type': 'application/zip',
+    'Content-Disposition': 'attachment; filename="camp-javery-photos.zip"',
+  });
+
+  const archive = new ZipArchive({ zlib: { level: 6 } });
+  archive.on('error', error => {
+    console.error('Zip archive error:', error.message);
+    res.destroy(error);
+  });
+  archive.pipe(res);
+
+  const usedNames = new Set();
+  for (const photo of photos) {
+    try {
+      const original = await getOriginalPhoto(photo.id);
+      let buffer, contentType;
+      if (original) {
+        buffer = original.buffer;
+        contentType = original.contentType || 'image/jpeg';
+      } else {
+        const fetchRes = await fetch(photo.url);
+        if (!fetchRes.ok) continue;
+        buffer = Buffer.from(await fetchRes.arrayBuffer());
+        contentType = fetchRes.headers.get('content-type') || 'image/jpeg';
+      }
+
+      const extension = contentType.includes('png') ? 'png' : 'jpg';
+      const baseName = photo.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'guest';
+      let filename = `${baseName}.${extension}`;
+      let suffix = 2;
+      while (usedNames.has(filename)) {
+        filename = `${baseName}-${suffix}.${extension}`;
+        suffix += 1;
+      }
+      usedNames.add(filename);
+
+      archive.append(buffer, { name: filename });
+    } catch (error) {
+      console.error(`Skipping photo ${photo.id} in download-all zip:`, error.message);
+    }
+  }
+
+  await archive.finalize();
 });
 
 app.get('/api/admin/videos', adminRateLimiter, requireAdmin, async (req, res) => {

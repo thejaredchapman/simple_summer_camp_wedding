@@ -4,6 +4,7 @@ import {
   adminDeletePhoto,
   adminGetPhotoMetadata,
   adminGetOriginalPhotoUrl,
+  adminDownloadAllPhotos,
 } from '../lib/photosApi';
 import { adminListVideos, adminDeleteVideo } from '../lib/videosApi';
 import ContactHelpLink from '../components/ContactHelpLink';
@@ -22,6 +23,7 @@ export default function AdminPage() {
   const [videos, setVideos] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [downloadingAll, setDownloadingAll] = useState(false);
   // photoId -> { state: 'loading'|'loaded'|'empty'|'error', metadata }
   const [uploaderInfo, setUploaderInfo] = useState({});
 
@@ -92,6 +94,18 @@ export default function AdminPage() {
     }
   }
 
+  async function handleDownloadAll() {
+    setDownloadingAll(true);
+    setError('');
+    try {
+      await adminDownloadAllPhotos(password);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDownloadingAll(false);
+    }
+  }
+
   async function handleDeletePhoto(id) {
     if (!window.confirm('Delete this photo?')) return;
     try {
@@ -141,6 +155,16 @@ export default function AdminPage() {
       <p className="admin-stats">
         {photos.length} photo{photos.length === 1 ? '' : 's'} uploaded
       </p>
+      {photos.length > 0 && (
+        <button
+          type="button"
+          className="admin-download-all"
+          onClick={handleDownloadAll}
+          disabled={downloadingAll}
+        >
+          {downloadingAll ? 'Building zip…' : `⬇ Download All ${photos.length} Photos`}
+        </button>
+      )}
       <div className="admin-grid">
         {photos.map(photo => (
           <div key={photo.id} className="admin-item">

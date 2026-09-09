@@ -44,6 +44,23 @@
   margin-bottom: var(--spacing-md);
 }
 
+.admin-download-all {
+  display: block;
+  margin: 0 auto var(--spacing-md);
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-download-all:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .admin-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
